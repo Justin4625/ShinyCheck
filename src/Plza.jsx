@@ -5,10 +5,19 @@ export default function Plza() {
         document.title = "Pokémon Legends: Z-A";
     }, []);
 
+    const cards = Array.from({ length: 10 }, (_, i) => i + 1);
+
     return (
-        <main style={{ padding: "2rem", fontFamily: "Arial, sans-serif" }}>
-            <h1>Welkom</h1>
-            <p>Dit is een simpele pagina met tekst.</p>
-        </main>
+        <div className="grid grid-cols-5 gap-4 p-4">
+            {cards.map((card) => (
+                <div
+                    key={card}
+                    className="bg-white rounded-lg shadow-md p-6 text-center hover:scale-105 transition-transform"
+                >
+                    <h2 className="text-xl font-bold mb-2">Card {card}</h2>
+                    <p>voorbeeldkaart</p>
+                </div>
+            ))}
+        </div>
     );
 }
