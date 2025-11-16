@@ -1,13 +1,16 @@
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import Home from "./Home.jsx";
+import {createBrowserRouter, RouterProvider} from "react-router-dom";
+import Plza from "./Plza.jsx";
+import Layout from "./Components/Layout.jsx";
 
-const router = createBrowserRouter(
-    [
+const router = createBrowserRouter([{
+        element: <Layout/>,
+        children: [
         {
             path: "/",
-            element: <Home />
-        }
-    ],
+            element: <Plza/>
+        },
+        ]
+    }],
     { basename: "/Shinycheck" }
 );
 

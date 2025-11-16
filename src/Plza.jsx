@@ -1,8 +1,8 @@
 import { useEffect } from "react";
 
-export default function Home() {
+export default function Plza() {
     useEffect(() => {
-        document.title = "Simpele pagina";
+        document.title = "Pokémon Legends: Z-A";
     }, []);
 
     return (
