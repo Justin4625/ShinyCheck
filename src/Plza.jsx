@@ -10,7 +10,7 @@ export default function Plza() {
 
             {/* Neon accent circles in background */}
             <div className="absolute -top-20 -left-10 w-60 h-60 bg-blue-400 rounded-full opacity-15 blur-3xl pointer-events-none"></div>
-            <div className="absolute -bottom-32 -right-20 w-80 h-80 bg-pink-400 rounded-full opacity-15 blur-3xl pointer-events-none"></div>
+            <div className="absolute -bottom-32 -right-20 w-80 h-80 bg-purple-400 rounded-full opacity-15 blur-3xl pointer-events-none"></div>
 
             <h1 className="relative text-3xl sm:text-4xl font-extrabold text-center text-gray-900 mb-10 tracking-wide z-10">
                 Pokémon Legends Z-A
@@ -22,12 +22,12 @@ export default function Plza() {
                         key={pokemon.id}
                         className="relative bg-gradient-to-br from-gray-100 to-gray-200 text-gray-900 rounded-2xl shadow-md p-6 flex flex-col items-center justify-between hover:scale-105 hover:shadow-xl transition-transform duration-300 overflow-hidden"
                     >
-                        {/* Neon accents op de kaart: fel blauw en roze/purple */}
+                        {/* Neon accents: groen, blauw en roze/purple allemaal even fel */}
                         <div className={`absolute -top-4 -right-4 w-16 h-16 rounded-full blur-2xl pointer-events-none
-                            ${index % 3 === 0 ? "bg-green-300 opacity-20" : index % 3 === 1 ? "bg-pink-400 opacity-40" : "bg-blue-400 opacity-40"}`}>
+                            ${index % 3 === 0 ? "bg-green-400 opacity-40" : index % 3 === 1 ? "bg-pink-400 opacity-40" : "bg-blue-400 opacity-40"}`}>
                         </div>
                         <div className={`absolute -bottom-4 -left-4 w-24 h-24 rounded-full blur-3xl pointer-events-none
-                            ${index % 3 === 0 ? "bg-purple-300 opacity-30" : index % 3 === 1 ? "bg-blue-400 opacity-50" : "bg-pink-400 opacity-50"}`}>
+                            ${index % 3 === 0 ? "bg-purple-400 opacity-40" : index % 3 === 1 ? "bg-blue-400 opacity-40" : "bg-green-400 opacity-40"}`}>
                         </div>
 
                         <h2 className="text-lg sm:text-xl font-bold mb-4 capitalize tracking-wide">
