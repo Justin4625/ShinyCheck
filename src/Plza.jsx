@@ -13,7 +13,7 @@ export default function Plza() {
                     <h2 className="text-xl font-bold mb-2 capitalize">{pokemon.name}</h2>
 
                     <img
-                        src={pokemon.sprites?.front_default}
+                        src={pokemon.sprites?.other?.home?.front_shiny || pokemon.sprites?.front_shiny || pokemon.sprites?.front_default}
                         alt={pokemon.name}
                         className="w-20 h-20 mx-auto"
                     />
