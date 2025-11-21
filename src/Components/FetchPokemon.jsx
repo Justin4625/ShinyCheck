@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import plzaPokemon from "../data/PlzaData.js";
 
 export default function usePokemon() {
     const [pokemonList, setPokemonList] = useState([]);
@@ -6,7 +7,7 @@ export default function usePokemon() {
     useEffect(() => {
         const fetchPokemon = async () => {
             try {
-                const zaPokemonNames = ["Chikorita", "Bayleef", "Meganium"];
+                const zaPokemonNames = Array.isArray(plzaPokemon) ? [...plzaPokemon] : [];
                 const detailedData = await Promise.all(
                     zaPokemonNames.map(async (name) => {
                         const resp = await fetch(
