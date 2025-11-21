@@ -13,7 +13,7 @@ export default function Plza() {
             <div className="absolute -bottom-32 -right-20 w-80 h-80 bg-purple-400 rounded-full opacity-15 blur-3xl pointer-events-none"></div>
 
             <h1 className="relative text-3xl sm:text-4xl font-extrabold text-center text-gray-900 mb-10 tracking-wide z-10">
-                Pokémon Legends Z-A
+                Pokémon Legends: Z-A
             </h1>
 
             <div className="relative grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-8 z-10">
