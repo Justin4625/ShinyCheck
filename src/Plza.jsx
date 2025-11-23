@@ -1,7 +1,9 @@
+import plzaPokemon from "./data/PlzaData.js";
 import usePokemon from "./Components/FetchPokemon.jsx";
 
 export default function Plza() {
-    const pokemonList = usePokemon();
+    const zaPokemonNames = Array.isArray(plzaPokemon) ? [...plzaPokemon] : [];
+    const pokemonList = usePokemon(zaPokemonNames);
 
     return (
         <div className="relative p-8 min-h-screen bg-gradient-to-b from-gray-50 via-gray-100 to-gray-200 overflow-hidden">
@@ -22,7 +24,6 @@ export default function Plza() {
                         key={pokemon.id}
                         className="relative bg-gradient-to-br from-gray-100 to-gray-200 text-gray-900 rounded-2xl shadow-md p-6 flex flex-col items-center justify-between hover:scale-105 hover:shadow-xl transition-transform duration-300 overflow-hidden"
                     >
-                        {/* Neon accents: groen, blauw en roze/purple allemaal even fel */}
                         <div className={`absolute -top-4 -right-4 w-16 h-16 rounded-full blur-2xl pointer-events-none
                             ${index % 3 === 0 ? "bg-green-400 opacity-40" : index % 3 === 1 ? "bg-pink-400 opacity-40" : "bg-blue-400 opacity-40"}`}>
                         </div>
