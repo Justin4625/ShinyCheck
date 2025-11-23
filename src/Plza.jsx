@@ -20,7 +20,7 @@ export default function Plza() {
 
             <div className="relative grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-8 z-10">
                 {pokemonList.map((pokemon, index) => {
-                    const number = String(index + 1).padStart(4, "0");
+                    const number = String(index + 1).padStart(3, "0");
 
                     return (
                         <div
