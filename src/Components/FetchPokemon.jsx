@@ -1,10 +1,11 @@
 import { useEffect, useState, useRef } from "react";
-import specialCases from "../data/specialData.js";
+import specialCases from "../data/SpecialData.js";
 
-export default function usePokemon(names = []) {
+export default function usePokemon(entries = []) {
     const [pokemonList, setPokemonList] = useState([]);
-    const mountedRef = useRef(true);
+    const mountedRef = useRef(false);
 
+    // Track whether component is mounted
     useEffect(() => {
         mountedRef.current = true;
         return () => {
@@ -12,28 +13,34 @@ export default function usePokemon(names = []) {
         };
     }, []);
 
+    // Helper to normalize names for the API
+    const formatForApi = (displayName) =>
+        (specialCases && specialCases[displayName]) ||
+        displayName.toLowerCase().replace(/[é]/g, "e");
+
     useEffect(() => {
-        if (!Array.isArray(names) || names.length === 0) {
-            Promise.resolve().then(() => {
-                if (mountedRef.current) setPokemonList([]);
-            });
+        if (!Array.isArray(entries) || entries.length === 0) {
+            // Defer clearing state to avoid synchronous setState inside effect
+            if (mountedRef.current) {
+                Promise.resolve().then(() => {
+                    if (mountedRef.current) setPokemonList([]);
+                });
+            }
             return;
         }
 
         let cancelled = false;
+
         const fetchPokemon = async () => {
             try {
-                const detailedData = await Promise.all(
-                    names.map(async (name) => {
-                        const formattedName =
-                            (specialCases && specialCases[name]) ||
-                            name.toLowerCase().replace(/[é]/g, "e");
+                const data = await Promise.all(
+                    entries.map(async (entry) => {
+                        const apiName = formatForApi(entry.name);
                         try {
-                            const resp = await fetch(
-                                `https://pokeapi.co/api/v2/pokemon/${formattedName}`
-                            );
+                            const resp = await fetch(`https://pokeapi.co/api/v2/pokemon/${apiName}`);
                             if (!resp.ok) return null;
-                            return resp.json();
+                            const json = await resp.json();
+                            return { ...json, id: entry.id }; // keep local id
                         } catch {
                             return null;
                         }
@@ -41,7 +48,7 @@ export default function usePokemon(names = []) {
                 );
 
                 if (!cancelled && mountedRef.current) {
-                    setPokemonList(detailedData.filter(Boolean));
+                    setPokemonList(data.filter(Boolean));
                 }
             } catch (err) {
                 console.error("Failed to fetch Pokémon data:", err);
@@ -52,10 +59,11 @@ export default function usePokemon(names = []) {
         };
 
         fetchPokemon();
+
         return () => {
             cancelled = true;
         };
-    }, [names]);
+    }, [entries]);
 
-    return pokemonList;
+    return { pokemonList };
 }
