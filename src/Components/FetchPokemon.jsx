@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from "react";
-import { specialCases } from "../data/PlzaData.js";
+import specialCases from "../data/specialData.js";
 
 export default function usePokemon(names = []) {
     const [pokemonList, setPokemonList] = useState([]);

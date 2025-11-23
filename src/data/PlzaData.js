@@ -32,12 +32,4 @@ const plzaPokemon = [
     "Beldum", "Metang", "Metagross", "Xerneas", "Yveltal", "Zygarde", "Diancie", "Mewtwo"
 ];
 
-export const specialCases = {
-    Meowstic: "meowstic-male",
-    Aegislash: "aegislash-shield",
-    Pumpkaboo: "pumpkaboo-average",
-    Gourgeist: "gourgeist-average",
-    Zygarde: "zygarde-50"
-};
-
 export default plzaPokemon;
