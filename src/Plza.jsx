@@ -63,7 +63,11 @@ export default function Plza() {
                 })}
             </div>
 
-            <PlzaModal selectedPokemon={selectedPokemon} onClose={closeModal} />
+            <PlzaModal
+                selectedPokemon={selectedPokemon}
+                onClose={closeModal}
+                index={plzaPokemon.findIndex(p => p.id === selectedPokemon?.id)}
+            />
         </div>
     );
 }
