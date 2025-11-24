@@ -8,7 +8,9 @@ export default function usePokemon(entries = []) {
     // Track whether component is mounted
     useEffect(() => {
         mountedRef.current = true;
-        return () => (mountedRef.current = false);
+        return () => {
+            mountedRef.current = false;
+        };
     }, []);
 
     // Helper to normalize names for the API
@@ -17,8 +19,8 @@ export default function usePokemon(entries = []) {
         displayName.toLowerCase().replace(/[é]/g, "e");
 
     useEffect(() => {
-        // Asynchroon leegmaken als er geen entries zijn
         if (!Array.isArray(entries) || entries.length === 0) {
+            // Defer clearing state to avoid synchronous setState inside effect
             if (mountedRef.current) {
                 Promise.resolve().then(() => {
                     if (mountedRef.current) setPokemonList([]);
@@ -35,38 +37,10 @@ export default function usePokemon(entries = []) {
                     entries.map(async (entry) => {
                         const apiName = formatForApi(entry.name);
                         try {
-                            // Haal basis Pokémon data
                             const resp = await fetch(`https://pokeapi.co/api/v2/pokemon/${apiName}`);
                             if (!resp.ok) return null;
                             const json = await resp.json();
-
-                            // Haal species data voor alle forms (incl. Mega)
-                            const speciesResp = await fetch(
-                                `https://pokeapi.co/api/v2/pokemon-species/${apiName}`
-                            );
-                            if (!speciesResp.ok) return { ...json, id: entry.id, forms: [] };
-                            const speciesJson = await speciesResp.json();
-
-                            // Alle varieties ophalen (forms, mega evoluties, etc.)
-                            const forms = await Promise.all(
-                                speciesJson.varieties.map(async (v) => {
-                                    try {
-                                        const formResp = await fetch(v.pokemon.url);
-                                        if (!formResp.ok) return null;
-                                        const formJson = await formResp.json();
-                                        return {
-                                            name: formJson.name,
-                                            sprite:
-                                                formJson.sprites?.other?.home?.front_shiny ||
-                                                "/placeholder.png",
-                                        };
-                                    } catch {
-                                        return null;
-                                    }
-                                })
-                            );
-
-                            return { ...json, id: entry.id, forms: forms.filter(Boolean) };
+                            return { ...json, id: entry.id }; // keep local id
                         } catch {
                             return null;
                         }
