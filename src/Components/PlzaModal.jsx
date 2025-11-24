@@ -23,10 +23,10 @@ export default function PlzaModal({ selectedPokemon, onClose, index = 0 }) {
     if (!selectedPokemon) return null;
 
     const formatTime = (seconds) => {
-        const hrs = String(Math.floor(seconds / 3600)).padStart(2, "0");
-        const mins = String(Math.floor((seconds % 3600) / 60)).padStart(2, "0");
-        const secs = String(seconds % 60).padStart(2, "0");
-        return `${hrs}:${mins}:${secs}`;
+        const hrs = Math.floor(seconds / 3600);
+        const mins = Math.floor((seconds % 3600) / 60);
+        const secs = seconds % 60;
+        return `${hrs}h ${mins}m ${secs}s`;
     };
 
     // Blob kleuren afwisselen
@@ -77,13 +77,14 @@ export default function PlzaModal({ selectedPokemon, onClose, index = 0 }) {
                 <div className="mt-6 flex gap-4 z-10">
                     {/* Counter */}
                     <div
-                        className="px-4 py-2 bg-white rounded-xl shadow-md text-xl font-bold text-gray-800 min-w-[60px] text-center">
+                        className="px-4 py-2 bg-white rounded-xl shadow-md text-xl font-bold text-gray-900 min-w-[60px] text-center">
                         {counter}
                     </div>
 
                     {/* Timer */}
                     <div
-                        className="px-4 py-2 bg-white rounded-xl shadow-md text-xl font-mono text-gray-900 min-w-[90px] text-center">
+                        className="px-4 py-2 bg-white rounded-xl shadow-md text-xl font-bold text-gray-800 min-w-[90px] text-center"
+                    >
                         {formatTime(timer)}
                     </div>
                 </div>
