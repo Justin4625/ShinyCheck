@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 export default function PlzaModal({ selectedPokemon, onClose }) {
     const [isPlaying, setIsPlaying] = useState(false);
     const [timer, setTimer] = useState(0);
-    const [counter, setCounter] = useState(0); // 👈 Counter state
+    const [counter, setCounter] = useState(0);
 
     // Timer logic
     useEffect(() => {
@@ -22,7 +22,7 @@ export default function PlzaModal({ selectedPokemon, onClose }) {
     const handleClose = () => {
         setIsPlaying(false);
         setTimer(0);
-        setCounter(0); // 👈 counter resetten
+        setCounter(0);
         onClose();
     };
 
@@ -32,7 +32,6 @@ export default function PlzaModal({ selectedPokemon, onClose }) {
         setIsPlaying((prev) => !prev);
     };
 
-    // Tijd formatteren
     const formatTime = (seconds) => {
         const mins = String(Math.floor(seconds / 60)).padStart(2, "0");
         const secs = String(seconds % 60).padStart(2, "0");
@@ -42,7 +41,6 @@ export default function PlzaModal({ selectedPokemon, onClose }) {
     return (
         <div
             className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
-            onClick={handleClose}
         >
             <div
                 onClick={(e) => e.stopPropagation()}
@@ -64,7 +62,7 @@ export default function PlzaModal({ selectedPokemon, onClose }) {
                 <img
                     src={selectedPokemon.sprites?.other?.home?.front_shiny || "/placeholder.png"}
                     alt={selectedPokemon.name}
-                    onClick={() => setCounter((prev) => prev + 1)} // 👈 +1 bij click
+                    onClick={() => setCounter((prev) => prev + 1)}
                     className="w-56 h-56 mx-auto drop-shadow-lg cursor-pointer active:scale-95 transition-transform"
                 />
 

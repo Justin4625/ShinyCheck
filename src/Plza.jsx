@@ -1,5 +1,5 @@
 // src/Plza.jsx
-import React, { useState } from "react";
+import React, {useState} from "react";
 import plzaPokemon from "./data/PlzaData.js";
 import usePokemon from "./Components/FetchPokemon.jsx";
 import PlzaModal from "./Components/PlzaModal.jsx";
