@@ -79,13 +79,13 @@ export default function PlzaModal({ selectedPokemon, onClose, index = 0 }) {
                     </button>
                     <button
                         className={`px-4 py-2 rounded-t-lg font-semibold ${
-                            activeTab === "details"
+                            activeTab === "settings"
                                 ? "bg-white text-gray-900 shadow-md"
                                 : "bg-gray-300 text-gray-600"
                         }`}
-                        onClick={() => setActiveTab("details")}
+                        onClick={() => setActiveTab("settings")}
                     >
-                        Details
+                        Settings
                     </button>
                 </div>
 
@@ -129,23 +129,12 @@ export default function PlzaModal({ selectedPokemon, onClose, index = 0 }) {
                         </>
                     )}
 
-                    {activeTab === "details" && (
+                    {activeTab === "settings" && (
                         <>
-                            <div className="px-4 py-3 bg-white rounded-xl shadow-md w-full text-center flex flex-col gap-2 sm:gap-4 items-center">
+                            <div className="px-4 py-3 bg-white rounded-xl shadow-md w-full text-center flex flex-col gap-4 items-center">
 
-                                {/* Reset knop */}
-                                <button
-                                    onClick={() => {
-                                        setCounter(0);
-                                        setTimer(0);
-                                    }}
-                                    className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white font-bold rounded-lg shadow-md mt-2"
-                                >
-                                    Reset
-                                </button>
-
-                                {/* Increment input */}
-                                <div className="mt-2 flex flex-col sm:flex-row items-center justify-center gap-2">
+                                {/* Increment input BOVEN reset */}
+                                <div className="flex flex-col sm:flex-row items-center justify-center gap-2">
                                     <label className="text-gray-700 font-semibold">Increment</label>
                                     <input
                                         type="number"
@@ -155,6 +144,17 @@ export default function PlzaModal({ selectedPokemon, onClose, index = 0 }) {
                                         className="w-20 px-3 py-1 rounded-lg border border-gray-300 text-center no-arrows"
                                     />
                                 </div>
+
+                                {/* Reset knop ONDER increment */}
+                                <button
+                                    onClick={() => {
+                                        setCounter(0);
+                                        setTimer(0);
+                                    }}
+                                    className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white font-bold rounded-lg shadow-md"
+                                >
+                                    Reset
+                                </button>
                             </div>
                         </>
                     )}
