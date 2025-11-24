@@ -5,6 +5,7 @@ export default function PlzaModal({ selectedPokemon, onClose, index = 0 }) {
     const [timer, setTimer] = useState(0);
     const [counter, setCounter] = useState(0);
     const [increment, setIncrement] = useState(1);
+    const [activeTab, setActiveTab] = useState("hunt"); // "hunt" of "details"
 
     useEffect(() => {
         let interval;
@@ -31,7 +32,7 @@ export default function PlzaModal({ selectedPokemon, onClose, index = 0 }) {
         return `${hrs}h ${mins}m ${secs}s`;
     };
 
-    // Blob kleuren afwisselen
+    // Blob kleuren
     const topRightColor =
         index % 3 === 0 ? "bg-green-400" : index % 3 === 1 ? "bg-pink-400" : "bg-blue-400";
     const bottomLeftColor =
@@ -71,62 +72,113 @@ export default function PlzaModal({ selectedPokemon, onClose, index = 0 }) {
                 </button>
 
                 {/* Titel */}
-                <h2 className="text-2xl sm:text-4xl font-extrabold mb-4 sm:mb-6 capitalize tracking-wider z-10 text-center">
+                <h2 className="text-2xl sm:text-4xl font-extrabold mb-2 sm:mb-4 capitalize tracking-wider z-10 text-center">
                     {selectedPokemon.name}
                 </h2>
+
+                {/* Tabs */}
+                <div className="flex gap-2 sm:gap-4 mb-4 sm:mb-6">
+                    <button
+                        className={`px-4 py-2 rounded-t-lg font-semibold ${
+                            activeTab === "hunt"
+                                ? "bg-white text-gray-900 shadow-md"
+                                : "bg-gray-300 text-gray-600"
+                        }`}
+                        onClick={() => setActiveTab("hunt")}
+                    >
+                        Hunt
+                    </button>
+                    <button
+                        className={`px-4 py-2 rounded-t-lg font-semibold ${
+                            activeTab === "details"
+                                ? "bg-white text-gray-900 shadow-md"
+                                : "bg-gray-300 text-gray-600"
+                        }`}
+                        onClick={() => setActiveTab("details")}
+                    >
+                        Details
+                    </button>
+                </div>
 
                 {/* Pokémon image */}
                 <img
                     src={selectedPokemon.sprites?.other?.home?.front_shiny || "/placeholder.png"}
                     alt={selectedPokemon.name}
                     onClick={() => {
-                        if (isPlaying) setCounter((prev) => prev + Number(increment));
+                        if (isPlaying && activeTab === "hunt")
+                            setCounter((prev) => prev + Number(increment));
                     }}
                     className="w-40 h-40 sm:w-64 sm:h-64 mx-auto drop-shadow-lg cursor-pointer active:scale-95 transition-transform z-10"
                 />
 
-                {/* Timer, Counter & Decrement */}
-                <div className="mt-4 flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6 z-10 w-full">
-                    {/* Timer */}
-                    <div className="px-4 py-2 sm:px-6 sm:py-3 bg-white rounded-xl shadow-md text-base sm:text-xl font-bold text-gray-600 min-w-[90px] text-center">
-                        {formatTime(timer)}
-                    </div>
+                {/* Tab content */}
+                <div className="mt-4 w-full flex flex-col items-center">
+                    {activeTab === "hunt" && (
+                        <>
+                            {/* Timer, Counter & Decrement */}
+                            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6 z-10 w-full">
+                                {/* Timer */}
+                                <div className="px-4 py-2 sm:px-6 sm:py-3 bg-white rounded-xl shadow-md text-base sm:text-xl font-bold text-gray-600 min-w-[90px] text-center">
+                                    {formatTime(timer)}
+                                </div>
 
-                    {/* Counter + Decrement */}
-                    <div className="flex items-center gap-2">
-                        <div className="px-6 py-2 sm:py-3 bg-white rounded-xl shadow-md text-xl sm:text-2xl font-bold text-gray-900 min-w-[70px] sm:min-w-[80px] text-center">
-                            {counter}
+                                {/* Counter + Decrement */}
+                                <div className="flex items-center gap-2">
+                                    <div className="px-6 py-2 sm:py-3 bg-white rounded-xl shadow-md text-xl sm:text-2xl font-bold text-gray-900 min-w-[70px] sm:min-w-[80px] text-center">
+                                        {counter}
+                                    </div>
+                                    <button
+                                        onClick={() =>
+                                            setCounter((prev) => Math.max(0, prev - Number(increment)))
+                                        }
+                                        className="px-3 py-1 sm:px-3 sm:py-2 bg-red-500 hover:bg-red-600 text-white font-bold rounded-lg shadow-md"
+                                    >
+                                        -{increment}
+                                    </button>
+                                </div>
+                            </div>
+
+                            {/* Increment input */}
+                            <div className="mt-4 flex flex-col sm:flex-row items-center justify-center gap-2 z-10">
+                                <label className="text-gray-700 font-semibold">Increment</label>
+                                <input
+                                    type="number"
+                                    min="1"
+                                    value={increment}
+                                    onChange={(e) => setIncrement(e.target.value)}
+                                    className="w-20 px-3 py-1 rounded-lg border border-gray-300 text-center no-arrows"
+                                />
+                            </div>
+                        </>
+                    )}
+
+                    {activeTab === "details" && (
+                        <div className="px-4 py-3 bg-white rounded-xl shadow-md w-full text-center">
+                            {/* Plaats hier de details van de Pokémon */}
+                            <p className="text-gray-700">
+                                Type: {selectedPokemon.types?.map((t) => t.type.name).join(", ")}
+                            </p>
+                            <p className="text-gray-700">
+                                Base experience: {selectedPokemon.base_experience}
+                            </p>
+                            <p className="text-gray-700">
+                                Height: {selectedPokemon.height} | Weight: {selectedPokemon.weight}
+                            </p>
                         </div>
-                        <button
-                            onClick={() => setCounter((prev) => Math.max(0, prev - Number(increment)))}
-                            className="px-3 py-1 sm:px-3 sm:py-2 bg-red-500 hover:bg-red-600 text-white font-bold rounded-lg shadow-md"
-                        >
-                            -{increment}
-                        </button>
-                    </div>
-                </div>
-
-                {/* Increment input */}
-                <div className="mt-4 flex flex-col sm:flex-row items-center justify-center gap-2 z-10">
-                    <label className="text-gray-700 font-semibold">Increment</label>
-                    <input
-                        type="number"
-                        min="1"
-                        value={increment}
-                        onChange={(e) => setIncrement(e.target.value)}
-                        className="w-20 px-3 py-1 rounded-lg border border-gray-300 text-center no-arrows"
-                    />
+                    )}
                 </div>
 
                 {/* Play / Pause knop */}
-                <div className="mt-6 flex justify-center w-full">
-                    <button
-                        onClick={() => setIsPlaying((p) => !p)}
-                        className="px-6 py-3 sm:px-8 sm:py-4 bg-gradient-to-r from-purple-500 to-blue-500 hover:from-blue-500 hover:to-purple-500 text-white font-bold rounded-xl shadow-lg transition-transform transform hover:scale-105 active:scale-95"
-                    >
-                        {isPlaying ? "Pause" : "Start"}
-                    </button>
-                </div>
+                {activeTab === "hunt" && (
+                    <div className="mt-6 flex justify-center w-full">
+                        <button
+                            onClick={() => setIsPlaying((p) => !p)}
+                            className="px-6 py-3 sm:px-8 sm:py-4 bg-gradient-to-r from-purple-500 to-blue-500 hover:from-blue-500 hover:to-purple-500 text-white font-bold rounded-xl shadow-lg transition-transform transform hover:scale-105 active:scale-95"
+                        >
+                            {isPlaying ? "Pause" : "Start"}
+                        </button>
+                    </div>
+                )}
             </div>
         </div>
     );
