@@ -69,7 +69,9 @@ export default function PlzaModal({ selectedPokemon, onClose, index = 0 }) {
                 <img
                     src={selectedPokemon.sprites?.other?.home?.front_shiny || "/placeholder.png"}
                     alt={selectedPokemon.name}
-                    onClick={() => setCounter((prev) => prev + 1)}
+                    onClick={() => {
+                        if (isPlaying) setCounter((prev) => prev + 1);
+                    }}
                     className="w-64 h-64 mx-auto drop-shadow-lg cursor-pointer active:scale-95 transition-transform z-10"
                 />
 
