@@ -54,6 +54,16 @@ export default function PlzaModal({ selectedPokemon, onClose, index = 0 }) {
                 <div
                     className={`absolute -bottom-10 -left-10 w-56 h-56 ${bottomLeftColor} opacity-40 blur-3xl pointer-events-none`}></div>
 
+                <button
+                    onClick={() => {
+                        setCounter(0);
+                        setTimer(0);
+                    }}
+                    className="absolute top-4 left-4 px-4 py-2 bg-red-500 hover:bg-red-600 text-white font-bold rounded-lg shadow-md z-10"
+                >
+                    Reset
+                </button>
+
                 {/* Sluit-knop */}
                 <button
                     onClick={handleClose}
@@ -77,25 +87,30 @@ export default function PlzaModal({ selectedPokemon, onClose, index = 0 }) {
                     className="w-64 h-64 mx-auto drop-shadow-lg cursor-pointer active:scale-95 transition-transform z-10"
                 />
 
-                {/* Counter en Timer */}
-                <div className="mt-6 flex gap-4 z-10">
+                {/* Timer, Counter & Decrement */}
+                <div className="mt-6 flex items-center justify-center gap-3 z-10">
+                    {/* Timer */}
+                    <div className="px-6 py-3 bg-white rounded-xl shadow-md text-xl font-bold text-gray-800 min-w-[100px] text-center">
+                        {formatTime(timer)}
+                    </div>
+
                     {/* Counter */}
-                    <div
-                        className="px-4 py-2 bg-white rounded-xl shadow-md text-xl font-bold text-gray-900 min-w-[60px] text-center">
+                    <div className="px-6 py-3 bg-white rounded-xl shadow-md text-2xl font-bold text-gray-900 min-w-[80px] text-center">
                         {counter}
                     </div>
 
-                    {/* Timer */}
-                    <div
-                        className="px-4 py-2 bg-white rounded-xl shadow-md text-xl font-bold text-gray-800 min-w-[90px] text-center"
+                    {/* Decrement knop */}
+                    <button
+                        onClick={() => setCounter(prev => Math.max(0, prev - Number(increment)))}
+                        className="px-2 py-1 bg-red-500 hover:bg-red-600 text-white font-bold rounded-lg shadow-md"
                     >
-                        {formatTime(timer)}
-                    </div>
+                        -{increment}
+                    </button>
                 </div>
 
-                {/* Increment input */}
-                <div className="mt-4 flex items-center gap-2 z-10">
-                    <label className="text-gray-700 font-semibold">Increment:</label>
+                {/* Increment input onder de counter + decrement */}
+                <div className="mt-4 flex items-center justify-center gap-2 z-10">
+                    <label className="text-gray-700 font-semibold">Increment</label>
                     <input
                         type="number"
                         min="1"
@@ -105,7 +120,7 @@ export default function PlzaModal({ selectedPokemon, onClose, index = 0 }) {
                     />
                 </div>
 
-                {/* Play / Pause knop met alleen icon */}
+                {/* Play / Pause knop */}
                 <button
                     onClick={() => setIsPlaying((p) => !p)}
                     className="mt-6 px-6 py-3 bg-gradient-to-r from-purple-500 to-blue-500 hover:from-blue-500 hover:to-purple-500 text-white font-bold rounded-xl shadow-lg transition-transform transform hover:scale-105 active:scale-95 z-10"
