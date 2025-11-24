@@ -4,6 +4,7 @@ export default function PlzaModal({ selectedPokemon, onClose, index = 0 }) {
     const [isPlaying, setIsPlaying] = useState(false);
     const [timer, setTimer] = useState(0);
     const [counter, setCounter] = useState(0);
+    const [increment, setIncrement] = useState(1);
 
     useEffect(() => {
         let interval;
@@ -17,6 +18,7 @@ export default function PlzaModal({ selectedPokemon, onClose, index = 0 }) {
         setIsPlaying(false);
         setTimer(0);
         setCounter(0);
+        setIncrement(1);
         onClose();
     };
 
@@ -70,7 +72,7 @@ export default function PlzaModal({ selectedPokemon, onClose, index = 0 }) {
                     src={selectedPokemon.sprites?.other?.home?.front_shiny || "/placeholder.png"}
                     alt={selectedPokemon.name}
                     onClick={() => {
-                        if (isPlaying) setCounter((prev) => prev + 1);
+                        if (isPlaying) setCounter(prev => prev + Number(increment));
                     }}
                     className="w-64 h-64 mx-auto drop-shadow-lg cursor-pointer active:scale-95 transition-transform z-10"
                 />
@@ -89,6 +91,18 @@ export default function PlzaModal({ selectedPokemon, onClose, index = 0 }) {
                     >
                         {formatTime(timer)}
                     </div>
+                </div>
+
+                {/* Increment input */}
+                <div className="mt-4 flex items-center gap-2 z-10">
+                    <label className="text-gray-700 font-semibold">Increment:</label>
+                    <input
+                        type="number"
+                        min="1"
+                        value={increment}
+                        onChange={(e) => setIncrement(e.target.value)}
+                        className="w-20 px-3 py-1 rounded-lg border border-gray-300 text-center no-arrows"
+                    />
                 </div>
 
                 {/* Play / Pause knop met alleen icon */}
