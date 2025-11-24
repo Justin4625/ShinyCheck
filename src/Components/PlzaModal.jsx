@@ -52,17 +52,6 @@ export default function PlzaModal({ selectedPokemon, onClose, index = 0 }) {
                     className={`absolute -bottom-10 -left-10 w-48 h-48 sm:w-56 sm:h-56 ${bottomLeftColor} opacity-40 blur-3xl pointer-events-none`}
                 />
 
-                {/* Reset knop */}
-                <button
-                    onClick={() => {
-                        setCounter(0);
-                        setTimer(0);
-                    }}
-                    className="absolute top-4 left-4 px-4 py-2 bg-red-500 hover:bg-red-600 text-white font-bold rounded-lg shadow-md z-10 text-sm sm:text-base"
-                >
-                    Reset
-                </button>
-
                 {/* Sluit-knop */}
                 <button
                     onClick={handleClose}
@@ -137,34 +126,37 @@ export default function PlzaModal({ selectedPokemon, onClose, index = 0 }) {
                                     </button>
                                 </div>
                             </div>
-
-                            {/* Increment input */}
-                            <div className="mt-4 flex flex-col sm:flex-row items-center justify-center gap-2 z-10">
-                                <label className="text-gray-700 font-semibold">Increment</label>
-                                <input
-                                    type="number"
-                                    min="1"
-                                    value={increment}
-                                    onChange={(e) => setIncrement(e.target.value)}
-                                    className="w-20 px-3 py-1 rounded-lg border border-gray-300 text-center no-arrows"
-                                />
-                            </div>
                         </>
                     )}
 
                     {activeTab === "details" && (
-                        <div className="px-4 py-3 bg-white rounded-xl shadow-md w-full text-center">
-                            {/* Plaats hier de details van de Pokémon */}
-                            <p className="text-gray-700">
-                                Type: {selectedPokemon.types?.map((t) => t.type.name).join(", ")}
-                            </p>
-                            <p className="text-gray-700">
-                                Base experience: {selectedPokemon.base_experience}
-                            </p>
-                            <p className="text-gray-700">
-                                Height: {selectedPokemon.height} | Weight: {selectedPokemon.weight}
-                            </p>
-                        </div>
+                        <>
+                            <div className="px-4 py-3 bg-white rounded-xl shadow-md w-full text-center flex flex-col gap-2 sm:gap-4 items-center">
+
+                                {/* Reset knop */}
+                                <button
+                                    onClick={() => {
+                                        setCounter(0);
+                                        setTimer(0);
+                                    }}
+                                    className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white font-bold rounded-lg shadow-md mt-2"
+                                >
+                                    Reset
+                                </button>
+
+                                {/* Increment input */}
+                                <div className="mt-2 flex flex-col sm:flex-row items-center justify-center gap-2">
+                                    <label className="text-gray-700 font-semibold">Increment</label>
+                                    <input
+                                        type="number"
+                                        min="1"
+                                        value={increment}
+                                        onChange={(e) => setIncrement(e.target.value)}
+                                        className="w-20 px-3 py-1 rounded-lg border border-gray-300 text-center no-arrows"
+                                    />
+                                </div>
+                            </div>
+                        </>
                     )}
                 </div>
 
