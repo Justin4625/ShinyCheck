@@ -44,7 +44,7 @@ export default function PlzaModal({ selectedPokemon, onClose, index = 0 }) {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
             <div
                 onClick={(e) => e.stopPropagation()}
-                className="relative bg-gradient-to-br from-gray-100 to-gray-200 text-gray-900 rounded-2xl shadow-xl p-10 w-[90%] max-w-3xl max-h-[90vh] overflow-y-auto flex flex-col items-center"
+                className="relative bg-gradient-to-br from-gray-100 to-gray-200 text-gray-900 rounded-2xl shadow-xl p-10 w-[90%] max-w-3xl max-h-[90vh] flex flex-col items-center"
             >
                 {/* Blobs */}
                 <div

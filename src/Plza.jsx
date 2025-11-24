@@ -1,5 +1,5 @@
 // src/Plza.jsx
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import plzaPokemon from "./data/PlzaData.js";
 import usePokemon from "./Components/FetchPokemon.jsx";
 import PlzaModal from "./Components/PlzaModal.jsx";
@@ -10,6 +10,19 @@ export default function Plza() {
 
     const openModal = (pokemon) => setSelectedPokemon(pokemon);
     const closeModal = () => setSelectedPokemon(null);
+
+    useEffect(() => {
+        // Als modal open is, body scroll blokkeren
+        if (selectedPokemon) {
+            document.body.style.overflow = "hidden";
+        } else {
+            document.body.style.overflow = "auto";
+        }
+
+        return () => {
+            document.body.style.overflow = "auto";
+        };
+    }, [selectedPokemon]);
 
     return (
         <div className="relative p-8 min-h-screen bg-gradient-to-b from-gray-50 via-gray-100 to-gray-200 overflow-hidden">
