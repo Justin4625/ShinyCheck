@@ -69,7 +69,6 @@ const plzaPokemon = [
     { id: "68", name: "Venipede" },
     { id: "69", name: "Whirlipede" },
     { id: "70", name: "Scolipede" },
-
     { id: "71", name: "Honedge" },
     { id: "72", name: "Doublade" },
     { id: "73", name: "Aegislash" },
