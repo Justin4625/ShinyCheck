@@ -1,21 +1,20 @@
-import { useState } from "react";
+// src/Plza.jsx
+import React, { useState } from "react";
 import plzaPokemon from "./data/PlzaData.js";
 import usePokemon from "./Components/FetchPokemon.jsx";
+import PlzaModal from "./Components/PlzaModal.jsx";
 
 export default function Plza() {
-    const [selectedPokemon, setSelectedPokemon] = useState(null);
-
     const { pokemonList } = usePokemon(plzaPokemon);
+    const [selectedPokemon, setSelectedPokemon] = useState(null);
 
     const openModal = (pokemon) => setSelectedPokemon(pokemon);
     const closeModal = () => setSelectedPokemon(null);
 
     return (
         <div className="relative p-8 min-h-screen bg-gradient-to-b from-gray-50 via-gray-100 to-gray-200 overflow-hidden">
-            {/* Grid overlay */}
             <div className="absolute inset-0 bg-[repeating-linear-gradient(90deg,rgba(200,200,255,0.05) 0 1px,transparent 1px 20px),repeating-linear-gradient(rgba(200,200,255,0.05) 0 1px,transparent 1px 20px)] pointer-events-none"></div>
 
-            {/* Color blobs */}
             <div className="absolute -top-20 -left-10 w-60 h-60 bg-blue-400 rounded-full opacity-15 blur-3xl pointer-events-none"></div>
             <div className="absolute -bottom-32 -right-20 w-80 h-80 bg-purple-400 rounded-full opacity-15 blur-3xl pointer-events-none"></div>
 
@@ -34,15 +33,14 @@ export default function Plza() {
                             onClick={() => openModal(pokemon)}
                             className="relative bg-gradient-to-br from-gray-100 to-gray-200 text-gray-900 rounded-2xl shadow-md p-6 flex flex-col items-center justify-between hover:scale-105 hover:shadow-xl transition-transform duration-300 overflow-hidden cursor-pointer"
                         >
-                            {/* Blobs */}
                             <div
                                 className={`absolute -top-4 -right-4 w-16 h-16 rounded-full blur-2xl pointer-events-none
-                                ${index % 3 === 0 ? "bg-green-400 opacity-40" : index % 3 === 1 ? "bg-pink-400 opacity-40" : "bg-blue-400 opacity-40"}`}
+                ${index % 3 === 0 ? "bg-green-400 opacity-40" : index % 3 === 1 ? "bg-pink-400 opacity-40" : "bg-blue-400 opacity-40"}`}
                             ></div>
 
                             <div
                                 className={`absolute -bottom-4 -left-4 w-24 h-24 rounded-full blur-3xl pointer-events-none
-                                ${index % 3 === 0 ? "bg-purple-400 opacity-40" : index % 3 === 1 ? "bg-blue-400 opacity-40" : "bg-green-400 opacity-40"}`}
+                ${index % 3 === 0 ? "bg-purple-400 opacity-40" : index % 3 === 1 ? "bg-blue-400 opacity-40" : "bg-green-400 opacity-40"}`}
                             ></div>
 
                             <h2 className="text-lg sm:text-xl font-bold mb-4 capitalize tracking-wide">
@@ -65,41 +63,7 @@ export default function Plza() {
                 })}
             </div>
 
-            {/* ---------------------- */}
-            {/*        MODAL           */}
-            {/* ---------------------- */}
-            {selectedPokemon && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-                    <div
-                        onClick={(e) => e.stopPropagation()}
-                        className="bg-white rounded-xl p-10 shadow-2xl w-[90%] max-w-2xl max-h-[90vh] overflow-y-auto text-center relative"
-                    >
-                        {/* Close button */}
-                        <button
-                            onClick={closeModal}
-                            className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 text-2xl"
-                        >
-                            ✕
-                        </button>
-
-                        <h2 className="text-3xl font-bold mb-6 capitalize tracking-wide">
-                            {selectedPokemon.name}
-                        </h2>
-
-                        <img
-                            src={selectedPokemon.sprites?.other?.home?.front_shiny}
-                            alt={selectedPokemon.name}
-                            className="w-56 h-56 mx-auto drop-shadow-lg"
-                        />
-
-                        {selectedPokemon.types && (
-                            <p className="mt-6 text-lg text-gray-700 uppercase tracking-wider">
-                                {selectedPokemon.types.map((t) => t.type.name).join(" / ")}
-                            </p>
-                        )}
-                    </div>
-                </div>
-            )}
+            <PlzaModal selectedPokemon={selectedPokemon} onClose={closeModal} />
         </div>
     );
 }
