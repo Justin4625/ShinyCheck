@@ -63,6 +63,7 @@ export default function PlzaModal({ selectedPokemon, onClose, index = 0 }) {
                     {selectedPokemon.name}
                 </h2>
 
+                {/* Pokémon image (click → +1 counter) */}
                 <img
                     src={selectedPokemon.sprites?.other?.home?.front_shiny || "/placeholder.png"}
                     alt={selectedPokemon.name}
@@ -70,14 +71,20 @@ export default function PlzaModal({ selectedPokemon, onClose, index = 0 }) {
                     className="w-64 h-64 mx-auto drop-shadow-lg cursor-pointer active:scale-95 transition-transform z-10"
                 />
 
-                <div className="mt-6 text-xl font-semibold text-gray-800 z-10">
-                    Counter: <span className="font-bold">{counter}</span>
+                {/* Counter en Timer */}
+                <div className="mt-6 flex gap-4 z-10">
+                    {/* Counter */}
+                    <div className="px-4 py-2 bg-white rounded-xl shadow-md text-xl font-bold text-gray-800 min-w-[60px] text-center">
+                        {counter}
+                    </div>
+
+                    {/* Timer */}
+                    <div className="px-4 py-2 bg-white rounded-xl shadow-md text-xl font-mono text-gray-800 min-w-[80px] text-center">
+                        {formatTime(timer)}
+                    </div>
                 </div>
 
-                <div className="mt-2 text-2xl font-mono text-gray-800 z-10">
-                    ⏱ {formatTime(timer)}
-                </div>
-
+                {/* Play / Pause knop */}
                 <button
                     onClick={() => setIsPlaying((p) => !p)}
                     className="mt-6 px-10 py-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl shadow-md transition-all z-10"
@@ -85,6 +92,7 @@ export default function PlzaModal({ selectedPokemon, onClose, index = 0 }) {
                     {isPlaying ? "Pause" : "Play"}
                 </button>
 
+                {/* Types */}
                 {selectedPokemon.types && (
                     <p className="mt-6 text-lg uppercase tracking-wider text-gray-700 z-10">
                         {selectedPokemon.types.map((t) => t.type.name).join(" / ")}
