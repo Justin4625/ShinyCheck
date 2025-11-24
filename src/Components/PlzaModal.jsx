@@ -8,9 +8,7 @@ export default function PlzaModal({ selectedPokemon, onClose, index = 0 }) {
     useEffect(() => {
         let interval;
         if (isPlaying) {
-            interval = setInterval(() => {
-                setTimer((prev) => prev + 1);
-            }, 1000);
+            interval = setInterval(() => setTimer((prev) => prev + 1), 1000);
         }
         return () => clearInterval(interval);
     }, [isPlaying]);
@@ -25,9 +23,10 @@ export default function PlzaModal({ selectedPokemon, onClose, index = 0 }) {
     if (!selectedPokemon) return null;
 
     const formatTime = (seconds) => {
-        const mins = String(Math.floor(seconds / 60)).padStart(2, "0");
+        const hrs = String(Math.floor(seconds / 3600)).padStart(2, "0");
+        const mins = String(Math.floor((seconds % 3600) / 60)).padStart(2, "0");
         const secs = String(seconds % 60).padStart(2, "0");
-        return `${mins}:${secs}`;
+        return `${hrs}:${mins}:${secs}`;
     };
 
     // Blob kleuren afwisselen
@@ -48,8 +47,10 @@ export default function PlzaModal({ selectedPokemon, onClose, index = 0 }) {
                 className="relative bg-gradient-to-br from-gray-100 to-gray-200 text-gray-900 rounded-2xl shadow-xl p-10 w-[90%] max-w-3xl max-h-[90vh] overflow-y-auto flex flex-col items-center"
             >
                 {/* Blobs */}
-                <div className={`absolute -top-6 -right-6 w-40 h-40 ${topRightColor} opacity-40 blur-3xl pointer-events-none`}></div>
-                <div className={`absolute -bottom-10 -left-10 w-56 h-56 ${bottomLeftColor} opacity-40 blur-3xl pointer-events-none`}></div>
+                <div
+                    className={`absolute -top-6 -right-6 w-40 h-40 ${topRightColor} opacity-40 blur-3xl pointer-events-none`}></div>
+                <div
+                    className={`absolute -bottom-10 -left-10 w-56 h-56 ${bottomLeftColor} opacity-40 blur-3xl pointer-events-none`}></div>
 
                 {/* Sluit-knop */}
                 <button
@@ -59,11 +60,12 @@ export default function PlzaModal({ selectedPokemon, onClose, index = 0 }) {
                     ✕
                 </button>
 
+                {/* Titel */}
                 <h2 className="text-4xl font-extrabold mb-6 capitalize tracking-wider z-10">
                     {selectedPokemon.name}
                 </h2>
 
-                {/* Pokémon image (click → +1 counter) */}
+                {/* Pokémon image */}
                 <img
                     src={selectedPokemon.sprites?.other?.home?.front_shiny || "/placeholder.png"}
                     alt={selectedPokemon.name}
@@ -74,30 +76,25 @@ export default function PlzaModal({ selectedPokemon, onClose, index = 0 }) {
                 {/* Counter en Timer */}
                 <div className="mt-6 flex gap-4 z-10">
                     {/* Counter */}
-                    <div className="px-4 py-2 bg-white rounded-xl shadow-md text-xl font-bold text-gray-800 min-w-[60px] text-center">
+                    <div
+                        className="px-4 py-2 bg-white rounded-xl shadow-md text-xl font-bold text-gray-800 min-w-[60px] text-center">
                         {counter}
                     </div>
 
                     {/* Timer */}
-                    <div className="px-4 py-2 bg-white rounded-xl shadow-md text-xl font-mono text-gray-800 min-w-[80px] text-center">
+                    <div
+                        className="px-4 py-2 bg-white rounded-xl shadow-md text-xl font-mono text-gray-900 min-w-[90px] text-center">
                         {formatTime(timer)}
                     </div>
                 </div>
 
-                {/* Play / Pause knop */}
+                {/* Play / Pause knop met alleen icon */}
                 <button
                     onClick={() => setIsPlaying((p) => !p)}
-                    className="mt-6 px-10 py-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl shadow-md transition-all z-10"
+                    className="mt-6 px-6 py-3 bg-gradient-to-r from-purple-500 to-blue-500 hover:from-blue-500 hover:to-purple-500 text-white font-bold rounded-xl shadow-lg transition-transform transform hover:scale-105 active:scale-95 z-10"
                 >
-                    {isPlaying ? "Pause" : "Play"}
+                    {isPlaying ? "Pause" : "Start"}
                 </button>
-
-                {/* Types */}
-                {selectedPokemon.types && (
-                    <p className="mt-6 text-lg uppercase tracking-wider text-gray-700 z-10">
-                        {selectedPokemon.types.map((t) => t.type.name).join(" / ")}
-                    </p>
-                )}
             </div>
         </div>
     );
