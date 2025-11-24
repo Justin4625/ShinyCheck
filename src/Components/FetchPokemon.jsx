@@ -5,18 +5,25 @@ export default function usePokemon(entries = []) {
     const [pokemonList, setPokemonList] = useState([]);
     const mountedRef = useRef(false);
 
+    // Track whether component is mounted
     useEffect(() => {
         mountedRef.current = true;
         return () => (mountedRef.current = false);
     }, []);
 
+    // Helper to normalize names for the API
     const formatForApi = (displayName) =>
         (specialCases && specialCases[displayName]) ||
         displayName.toLowerCase().replace(/[é]/g, "e");
 
     useEffect(() => {
+        // Asynchroon leegmaken als er geen entries zijn
         if (!Array.isArray(entries) || entries.length === 0) {
-            if (mountedRef.current) setPokemonList([]);
+            if (mountedRef.current) {
+                Promise.resolve().then(() => {
+                    if (mountedRef.current) setPokemonList([]);
+                });
+            }
             return;
         }
 
@@ -28,19 +35,19 @@ export default function usePokemon(entries = []) {
                     entries.map(async (entry) => {
                         const apiName = formatForApi(entry.name);
                         try {
-                            // Pokémon basisdata
+                            // Haal basis Pokémon data
                             const resp = await fetch(`https://pokeapi.co/api/v2/pokemon/${apiName}`);
                             if (!resp.ok) return null;
                             const json = await resp.json();
 
-                            // Pokémon species voor alle forms
+                            // Haal species data voor alle forms (incl. Mega)
                             const speciesResp = await fetch(
                                 `https://pokeapi.co/api/v2/pokemon-species/${apiName}`
                             );
                             if (!speciesResp.ok) return { ...json, id: entry.id, forms: [] };
                             const speciesJson = await speciesResp.json();
 
-                            // Haal alle varieties op
+                            // Alle varieties ophalen (forms, mega evoluties, etc.)
                             const forms = await Promise.all(
                                 speciesJson.varieties.map(async (v) => {
                                     try {
@@ -71,7 +78,9 @@ export default function usePokemon(entries = []) {
                 }
             } catch (err) {
                 console.error("Failed to fetch Pokémon data:", err);
-                if (!cancelled && mountedRef.current) setPokemonList([]);
+                if (!cancelled && mountedRef.current) {
+                    setPokemonList([]);
+                }
             }
         };
 
