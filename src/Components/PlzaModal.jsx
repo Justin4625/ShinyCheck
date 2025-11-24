@@ -62,7 +62,7 @@ export default function PlzaModal({ selectedPokemon, onClose, index = 0 }) {
 
                 {/* Titel */}
                 <h2 className="text-2xl sm:text-4xl font-extrabold mb-2 sm:mb-4 capitalize tracking-wider z-10 text-center">
-                    {selectedPokemon.name}
+                    #{String(selectedPokemon.id).padStart(3, "0")} - {selectedPokemon.name}
                 </h2>
 
                 {/* Tabs */}
