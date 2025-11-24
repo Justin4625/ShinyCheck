@@ -5,27 +5,18 @@ export default function usePokemon(entries = []) {
     const [pokemonList, setPokemonList] = useState([]);
     const mountedRef = useRef(false);
 
-    // Track whether component is mounted
     useEffect(() => {
         mountedRef.current = true;
-        return () => {
-            mountedRef.current = false;
-        };
+        return () => (mountedRef.current = false);
     }, []);
 
-    // Helper to normalize names for the API
     const formatForApi = (displayName) =>
         (specialCases && specialCases[displayName]) ||
         displayName.toLowerCase().replace(/[é]/g, "e");
 
     useEffect(() => {
         if (!Array.isArray(entries) || entries.length === 0) {
-            // Defer clearing state to avoid synchronous setState inside effect
-            if (mountedRef.current) {
-                Promise.resolve().then(() => {
-                    if (mountedRef.current) setPokemonList([]);
-                });
-            }
+            if (mountedRef.current) setPokemonList([]);
             return;
         }
 
@@ -37,10 +28,38 @@ export default function usePokemon(entries = []) {
                     entries.map(async (entry) => {
                         const apiName = formatForApi(entry.name);
                         try {
+                            // Pokémon basisdata
                             const resp = await fetch(`https://pokeapi.co/api/v2/pokemon/${apiName}`);
                             if (!resp.ok) return null;
                             const json = await resp.json();
-                            return { ...json, id: entry.id }; // keep local id
+
+                            // Pokémon species voor alle forms
+                            const speciesResp = await fetch(
+                                `https://pokeapi.co/api/v2/pokemon-species/${apiName}`
+                            );
+                            if (!speciesResp.ok) return { ...json, id: entry.id, forms: [] };
+                            const speciesJson = await speciesResp.json();
+
+                            // Haal alle varieties op
+                            const forms = await Promise.all(
+                                speciesJson.varieties.map(async (v) => {
+                                    try {
+                                        const formResp = await fetch(v.pokemon.url);
+                                        if (!formResp.ok) return null;
+                                        const formJson = await formResp.json();
+                                        return {
+                                            name: formJson.name,
+                                            sprite:
+                                                formJson.sprites?.other?.home?.front_shiny ||
+                                                "/placeholder.png",
+                                        };
+                                    } catch {
+                                        return null;
+                                    }
+                                })
+                            );
+
+                            return { ...json, id: entry.id, forms: forms.filter(Boolean) };
                         } catch {
                             return null;
                         }
@@ -52,9 +71,7 @@ export default function usePokemon(entries = []) {
                 }
             } catch (err) {
                 console.error("Failed to fetch Pokémon data:", err);
-                if (!cancelled && mountedRef.current) {
-                    setPokemonList([]);
-                }
+                if (!cancelled && mountedRef.current) setPokemonList([]);
             }
         };
 
