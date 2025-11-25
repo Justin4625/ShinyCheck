@@ -37,13 +37,13 @@ export default function Plza() {
             </h1>
 
             {/* Tabs */}
-            <div className="flex justify-center mb-10 z-10">
+            <div className="flex flex-wrap justify-center mb-10 z-10 gap-1 sm:gap-2">
                 {[
                     { id: "active", label: "Active Hunts" },
                     { id: "base", label: "Base Game" },
                     { id: "mega", label: "Mega Dimension" },
                     { id: "collection", label: "Collection" },
-                ].map((tab, idx) => {
+                ].map((tab) => {
                     const isActive = activeTab === tab.id;
                     return (
                         <button
@@ -53,13 +53,12 @@ export default function Plza() {
                                 clipPath: "polygon(10% 0%, 100% 0%, 90% 100%, 0% 100%)",
                             }}
                             className={`
-          relative flex-1 px-6 py-3 text-center font-bold text-sm sm:text-base
-          transition-all duration-300
-          ${isActive
+                    relative flex-auto sm:flex-1 min-w-[100px] sm:min-w-0 px-2 sm:px-4 py-2 sm:py-3 text-center font-bold
+                    text-xs sm:text-sm md:text-base transition-all duration-300
+                    ${isActive
                                 ? "bg-gradient-to-r from-purple-400 via-pink-500 to-blue-500 text-white shadow-lg"
                                 : "bg-gray-300 text-gray-700 hover:bg-gray-400"}
-          ${idx < 2 ? "mr-[2px]" : ""} 
-        `}
+                `}
                         >
                             {tab.label}
                         </button>
