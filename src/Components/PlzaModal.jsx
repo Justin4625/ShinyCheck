@@ -52,7 +52,7 @@ export default function PlzaModal({ selectedPokemon, onClose, index = 0 }) {
                 {/* Sluit-knop */}
                 <button
                     onClick={handleClose}
-                    className="absolute top-4 right-4w-10 h-10 sm:w-11 sm:h-11flex items-center justify-centerrounded-fullbg-gradient-to-br from-purple-400 to-pink-500text-white text-xl font-boldshadow-md shadow-purple-500/40transition-all duration-200hover:scale-110 hover:shadow-purple-600/50active:scale-95"
+                    className="absolute top-4 right-4 w-10 h-10 sm:w-11 sm:h-11 flex items-center justify-center rounded-full bg-gradient-to-br from-purple-400 to-pink-500 text-white text-xl font-bold shadow-md shadow-purple-500/40 transition-all duration-200 hover:scale-110 hover:shadow-purple-600/50 active:scale-95"
                 >
                     ✕
                 </button>
@@ -122,7 +122,7 @@ export default function PlzaModal({ selectedPokemon, onClose, index = 0 }) {
                                         onClick={() =>
                                             setCounter((prev) => Math.max(0, prev - Number(increment)))
                                         }
-                                        className="px-4 py-2bg-gradient-to-r from-red-400 to-red-600hover:from-red-500 hover:to-red-700text-white font-semiboldrounded-xl shadow-mdtransition-all duration-200transform hover:scale-105 active:scale-95"
+                                        className="px-4 py-2 bg-gradient-to-r from-red-400 to-red-600 hover:from-red-500 hover:to-red-700 text-white font-semibold rounded-xl shadow-md transition-all duration-200 transform hover:scale-105 active:scale-95"
                                     >
                                         -{increment}
                                     </button>
@@ -156,7 +156,7 @@ export default function PlzaModal({ selectedPokemon, onClose, index = 0 }) {
                                             setCounter(0);
                                             setTimer(0);
                                         }}
-                                        className="px-5 py-2bg-gradient-to-r from-red-400 to-red-600hover:from-red-500 hover:to-red-700text-white font-semiboldrounded-xl shadow-mdtransition-all duration-200transform hover:scale-105 active:scale-95"
+                                        className="px-5 py-2 bg-gradient-to-r from-red-400 to-red-600 hover:from-red-500 hover:to-red-700 text-white font-semibold rounded-xl shadow-md transition-all duration-200 transform hover:scale-105 active:scale-95"
                                     >
                                         Reset
                                     </button>
@@ -169,7 +169,7 @@ export default function PlzaModal({ selectedPokemon, onClose, index = 0 }) {
                                             setTimer(0);
                                             alert('Gotcha! 🎉');
                                         }}
-                                        className="px-5 py-2bg-gradient-to-r from-green-400 to-green-600hover:from-green-500 hover:to-green-700text-white font-semiboldrounded-xl shadow-mdtransition-all duration-200transform hover:scale-105 active:scale-95"
+                                        className="px-5 py-2 bg-gradient-to-r from-green-400 to-green-600 hover:from-green-500 hover:to-green-700 text-white font-semibold rounded-xl shadow-md transition-all duration-200 transform hover:scale-105 active:scale-95"
                                     >
                                         Gotcha
                                     </button>
