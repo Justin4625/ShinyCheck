@@ -37,31 +37,33 @@ export default function Plza() {
             </h1>
 
             {/* Tabs */}
-            <div className="flex justify-center gap-4 mb-10 z-10 relative">
-                <button
-                    className={`px-4 py-2 rounded-t-lg font-semibold ${
-                        activeTab === "active" ? "bg-white text-gray-900 shadow-md" : "bg-gray-300 text-gray-600"
-                    }`}
-                    onClick={() => setActiveTab("active")}
-                >
-                    Active Hunts
-                </button>
-                <button
-                    className={`px-4 py-2 rounded-t-lg font-semibold ${
-                        activeTab === "base" ? "bg-white text-gray-900 shadow-md" : "bg-gray-300 text-gray-600"
-                    }`}
-                    onClick={() => setActiveTab("base")}
-                >
-                    Base Game
-                </button>
-                <button
-                    className={`px-4 py-2 rounded-t-lg font-semibold ${
-                        activeTab === "mega" ? "bg-white text-gray-900 shadow-md" : "bg-gray-300 text-gray-600"
-                    }`}
-                    onClick={() => setActiveTab("mega")}
-                >
-                    Mega Dimension
-                </button>
+            <div className="flex justify-center gap-6 mb-10 z-10 relative">
+                {[
+                    { id: "active", label: "Active Hunts" },
+                    { id: "base", label: "Base Game" },
+                    { id: "mega", label: "Mega Dimension" },
+                ].map((tab) => {
+                    const isActive = activeTab === tab.id;
+                    return (
+                        <button
+                            key={tab.id}
+                            onClick={() => setActiveTab(tab.id)}
+                            style={{
+                                clipPath: "polygon(10% 0%, 100% 0%, 90% 100%, 0% 100%)",
+                            }}
+                            className={`
+                    relative px-6 py-2 font-bold text-sm sm:text-base
+                    transition-all duration-300
+                    ${isActive
+                                ? "bg-gradient-to-r from-purple-400 via-pink-500 to-blue-500 text-white shadow-lg"
+                                : "bg-gray-300 text-gray-700 hover:bg-gray-400"}
+                    hover:scale-105
+                `}
+                        >
+                            {tab.label}
+                        </button>
+                    );
+                })}
             </div>
 
             {/* Pokémon Grid */}
