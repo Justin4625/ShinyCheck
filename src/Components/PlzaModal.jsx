@@ -56,9 +56,11 @@ export default function PlzaModal({ selectedPokemon, onClose, index = 0 }) {
             >
                 {/* Blobs */}
                 <div
-                    className={`absolute -top-6 -right-6 w-36 h-36 sm:w-40 sm:h-40 ${topRightColor} opacity-40 blur-3xl pointer-events-none`}/>
+                    className={`absolute -top-6 -right-6 w-36 h-36 sm:w-40 sm:h-40 ${topRightColor} opacity-40 blur-3xl pointer-events-none`}
+                />
                 <div
-                    className={`absolute -bottom-10 -left-10 w-48 h-48 sm:w-56 sm:h-56 ${bottomLeftColor} opacity-40 blur-3xl pointer-events-none`}/>
+                    className={`absolute -bottom-10 -left-10 w-48 h-48 sm:w-56 sm:h-56 ${bottomLeftColor} opacity-40 blur-3xl pointer-events-none`}
+                />
 
                 {/* Sluit-knop */}
                 <button
@@ -97,115 +99,103 @@ export default function PlzaModal({ selectedPokemon, onClose, index = 0 }) {
                     </button>
                 </div>
 
-                {/* Pokémon image */}
+                {/* Pokémon image (altijd zichtbaar) */}
                 <img
                     src={selectedPokemon.sprites?.other?.home?.front_shiny || "/placeholder.png"}
                     alt={selectedPokemon.name}
                     onClick={() => {
-                        if (isPlaying && activeTab === "hunt")
-                            setCounter((prev) => prev + Number(increment));
+                        if (isPlaying && activeTab === "hunt") setCounter((prev) => prev + Number(increment));
                     }}
                     className="w-40 h-40 sm:w-64 sm:h-64 mx-auto drop-shadow-lg cursor-pointer active:scale-95 transition-transform z-10"
                 />
 
-                {/* Tab content */}
-                <div className="mt-4 w-full flex flex-col items-center">
-                    {activeTab === "hunt" && (
-                        <>
-                            {/* Timer, Counter & Decrement */}
-                            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6 z-10 w-full">
-                                {/* Timer */}
-                                <div className="px-4 py-2 sm:px-6 sm:py-3 bg-white rounded-xl shadow-md text-base sm:text-xl font-bold text-gray-600 min-w-[90px] text-center">
-                                    {formatTime(timer)}
-                                </div>
-
-                                {/* Counter + Decrement */}
-                                <div className="flex items-center gap-2">
-                                    <div className="px-6 py-2 sm:py-3 bg-white rounded-xl shadow-md text-xl sm:text-2xl font-bold text-gray-900 min-w-[70px] sm:min-w-[80px] text-center">
-                                        {counter}
-                                    </div>
-
-                                    {/* MODERN decrement button */}
-                                    <button
-                                        onClick={() =>
-                                            setCounter((prev) => Math.max(0, prev - Number(increment)))
-                                        }
-                                        className="px-4 py-2 bg-gradient-to-r from-red-400 to-red-600 hover:from-red-500 hover:to-red-700 text-white font-semibold rounded-xl shadow-md transition-all duration-200 transform hover:scale-105 active:scale-95"
-                                    >
-                                        -{increment}
-                                    </button>
-                                </div>
-                            </div>
-                        </>
-                    )}
-
-                    {activeTab === "settings" && (
-                        <>
-                            <div className="px-4 py-3 bg-white rounded-xl shadow-md w-full text-center flex flex-col gap-4 items-center">
-
-                                {/* Increment input */}
-                                <div className="flex flex-col sm:flex-row items-center justify-center gap-2">
-                                    <label className="text-gray-700 font-semibold">Increment</label>
-                                    <input
-                                        type="number"
-                                        min="1"
-                                        value={increment}
-                                        onChange={(e) => setIncrement(e.target.value)}
-                                        className="w-20 px-3 py-1 rounded-lg border border-gray-300 text-center no-arrows"
-                                    />
-                                </div>
-
-                                {/* MODERN reset + gotcha buttons */}
-                                <div className="flex gap-3 w-full justify-center">
-                                    {/* Reset */}
-                                    <button
-                                        onClick={() => setShowConfirm(true)}
-                                        className="px-5 py-2 bg-gradient-to-r from-red-400 to-red-600 hover:from-red-500 hover:to-red-700 text-white font-semibold rounded-xl shadow-md transition-all duration-200 transform hover:scale-105 active:scale-95"
-                                    >
-                                        Reset
-                                    </button>
-
-                                    {/* Gotcha */}
-                                    <button
-                                        onClick={() => {
-                                            setIsPlaying(false);
-                                            setCounter(0);
-                                            setTimer(0);
-                                            alert('Gotcha! 🎉');
-                                        }}
-                                        className="px-5 py-2 bg-gradient-to-r from-green-400 to-green-600 hover:from-green-500 hover:to-green-700 text-white font-semibold rounded-xl shadow-md transition-all duration-200 transform hover:scale-105 active:scale-95"
-                                    >
-                                        Gotcha
-                                    </button>
-                                </div>
-                            </div>
-                        </>
-                    )}
-                </div>
-
-                {/* Play / Pause */}
+                {/* Hunt Tab content */}
                 {activeTab === "hunt" && (
-                    <div className="mt-6 flex justify-center w-full">
+                    <div className="flex flex-col items-center gap-6 w-full mt-4">
+                        {/* Timer + Counter */}
+                        <div className="flex items-center gap-4 justify-center flex-wrap sm:flex-nowrap w-full">
+                            {/* Timer */}
+                            <div className="px-4 py-2 sm:px-6 sm:py-3 bg-white rounded-xl shadow-md text-gray-600 font-bold text-base sm:text-xl text-center min-w-[90px]">
+                                {formatTime(timer)}
+                            </div>
+
+                            {/* Counter + Decrement */}
+                            <div className="flex items-center gap-2 justify-center">
+                                <div className="px-6 py-2 sm:py-3 bg-white rounded-xl shadow-md text-xl sm:text-2xl font-bold text-gray-900 min-w-[70px] sm:min-w-[80px] text-center">
+                                    {counter}
+                                </div>
+                                <button
+                                    onClick={() =>
+                                        setCounter((prev) => Math.max(0, prev - Number(increment)))
+                                    }
+                                    className="px-4 py-2 bg-gradient-to-r from-red-400 to-red-600 hover:from-red-500 hover:to-red-700 text-white font-semibold rounded-xl shadow-md transition-all duration-200 transform hover:scale-105 active:scale-95"
+                                >
+                                    -{increment}
+                                </button>
+                            </div>
+                        </div>
+
+                        {/* Start / Pause knop */}
                         <button
                             onClick={() => setIsPlaying((p) => !p)}
                             className={`
-    px-6 py-3 sm:px-8 sm:py-4 font-bold rounded-xl text-white shadow-lg transform hover:scale-105 transition-all duration-300
-    bg-gradient-to-r ${isPlaying
+                                px-6 py-3 sm:px-8 sm:py-4 font-bold rounded-xl text-white shadow-lg transform hover:scale-105 transition-all duration-300
+                                bg-gradient-to-r ${isPlaying
                                 ? "from-blue-600 via-purple-600 to-blue-700"
                                 : "from-green-500 via-lime-600 to-green-600"} 
-    bg-[length:200%_200%] bg-[position:0%_50%] hover:bg-[position:100%_50%]
-`}
+                                bg-[length:200%_200%] bg-[position:0%_50%] hover:bg-[position:100%_50%]
+                            `}
                         >
                             {isPlaying ? "Pause" : "Start"}
                         </button>
                     </div>
                 )}
 
+                {/* Settings Tab content */}
+                {activeTab === "settings" && (
+                    <div className="px-4 py-3 bg-white rounded-xl shadow-md w-full text-center flex flex-col gap-4 items-center mt-4">
+                        {/* Increment input */}
+                        <div className="flex flex-col sm:flex-row items-center justify-center gap-2">
+                            <label className="text-gray-700 font-semibold">Increment</label>
+                            <input
+                                type="number"
+                                min="1"
+                                value={increment}
+                                onChange={(e) => setIncrement(e.target.value)}
+                                className="w-20 px-3 py-1 rounded-lg border border-gray-300 text-center no-arrows"
+                            />
+                        </div>
+
+                        {/* Reset + Gotcha buttons */}
+                        <div className="flex gap-3 w-full justify-center">
+                            {/* Reset */}
+                            <button
+                                onClick={() => setShowConfirm(true)}
+                                className="px-5 py-2 bg-gradient-to-r from-red-400 to-red-600 hover:from-red-500 hover:to-red-700 text-white font-semibold rounded-xl shadow-md transition-all duration-200 transform hover:scale-105 active:scale-95"
+                            >
+                                Reset
+                            </button>
+
+                            {/* Gotcha */}
+                            <button
+                                onClick={() => {
+                                    setIsPlaying(false);
+                                    setCounter(0);
+                                    setTimer(0);
+                                    alert("Gotcha! 🎉");
+                                }}
+                                className="px-5 py-2 bg-gradient-to-r from-green-400 to-green-600 hover:from-green-500 hover:to-green-700 text-white font-semibold rounded-xl shadow-md transition-all duration-200 transform hover:scale-105 active:scale-95"
+                            >
+                                Gotcha
+                            </button>
+                        </div>
+                    </div>
+                )}
+
                 {/* Custom Reset Confirmation */}
                 {showConfirm && (
                     <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
-                        <div
-                            className="bg-white rounded-2xl shadow-xl p-6 w-[90%] sm:w-1/2 text-center flex flex-col gap-4">
+                        <div className="bg-white rounded-2xl shadow-xl p-6 w-[90%] sm:w-1/2 text-center flex flex-col gap-4">
                             <p className="text-gray-800 font-semibold text-lg">
                                 Are you sure you want to reset the timer and counter?
                             </p>
