@@ -7,6 +7,7 @@ export default function PlzaModal({ selectedPokemon, onClose, index = 0 }) {
     const [increment, setIncrement] = useState(1);
     const [activeTab, setActiveTab] = useState("hunt");
     const [showConfirm, setShowConfirm] = useState(false);
+    const [showGotchaConfirm, setShowGotchaConfirm] = useState(false);
 
     // Timer effect
     useEffect(() => {
@@ -33,6 +34,7 @@ export default function PlzaModal({ selectedPokemon, onClose, index = 0 }) {
         setCounter(0);
         setIncrement(1);
         setShowConfirm(false);
+        setShowGotchaConfirm(false);
         onClose();
     };
 
@@ -178,12 +180,7 @@ export default function PlzaModal({ selectedPokemon, onClose, index = 0 }) {
 
                             {/* Gotcha */}
                             <button
-                                onClick={() => {
-                                    setIsPlaying(false);
-                                    setCounter(0);
-                                    setTimer(0);
-                                    alert("Gotcha! 🎉");
-                                }}
+                                onClick={() => setShowGotchaConfirm(true)}
                                 className="px-5 py-2 bg-gradient-to-r from-green-400 to-green-600 hover:from-green-500 hover:to-green-700 text-white font-semibold rounded-xl shadow-md transition-all duration-200 transform hover:scale-105 active:scale-95"
                             >
                                 Gotcha
@@ -213,6 +210,37 @@ export default function PlzaModal({ selectedPokemon, onClose, index = 0 }) {
                                         setShowConfirm(false);
                                     }}
                                     className="px-5 py-2 bg-gradient-to-r from-red-400 to-red-600 hover:from-red-500 hover:to-red-700 text-white font-semibold rounded-xl shadow-md transition-all duration-200 transform hover:scale-105 active:scale-95"
+                                >
+                                    Confirm
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
+                {/* Custom Gotcha Confirmation */}
+                {showGotchaConfirm && (
+                    <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
+                        <div className="bg-white rounded-2xl shadow-xl p-6 w-[90%] sm:w-1/2 text-center flex flex-col gap-4">
+                            <p className="text-gray-800 font-semibold text-lg">
+                                Are you sure you want to end this hunt?
+                            </p>
+                            <div className="flex justify-center gap-4 mt-4">
+                                <button
+                                    onClick={() => setShowGotchaConfirm(false)}
+                                    className="px-5 py-2 bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold rounded-xl shadow-md transition-all duration-200 transform hover:scale-105 active:scale-95"
+                                >
+                                    Cancel
+                                </button>
+                                <button
+                                    onClick={() => {
+                                        setIsPlaying(false);
+                                        setCounter(0);
+                                        setTimer(0);
+                                        setShowGotchaConfirm(false);
+                                        alert("Gotcha! 🎉");
+                                    }}
+                                    className="px-5 py-2 bg-gradient-to-r from-green-400 to-green-600 hover:from-green-500 hover:to-green-700 text-white font-semibold rounded-xl shadow-md transition-all duration-200 transform hover:scale-105 active:scale-95"
                                 >
                                     Confirm
                                 </button>
