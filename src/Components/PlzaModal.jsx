@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, {useEffect, useState} from "react";
 
 export default function PlzaModal({ selectedPokemon, onClose, index = 0 }) {
     const [isPlaying, setIsPlaying] = useState(false);
@@ -14,6 +14,14 @@ export default function PlzaModal({ selectedPokemon, onClose, index = 0 }) {
         }
         return () => clearInterval(interval);
     }, [isPlaying]);
+
+    // RESET TAB NAAR HUNT BIJ NIEUWE POKÉMON
+    useEffect(() => {
+        if (selectedPokemon) {
+            const id = setTimeout(() => setActiveTab("hunt"), 0);
+            return () => clearTimeout(id);
+        }
+    }, [selectedPokemon]);
 
     const handleClose = () => {
         setIsPlaying(false);
