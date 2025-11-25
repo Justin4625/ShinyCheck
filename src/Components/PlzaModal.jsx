@@ -97,7 +97,7 @@ export default function PlzaModal({ selectedPokemon, onClose, index = 0 }) {
           text-center font-bold text-base
           transition-all duration-300
           ${isActive
-                                    ? "bg-gradient-to-r from-purple-400 via-pink-500 to-blue-500 text-white shadow-md"
+                                    ? "bg-gradient-to-r from-purple-400 to-blue-500 text-white shadow-md"
                                     : "bg-gray-300 text-gray-700 hover:bg-gray-400"}
         `}
                             >
