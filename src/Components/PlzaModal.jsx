@@ -78,27 +78,33 @@ export default function PlzaModal({ selectedPokemon, onClose, index = 0 }) {
                 </h2>
 
                 {/* Tabs */}
-                <div className="flex gap-2 sm:gap-4 mb-4 sm:mb-6">
-                    <button
-                        className={`px-4 py-2 rounded-t-lg font-semibold ${
-                            activeTab === "hunt"
-                                ? "bg-white text-gray-900 shadow-md"
-                                : "bg-gray-300 text-gray-600"
-                        }`}
-                        onClick={() => setActiveTab("hunt")}
-                    >
-                        Hunt
-                    </button>
-                    <button
-                        className={`px-4 py-2 rounded-t-lg font-semibold ${
-                            activeTab === "settings"
-                                ? "bg-white text-gray-900 shadow-md"
-                                : "bg-gray-300 text-gray-600"
-                        }`}
-                        onClick={() => setActiveTab("settings")}
-                    >
-                        Settings
-                    </button>
+                <div className="flex justify-center mb-6 gap-[2px] z-10">
+                    {[
+                        { id: "hunt", label: "Hunt" },
+                        { id: "settings", label: "Settings" },
+                    ].map((tab) => {
+                        const isActive = activeTab === tab.id;
+                        return (
+                            <button
+                                key={tab.id}
+                                onClick={() => setActiveTab(tab.id)}
+                                style={{
+                                    clipPath: "polygon(15% 0%, 100% 0%, 85% 100%, 0% 100%)",
+                                    width: "160px",  // iets breder
+                                    height: "42px",  // iets korter
+                                }}
+                                className={`
+          text-center font-bold text-base
+          transition-all duration-300
+          ${isActive
+                                    ? "bg-gradient-to-r from-purple-400 via-pink-500 to-blue-500 text-white shadow-md"
+                                    : "bg-gray-300 text-gray-700 hover:bg-gray-400"}
+        `}
+                            >
+                                {tab.label}
+                            </button>
+                        );
+                    })}
                 </div>
 
                 {/* Pokémon image (altijd zichtbaar) */}
