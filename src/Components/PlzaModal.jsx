@@ -44,13 +44,15 @@ export default function PlzaModal({ selectedPokemon, onClose, index = 0 }) {
                 className="relative bg-gradient-to-br from-gray-100 to-gray-200 text-gray-900 rounded-2xl shadow-xl p-6 sm:p-10 w-[95%] sm:w-[90%] max-w-3xl max-h-[90vh] flex flex-col items-center overflow-hidden"
             >
                 {/* Blobs */}
-                <div className={`absolute -top-6 -right-6 w-36 h-36 sm:w-40 sm:h-40 ${topRightColor} opacity-40 blur-3xl pointer-events-none`} />
-                <div className={`absolute -bottom-10 -left-10 w-48 h-48 sm:w-56 sm:h-56 ${bottomLeftColor} opacity-40 blur-3xl pointer-events-none`} />
+                <div
+                    className={`absolute -top-6 -right-6 w-36 h-36 sm:w-40 sm:h-40 ${topRightColor} opacity-40 blur-3xl pointer-events-none`}/>
+                <div
+                    className={`absolute -bottom-10 -left-10 w-48 h-48 sm:w-56 sm:h-56 ${bottomLeftColor} opacity-40 blur-3xl pointer-events-none`}/>
 
                 {/* Sluit-knop */}
                 <button
                     onClick={handleClose}
-                    className="absolute top-4 right-4 text-gray-600 hover:text-gray-800 text-2xl sm:text-3xl z-10"
+                    className="absolute top-4 right-4w-10 h-10 sm:w-11 sm:h-11flex items-center justify-centerrounded-fullbg-gradient-to-br from-purple-400 to-pink-500text-white text-xl font-boldshadow-md shadow-purple-500/40transition-all duration-200hover:scale-110 hover:shadow-purple-600/50active:scale-95"
                 >
                     ✕
                 </button>
@@ -100,15 +102,18 @@ export default function PlzaModal({ selectedPokemon, onClose, index = 0 }) {
                     {activeTab === "hunt" && (
                         <>
                             {/* Timer, Counter & Decrement */}
-                            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6 z-10 w-full">
+                            <div
+                                className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6 z-10 w-full">
                                 {/* Timer */}
-                                <div className="px-4 py-2 sm:px-6 sm:py-3 bg-white rounded-xl shadow-md text-base sm:text-xl font-bold text-gray-600 min-w-[90px] text-center">
+                                <div
+                                    className="px-4 py-2 sm:px-6 sm:py-3 bg-white rounded-xl shadow-md text-base sm:text-xl font-bold text-gray-600 min-w-[90px] text-center">
                                     {formatTime(timer)}
                                 </div>
 
                                 {/* Counter + Decrement */}
                                 <div className="flex items-center gap-2">
-                                    <div className="px-6 py-2 sm:py-3 bg-white rounded-xl shadow-md text-xl sm:text-2xl font-bold text-gray-900 min-w-[70px] sm:min-w-[80px] text-center">
+                                    <div
+                                        className="px-6 py-2 sm:py-3 bg-white rounded-xl shadow-md text-xl sm:text-2xl font-bold text-gray-900 min-w-[70px] sm:min-w-[80px] text-center">
                                         {counter}
                                     </div>
 
@@ -117,15 +122,7 @@ export default function PlzaModal({ selectedPokemon, onClose, index = 0 }) {
                                         onClick={() =>
                                             setCounter((prev) => Math.max(0, prev - Number(increment)))
                                         }
-                                        className="
-                                            px-4 py-2
-                                            bg-gradient-to-r from-red-400 to-red-600
-                                            hover:from-red-500 hover:to-red-700
-                                            text-white font-semibold
-                                            rounded-xl shadow-md
-                                            transition-all duration-200
-                                            transform hover:scale-105 active:scale-95
-                                        "
+                                        className="px-4 py-2bg-gradient-to-r from-red-400 to-red-600hover:from-red-500 hover:to-red-700text-white font-semiboldrounded-xl shadow-mdtransition-all duration-200transform hover:scale-105 active:scale-95"
                                     >
                                         -{increment}
                                     </button>
@@ -136,7 +133,8 @@ export default function PlzaModal({ selectedPokemon, onClose, index = 0 }) {
 
                     {activeTab === "settings" && (
                         <>
-                            <div className="px-4 py-3 bg-white rounded-xl shadow-md w-full text-center flex flex-col gap-4 items-center">
+                            <div
+                                className="px-4 py-3 bg-white rounded-xl shadow-md w-full text-center flex flex-col gap-4 items-center">
 
                                 {/* Increment input */}
                                 <div className="flex flex-col sm:flex-row items-center justify-center gap-2">
@@ -158,15 +156,7 @@ export default function PlzaModal({ selectedPokemon, onClose, index = 0 }) {
                                             setCounter(0);
                                             setTimer(0);
                                         }}
-                                        className="
-                                            px-5 py-2
-                                            bg-gradient-to-r from-red-400 to-red-600
-                                            hover:from-red-500 hover:to-red-700
-                                            text-white font-semibold
-                                            rounded-xl shadow-md
-                                            transition-all duration-200
-                                            transform hover:scale-105 active:scale-95
-                                        "
+                                        className="px-5 py-2bg-gradient-to-r from-red-400 to-red-600hover:from-red-500 hover:to-red-700text-white font-semiboldrounded-xl shadow-mdtransition-all duration-200transform hover:scale-105 active:scale-95"
                                     >
                                         Reset
                                     </button>
@@ -179,15 +169,7 @@ export default function PlzaModal({ selectedPokemon, onClose, index = 0 }) {
                                             setTimer(0);
                                             alert('Gotcha! 🎉');
                                         }}
-                                        className="
-                                            px-5 py-2
-                                            bg-gradient-to-r from-green-400 to-green-600
-                                            hover:from-green-500 hover:to-green-700
-                                            text-white font-semibold
-                                            rounded-xl shadow-md
-                                            transition-all duration-200
-                                            transform hover:scale-105 active:scale-95
-                                        "
+                                        className="px-5 py-2bg-gradient-to-r from-green-400 to-green-600hover:from-green-500 hover:to-green-700text-white font-semiboldrounded-xl shadow-mdtransition-all duration-200transform hover:scale-105 active:scale-95"
                                     >
                                         Gotcha
                                     </button>
