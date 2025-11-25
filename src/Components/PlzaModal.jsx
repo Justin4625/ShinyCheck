@@ -5,7 +5,7 @@ export default function PlzaModal({ selectedPokemon, onClose, index = 0 }) {
     const [timer, setTimer] = useState(0);
     const [counter, setCounter] = useState(0);
     const [increment, setIncrement] = useState(1);
-    const [activeTab, setActiveTab] = useState("hunt"); // "hunt" of "details"
+    const [activeTab, setActiveTab] = useState("hunt");
 
     useEffect(() => {
         let interval;
@@ -32,7 +32,6 @@ export default function PlzaModal({ selectedPokemon, onClose, index = 0 }) {
         return `${hrs}h ${mins}m ${secs}s`;
     };
 
-    // Blob kleuren
     const topRightColor =
         index % 3 === 0 ? "bg-green-400" : index % 3 === 1 ? "bg-pink-400" : "bg-blue-400";
     const bottomLeftColor =
@@ -45,12 +44,8 @@ export default function PlzaModal({ selectedPokemon, onClose, index = 0 }) {
                 className="relative bg-gradient-to-br from-gray-100 to-gray-200 text-gray-900 rounded-2xl shadow-xl p-6 sm:p-10 w-[95%] sm:w-[90%] max-w-3xl max-h-[90vh] flex flex-col items-center overflow-hidden"
             >
                 {/* Blobs */}
-                <div
-                    className={`absolute -top-6 -right-6 w-36 h-36 sm:w-40 sm:h-40 ${topRightColor} opacity-40 blur-3xl pointer-events-none`}
-                />
-                <div
-                    className={`absolute -bottom-10 -left-10 w-48 h-48 sm:w-56 sm:h-56 ${bottomLeftColor} opacity-40 blur-3xl pointer-events-none`}
-                />
+                <div className={`absolute -top-6 -right-6 w-36 h-36 sm:w-40 sm:h-40 ${topRightColor} opacity-40 blur-3xl pointer-events-none`} />
+                <div className={`absolute -bottom-10 -left-10 w-48 h-48 sm:w-56 sm:h-56 ${bottomLeftColor} opacity-40 blur-3xl pointer-events-none`} />
 
                 {/* Sluit-knop */}
                 <button
@@ -116,11 +111,21 @@ export default function PlzaModal({ selectedPokemon, onClose, index = 0 }) {
                                     <div className="px-6 py-2 sm:py-3 bg-white rounded-xl shadow-md text-xl sm:text-2xl font-bold text-gray-900 min-w-[70px] sm:min-w-[80px] text-center">
                                         {counter}
                                     </div>
+
+                                    {/* MODERN decrement button */}
                                     <button
                                         onClick={() =>
                                             setCounter((prev) => Math.max(0, prev - Number(increment)))
                                         }
-                                        className="px-3 py-1 sm:px-3 sm:py-2 bg-red-500 hover:bg-red-600 text-white font-bold rounded-lg shadow-md"
+                                        className="
+                                            px-4 py-2
+                                            bg-gradient-to-r from-red-400 to-red-600
+                                            hover:from-red-500 hover:to-red-700
+                                            text-white font-semibold
+                                            rounded-xl shadow-md
+                                            transition-all duration-200
+                                            transform hover:scale-105 active:scale-95
+                                        "
                                     >
                                         -{increment}
                                     </button>
@@ -133,7 +138,7 @@ export default function PlzaModal({ selectedPokemon, onClose, index = 0 }) {
                         <>
                             <div className="px-4 py-3 bg-white rounded-xl shadow-md w-full text-center flex flex-col gap-4 items-center">
 
-                                {/* Increment input BOVEN reset */}
+                                {/* Increment input */}
                                 <div className="flex flex-col sm:flex-row items-center justify-center gap-2">
                                     <label className="text-gray-700 font-semibold">Increment</label>
                                     <input
@@ -145,26 +150,44 @@ export default function PlzaModal({ selectedPokemon, onClose, index = 0 }) {
                                     />
                                 </div>
 
-                                {/* Reset + Gotcha knoppen */}
-                                <div className="flex gap-3">
+                                {/* MODERN reset + gotcha buttons */}
+                                <div className="flex gap-3 w-full justify-center">
+                                    {/* Reset */}
                                     <button
                                         onClick={() => {
                                             setCounter(0);
                                             setTimer(0);
                                         }}
-                                        className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white font-bold rounded-lg shadow-md"
+                                        className="
+                                            px-5 py-2
+                                            bg-gradient-to-r from-red-400 to-red-600
+                                            hover:from-red-500 hover:to-red-700
+                                            text-white font-semibold
+                                            rounded-xl shadow-md
+                                            transition-all duration-200
+                                            transform hover:scale-105 active:scale-95
+                                        "
                                     >
                                         Reset
                                     </button>
 
+                                    {/* Gotcha */}
                                     <button
                                         onClick={() => {
                                             setIsPlaying(false);
                                             setCounter(0);
                                             setTimer(0);
-                                            alert("Gotcha! 🎉");
+                                            alert('Gotcha! 🎉');
                                         }}
-                                        className="px-4 py-2 bg-green-500 hover:bg-green-600 text-white font-bold rounded-lg shadow-md"
+                                        className="
+                                            px-5 py-2
+                                            bg-gradient-to-r from-green-400 to-green-600
+                                            hover:from-green-500 hover:to-green-700
+                                            text-white font-semibold
+                                            rounded-xl shadow-md
+                                            transition-all duration-200
+                                            transform hover:scale-105 active:scale-95
+                                        "
                                     >
                                         Gotcha
                                     </button>
@@ -174,7 +197,7 @@ export default function PlzaModal({ selectedPokemon, onClose, index = 0 }) {
                     )}
                 </div>
 
-                {/* Play / Pause knop */}
+                {/* Play / Pause */}
                 {activeTab === "hunt" && (
                     <div className="mt-6 flex justify-center w-full">
                         <button
