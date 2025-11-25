@@ -188,7 +188,13 @@ export default function PlzaModal({ selectedPokemon, onClose, index = 0 }) {
                     <div className="mt-6 flex justify-center w-full">
                         <button
                             onClick={() => setIsPlaying((p) => !p)}
-                            className="px-6 py-3 sm:px-8 sm:py-4 bg-gradient-to-r from-purple-500 to-blue-500 hover:from-blue-500 hover:to-purple-500 text-white font-bold rounded-xl shadow-lg transition-transform transform hover:scale-105 active:scale-95"
+                            className={`
+    px-6 py-3 sm:px-8 sm:py-4 font-bold rounded-xl text-white shadow-lg transform hover:scale-105 transition-all duration-300
+    bg-gradient-to-r ${isPlaying
+                                ? "from-blue-600 via-purple-600 to-blue-700"
+                                : "from-green-500 via-lime-600 to-green-600"} 
+    bg-[length:200%_200%] bg-[position:0%_50%] hover:bg-[position:100%_50%]
+`}
                         >
                             {isPlaying ? "Pause" : "Start"}
                         </button>
@@ -198,7 +204,8 @@ export default function PlzaModal({ selectedPokemon, onClose, index = 0 }) {
                 {/* Custom Reset Confirmation */}
                 {showConfirm && (
                     <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
-                        <div className="bg-white rounded-2xl shadow-xl p-6 w-[90%] sm:w-1/2 text-center flex flex-col gap-4">
+                        <div
+                            className="bg-white rounded-2xl shadow-xl p-6 w-[90%] sm:w-1/2 text-center flex flex-col gap-4">
                             <p className="text-gray-800 font-semibold text-lg">
                                 Are you sure you want to reset the timer and counter?
                             </p>
