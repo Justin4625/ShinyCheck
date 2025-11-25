@@ -145,16 +145,30 @@ export default function PlzaModal({ selectedPokemon, onClose, index = 0 }) {
                                     />
                                 </div>
 
-                                {/* Reset knop ONDER increment */}
-                                <button
-                                    onClick={() => {
-                                        setCounter(0);
-                                        setTimer(0);
-                                    }}
-                                    className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white font-bold rounded-lg shadow-md"
-                                >
-                                    Reset
-                                </button>
+                                {/* Reset + Gotcha knoppen */}
+                                <div className="flex gap-3">
+                                    <button
+                                        onClick={() => {
+                                            setCounter(0);
+                                            setTimer(0);
+                                        }}
+                                        className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white font-bold rounded-lg shadow-md"
+                                    >
+                                        Reset
+                                    </button>
+
+                                    <button
+                                        onClick={() => {
+                                            setIsPlaying(false);
+                                            setCounter(0);
+                                            setTimer(0);
+                                            alert("Gotcha! 🎉");
+                                        }}
+                                        className="px-4 py-2 bg-green-500 hover:bg-green-600 text-white font-bold rounded-lg shadow-md"
+                                    >
+                                        Gotcha
+                                    </button>
+                                </div>
                             </div>
                         </>
                     )}
