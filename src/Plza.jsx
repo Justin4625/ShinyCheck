@@ -1,5 +1,5 @@
 // src/Plza.jsx
-import React, { useEffect, useState } from "react";
+import React, {useEffect, useState} from "react";
 import plzaPokemon from "./data/PlzaData.js";
 import usePokemon from "./Components/FetchPokemon.jsx";
 import PlzaModal from "./Components/PlzaModal.jsx";
@@ -105,6 +105,23 @@ export default function Plza() {
                                     {pokemon.types.map((t) => t.type.name).join(" / ")}
                                 </p>
                             )}
+
+                            {/* Collected balk */}
+                            <div className="mt-5 w-full">
+                                <div className="relative w-full h-7 rounded-2xl bg-gray-300/80 overflow-hidden shadow-inner">
+
+                                    {/* Progress bar (nu 0%) */}
+                                    <div
+                                        className="absolute left-0 top-0 h-full bg-gradient-to-r from-purple-400 to-blue-500 transition-all duration-300"
+                                        style={{ width: "0%" }}
+                                    ></div>
+
+                                    {/* Tekst */}
+                                    <span className="absolute inset-0 flex items-center justify-center text-[12px] font-extrabold tracking-wide text-gray-900 drop-shadow-sm">
+            Collected: 0
+        </span>
+                                </div>
+                            </div>
                         </div>
                     );
                 })}
