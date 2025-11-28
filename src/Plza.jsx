@@ -18,21 +18,6 @@ export default function Plza() {
         };
     }, [selectedPokemon]);
 
-    // Pokémon weergeven op basis van actieve tab
-    const displayedPokemon = activeTab === "collection"
-        ? plzaPokemon.flatMap(p => {
-            const shinyCount = Number(localStorage.getItem(`shiny_${p.id}`)) || 0;
-            const hunts = [];
-            for (let i = 1; i <= shinyCount; i++) {
-                const storedData = JSON.parse(localStorage.getItem(`shinyData_${p.id}_${i}`)) || { timer: 0, counter: 0 };
-                hunts.push({ ...p, storedData, shinyIndex: i });
-            }
-            return hunts;
-        })
-        : activeTab === "base"
-            ? plzaPokemon
-            : [];
-
     const formatTime = (seconds) => {
         const hrs = Math.floor(seconds / 3600);
         const mins = Math.floor((seconds % 3600) / 60);
@@ -40,20 +25,28 @@ export default function Plza() {
         return `${hrs}h ${mins}m ${secs}s`;
     };
 
+    // Collection: alle shinies met timestamp verzamelen en sorteren
+    const displayedPokemon = activeTab === "collection"
+        ? plzaPokemon.flatMap(p => {
+            const shinyCount = Number(localStorage.getItem(`shiny_${p.id}`)) || 0;
+            const hunts = [];
+            for (let i = 1; i <= shinyCount; i++) {
+                const storedData = JSON.parse(localStorage.getItem(`shinyData_${p.id}_${i}`)) || { timer: 0, counter: 0, timestamp: 0 };
+                hunts.push({ ...p, storedData, shinyIndex: i });
+            }
+            return hunts;
+        })
+            .sort((a, b) => b.storedData.timestamp - a.storedData.timestamp)
+        : activeTab === "base"
+            ? plzaPokemon
+            : [];
+
     return (
         <div className="relative p-8 min-h-screen bg-gradient-to-b from-gray-50 via-gray-100 to-gray-200 overflow-hidden">
-            {/* Achtergrond lijnen */}
-            <div className="absolute inset-0 bg-[repeating-linear-gradient(90deg,rgba(200,200,255,0.05) 0 1px,transparent 1px 20px),repeating-linear-gradient(rgba(200,200,255,0.05) 0 1px,transparent 1px 20px)] pointer-events-none"></div>
-
-            {/* Achtergrond blobs */}
-            <div className="absolute -top-20 -left-10 w-60 h-60 bg-blue-400 rounded-full opacity-15 blur-3xl pointer-events-none"></div>
-            <div className="absolute -bottom-32 -right-20 w-80 h-80 bg-purple-400 rounded-full opacity-15 blur-3xl pointer-events-none"></div>
-
             <h1 className="relative text-3xl sm:text-4xl font-extrabold text-center text-gray-900 mb-4 tracking-wide z-10">
                 Pokémon Legends: Z-A
             </h1>
 
-            {/* Tabs */}
             <div className="flex flex-wrap justify-center mb-10 z-10 gap-1 sm:gap-2">
                 {[
                     { id: "active", label: "Active Hunts" },
@@ -81,9 +74,8 @@ export default function Plza() {
                 })}
             </div>
 
-            {/* Pokémon Grid */}
             <div className="relative grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-8 z-10">
-                {displayedPokemon.map((entry, index) => {
+                {displayedPokemon.map((entry) => {
                     const number = String(entry.id).padStart(3, "0");
                     const pokemon = pokemonList.find(p => p.id === entry.id);
                     const shinyCount = Number(localStorage.getItem(`shiny_${entry.id}`)) || 0;
@@ -102,16 +94,6 @@ export default function Plza() {
                             }
                             `}
                         >
-                            {/* Top right blob */}
-                            <div className={`absolute -top-4 -right-4 w-16 h-16 rounded-full blur-2xl pointer-events-none
-                                ${index % 3 === 0 ? "bg-green-400 opacity-40" : index % 3 === 1 ? "bg-pink-400 opacity-40" : "bg-blue-400 opacity-40"}`}
-                            ></div>
-
-                            {/* Bottom left blob */}
-                            <div className={`absolute -bottom-4 -left-4 w-24 h-24 rounded-full blur-3xl pointer-events-none
-                                ${index % 3 === 0 ? "bg-purple-400 opacity-40" : index % 3 === 1 ? "bg-blue-400 opacity-40" : "bg-green-400 opacity-40"}`}
-                            ></div>
-
                             <h2 className="text-lg sm:text-xl font-bold mb-4 capitalize tracking-wide">
                                 {entry.name} (#{number})
                             </h2>
@@ -128,7 +110,6 @@ export default function Plza() {
                                 </p>
                             )}
 
-                            {/* Collected info voor Collection */}
                             {activeTab === "collection" && (
                                 <div className="mt-4 w-full flex flex-col items-center gap-1">
                                     <div className="px-4 py-1 rounded-full bg-gradient-to-r from-purple-400 to-blue-500 text-white text-sm font-bold shadow-md tracking-wide">
@@ -137,7 +118,6 @@ export default function Plza() {
                                 </div>
                             )}
 
-                            {/* Collected counter voor Base */}
                             {activeTab !== "collection" && (
                                 <div className="mt-4 w-full flex justify-center">
                                     <div className="px-4 py-1 rounded-full bg-gradient-to-r from-purple-400 to-blue-500 text-white text-sm font-bold shadow-md tracking-wide">

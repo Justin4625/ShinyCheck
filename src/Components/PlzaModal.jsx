@@ -13,12 +13,12 @@ export default function PlzaModal({ selectedPokemon, onClose, index = 0 }) {
     useEffect(() => {
         let interval;
         if (isPlaying) {
-            interval = setInterval(() => setTimer(prev => prev + 1), 1000);
+            interval = setInterval(() => setTimer((prev) => prev + 1), 1000);
         }
         return () => clearInterval(interval);
     }, [isPlaying]);
 
-    // Reset active tab to Hunt op nieuwe Pokémon
+    // Reset active tab to Hunt on new Pokémon
     useEffect(() => {
         if (selectedPokemon) {
             const id = setTimeout(() => setActiveTab("hunt"), 0);
@@ -26,7 +26,7 @@ export default function PlzaModal({ selectedPokemon, onClose, index = 0 }) {
         }
     }, [selectedPokemon]);
 
-    // Laad vorige timer/counter
+    // Load stored timer & counter
     useEffect(() => {
         if (!selectedPokemon) return;
         const storedData = localStorage.getItem(`hunt_${selectedPokemon.id}`);
@@ -40,7 +40,7 @@ export default function PlzaModal({ selectedPokemon, onClose, index = 0 }) {
         }
     }, [selectedPokemon]);
 
-    // Opslaan actieve hunt
+    // Save timer & counter
     useEffect(() => {
         if (!selectedPokemon) return;
         localStorage.setItem(`hunt_${selectedPokemon.id}`, JSON.stringify({ timer, counter }));
@@ -58,25 +58,31 @@ export default function PlzaModal({ selectedPokemon, onClose, index = 0 }) {
         onClose();
     };
 
-    const formatTime = seconds => {
+    const formatTime = (seconds) => {
         const hrs = Math.floor(seconds / 3600);
         const mins = Math.floor((seconds % 3600) / 60);
         const secs = seconds % 60;
         return `${hrs}h ${mins}m ${secs}s`;
     };
 
-    const topRightColor = index % 3 === 0 ? "bg-green-400" : index % 3 === 1 ? "bg-pink-400" : "bg-blue-400";
-    const bottomLeftColor = index % 3 === 0 ? "bg-purple-400" : index % 3 === 1 ? "bg-blue-400" : "bg-green-400";
+    const topRightColor =
+        index % 3 === 0 ? "bg-green-400" : index % 3 === 1 ? "bg-pink-400" : "bg-blue-400";
+    const bottomLeftColor =
+        index % 3 === 0 ? "bg-purple-400" : index % 3 === 1 ? "bg-blue-400" : "bg-green-400";
 
     return (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
             <div
-                onClick={e => e.stopPropagation()}
+                onClick={(e) => e.stopPropagation()}
                 className="relative bg-gradient-to-br from-gray-100 to-gray-200 text-gray-900 rounded-2xl shadow-xl p-6 sm:p-10 w-[95%] sm:w-[90%] max-w-3xl max-h-[90vh] flex flex-col items-center overflow-hidden"
             >
                 {/* Blobs */}
-                <div className={`absolute -top-6 -right-6 w-36 h-36 sm:w-40 sm:h-40 ${topRightColor} opacity-40 blur-3xl pointer-events-none`} />
-                <div className={`absolute -bottom-10 -left-10 w-48 h-48 sm:w-56 sm:h-56 ${bottomLeftColor} opacity-40 blur-3xl pointer-events-none`} />
+                <div
+                    className={`absolute -top-6 -right-6 w-36 h-36 sm:w-40 sm:h-40 ${topRightColor} opacity-40 blur-3xl pointer-events-none`}
+                />
+                <div
+                    className={`absolute -bottom-10 -left-10 w-48 h-48 sm:w-56 sm:h-56 ${bottomLeftColor} opacity-40 blur-3xl pointer-events-none`}
+                />
 
                 {/* Sluit-knop */}
                 <button
@@ -96,17 +102,23 @@ export default function PlzaModal({ selectedPokemon, onClose, index = 0 }) {
                     {[
                         { id: "hunt", label: "Hunt" },
                         { id: "settings", label: "Settings" },
-                    ].map(tab => {
+                    ].map((tab) => {
                         const isActive = activeTab === tab.id;
                         return (
                             <button
                                 key={tab.id}
                                 onClick={() => setActiveTab(tab.id)}
-                                style={{ clipPath: "polygon(15% 0%, 100% 0%, 85% 100%, 0% 100%)", width: "160px", height: "42px" }}
+                                style={{
+                                    clipPath: "polygon(15% 0%, 100% 0%, 85% 100%, 0% 100%)",
+                                    width: "160px",
+                                    height: "42px",
+                                }}
                                 className={`
                                     text-center font-bold text-base
                                     transition-all duration-300
-                                    ${isActive ? "bg-gradient-to-r from-purple-400 to-blue-500 text-white shadow-md" : "bg-gray-300 text-gray-700 hover:bg-gray-400"}
+                                    ${isActive
+                                    ? "bg-gradient-to-r from-purple-400 to-blue-500 text-white shadow-md"
+                                    : "bg-gray-300 text-gray-700 hover:bg-gray-400"}
                                 `}
                             >
                                 {tab.label}
@@ -115,17 +127,17 @@ export default function PlzaModal({ selectedPokemon, onClose, index = 0 }) {
                     })}
                 </div>
 
-                {/* Pokémon image */}
+                {/* Pokémon image (altijd zichtbaar) */}
                 <img
                     src={selectedPokemon.sprites?.other?.home?.front_shiny || "/placeholder.png"}
                     alt={selectedPokemon.name}
                     onClick={() => {
-                        if (isPlaying && activeTab === "hunt") setCounter(prev => prev + Number(increment));
+                        if (isPlaying && activeTab === "hunt") setCounter((prev) => prev + Number(increment));
                     }}
                     className="w-40 h-40 sm:w-64 sm:h-64 mx-auto drop-shadow-lg cursor-pointer active:scale-95 transition-transform z-10"
                 />
 
-                {/* Hunt tab content */}
+                {/* Hunt Tab content */}
                 {activeTab === "hunt" && (
                     <div className="flex flex-col items-center gap-6 w-full mt-4">
                         <div className="flex items-center gap-4 justify-center flex-wrap sm:flex-nowrap w-full">
@@ -137,7 +149,9 @@ export default function PlzaModal({ selectedPokemon, onClose, index = 0 }) {
                                     {counter}
                                 </div>
                                 <button
-                                    onClick={() => setCounter(prev => Math.max(0, prev - Number(increment)))}
+                                    onClick={() =>
+                                        setCounter((prev) => Math.max(0, prev - Number(increment)))
+                                    }
                                     className="px-4 py-2 bg-gradient-to-r from-red-400 to-red-600 hover:from-red-500 hover:to-red-700 text-white font-semibold rounded-xl shadow-md transition-all duration-200 transform hover:scale-105 active:scale-95"
                                 >
                                     -{increment}
@@ -146,10 +160,12 @@ export default function PlzaModal({ selectedPokemon, onClose, index = 0 }) {
                         </div>
 
                         <button
-                            onClick={() => setIsPlaying(p => !p)}
+                            onClick={() => setIsPlaying((p) => !p)}
                             className={`
                                 px-6 py-3 sm:px-8 sm:py-4 font-bold rounded-xl text-white shadow-lg transform hover:scale-105 transition-all duration-300
-                                bg-gradient-to-r ${isPlaying ? "from-blue-600 via-purple-600 to-blue-700" : "from-green-500 via-lime-600 to-green-600"}
+                                bg-gradient-to-r ${isPlaying
+                                ? "from-blue-600 via-purple-600 to-blue-700"
+                                : "from-green-500 via-lime-600 to-green-600"}
                                 bg-[length:200%_200%] bg-[position:0%_50%] hover:bg-[position:100%_50%]
                             `}
                         >
@@ -158,7 +174,7 @@ export default function PlzaModal({ selectedPokemon, onClose, index = 0 }) {
                     </div>
                 )}
 
-                {/* Settings tab content */}
+                {/* Settings Tab content */}
                 {activeTab === "settings" && (
                     <div className="px-4 py-3 bg-white rounded-xl shadow-md w-full text-center flex flex-col gap-4 items-center mt-4">
                         <div className="flex flex-col sm:flex-row items-center justify-center gap-2">
@@ -167,7 +183,7 @@ export default function PlzaModal({ selectedPokemon, onClose, index = 0 }) {
                                 type="number"
                                 min="1"
                                 value={increment}
-                                onChange={e => setIncrement(e.target.value)}
+                                onChange={(e) => setIncrement(e.target.value)}
                                 className="w-20 px-3 py-1 rounded-lg border border-gray-300 text-center no-arrows"
                             />
                         </div>
@@ -179,7 +195,6 @@ export default function PlzaModal({ selectedPokemon, onClose, index = 0 }) {
                             >
                                 Reset
                             </button>
-
                             <button
                                 onClick={() => setShowGotchaConfirm(true)}
                                 className="px-5 py-2 bg-gradient-to-r from-green-400 to-green-600 hover:from-green-500 hover:to-green-700 text-white font-semibold rounded-xl shadow-md transition-all duration-200 transform hover:scale-105 active:scale-95"
@@ -190,48 +205,7 @@ export default function PlzaModal({ selectedPokemon, onClose, index = 0 }) {
                     </div>
                 )}
 
-                {/* Gotcha Confirmation */}
-                {showGotchaConfirm && (
-                    <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
-                        <div className="bg-white rounded-2xl shadow-xl p-6 w-[90%] sm:w-1/2 text-center flex flex-col gap-4">
-                            <p className="text-gray-800 font-semibold text-lg">
-                                Are you sure you want to end this hunt?
-                            </p>
-                            <div className="flex justify-center gap-4 mt-4">
-                                <button
-                                    onClick={() => setShowGotchaConfirm(false)}
-                                    className="px-5 py-2 bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold rounded-xl shadow-md transition-all duration-200 transform hover:scale-105 active:scale-95"
-                                >
-                                    Cancel
-                                </button>
-                                <button
-                                    onClick={() => {
-                                        const key = `shiny_${selectedPokemon.id}`;
-                                        const current = Number(localStorage.getItem(key)) || 0;
-                                        localStorage.setItem(key, current + 1);
-
-                                        // Opslaan timer/counter voor collection
-                                        const shinyDataKey = `shinyData_${selectedPokemon.id}_${current + 1}`;
-                                        localStorage.setItem(shinyDataKey, JSON.stringify({ timer, counter }));
-
-                                        setIsPlaying(false);
-                                        setCounter(0);
-                                        setTimer(0);
-                                        localStorage.removeItem(`hunt_${selectedPokemon.id}`);
-                                        setShowGotchaConfirm(false);
-
-                                        alert("Gotcha! 🎉");
-                                    }}
-                                    className="px-5 py-2 bg-gradient-to-r from-green-400 to-green-600 hover:from-green-500 hover:to-green-700 text-white font-semibold rounded-xl shadow-md transition-all duration-200 transform hover:scale-105 active:scale-95"
-                                >
-                                    Confirm
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                )}
-
-                {/* Reset Confirmation */}
+                {/* Reset confirmation */}
                 {showConfirm && (
                     <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
                         <div className="bg-white rounded-2xl shadow-xl p-6 w-[90%] sm:w-1/2 text-center flex flex-col gap-4">
@@ -253,6 +227,50 @@ export default function PlzaModal({ selectedPokemon, onClose, index = 0 }) {
                                         setShowConfirm(false);
                                     }}
                                     className="px-5 py-2 bg-gradient-to-r from-red-400 to-red-600 hover:from-red-500 hover:to-red-700 text-white font-semibold rounded-xl shadow-md transition-all duration-200 transform hover:scale-105 active:scale-95"
+                                >
+                                    Confirm
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
+                {/* Gotcha confirmation */}
+                {showGotchaConfirm && (
+                    <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
+                        <div className="bg-white rounded-2xl shadow-xl p-6 w-[90%] sm:w-1/2 text-center flex flex-col gap-4">
+                            <p className="text-gray-800 font-semibold text-lg">
+                                Are you sure you want to end this hunt?
+                            </p>
+                            <div className="flex justify-center gap-4 mt-4">
+                                <button
+                                    onClick={() => setShowGotchaConfirm(false)}
+                                    className="px-5 py-2 bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold rounded-xl shadow-md transition-all duration-200 transform hover:scale-105 active:scale-95"
+                                >
+                                    Cancel
+                                </button>
+                                <button
+                                    onClick={() => {
+                                        const key = `shiny_${selectedPokemon.id}`;
+                                        const current = Number(localStorage.getItem(key)) || 0;
+                                        const newIndex = current + 1;
+
+                                        localStorage.setItem(key, newIndex);
+                                        localStorage.setItem(`shinyData_${selectedPokemon.id}_${newIndex}`, JSON.stringify({
+                                            timer,
+                                            counter,
+                                            timestamp: Date.now(), // meest recente tijd
+                                        }));
+
+                                        setIsPlaying(false);
+                                        setCounter(0);
+                                        setTimer(0);
+                                        localStorage.removeItem(`hunt_${selectedPokemon.id}`);
+                                        setShowGotchaConfirm(false);
+
+                                        alert("Gotcha! 🎉");
+                                    }}
+                                    className="px-5 py-2 bg-gradient-to-r from-green-400 to-green-600 hover:from-green-500 hover:to-green-700 text-white font-semibold rounded-xl shadow-md transition-all duration-200 transform hover:scale-105 active:scale-95"
                                 >
                                     Confirm
                                 </button>
