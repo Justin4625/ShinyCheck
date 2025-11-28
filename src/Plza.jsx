@@ -1,5 +1,4 @@
-// src/Plza.jsx
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import plzaPokemon from "./data/PlzaData.js";
 import usePokemon from "./Components/FetchPokemon.jsx";
 import PlzaModal from "./Components/PlzaModal.jsx";
@@ -20,8 +19,28 @@ export default function Plza() {
         };
     }, [selectedPokemon]);
 
-    // Voor nu tonen we enkel Base Game Pokémon
-    const displayedPokemon = activeTab === "base" ? plzaPokemon : [];
+    // Functie om seconden om te zetten naar hh:mm:ss
+    const formatTime = (seconds) => {
+        const hrs = Math.floor(seconds / 3600);
+        const mins = Math.floor((seconds % 3600) / 60);
+        const secs = seconds % 60;
+        return `${hrs}h ${mins}m ${secs}s`;
+    };
+
+    // Voor weergave per tab
+    const displayedPokemon = activeTab === "base"
+        ? plzaPokemon
+        : activeTab === "collection"
+            ? plzaPokemon.flatMap(p => {
+                const shinyCount = Number(localStorage.getItem(`shiny_${p.id}`)) || 0;
+                const hunts = [];
+                for (let i = 0; i < shinyCount; i++) {
+                    const storedData = JSON.parse(localStorage.getItem(`hunt_${p.id}`)) || { timer: 0, counter: 0 };
+                    hunts.push({ ...p, storedData });
+                }
+                return hunts;
+            })
+            : [];
 
     return (
         <div className="relative p-8 min-h-screen bg-gradient-to-b from-gray-50 via-gray-100 to-gray-200 overflow-hidden">
@@ -69,15 +88,17 @@ export default function Plza() {
             {/* Pokémon Grid */}
             <div className="relative grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-8 z-10">
                 {displayedPokemon.map((entry, index) => {
-                    const number = String(index + 1).padStart(3, "0");
+                    const number = String(entry.id).padStart(3, "0");
                     const pokemon = pokemonList.find((p) => p.id === entry.id);
 
-                    const shinyCount = Number(localStorage.getItem(`shiny_${entry.id}`)) || 0;
-                    const isGolden = shinyCount >= 1; // ✅ WORDT NU ECHT GEBRUIKT
+                    // In Collection-tab is alles shiny
+                    const isGolden = activeTab === "collection" ? true : (Number(localStorage.getItem(`shiny_${entry.id}`)) || 0) >= 1;
+                    const timer = entry.storedData?.timer || 0;
+                    const counter = entry.storedData?.counter || 0;
 
                     return (
                         <div
-                            key={entry.id}
+                            key={index} // gebruik index voor unieke key bij duplicates
                             onClick={() => openModal(pokemon)}
                             className={`
         relative rounded-2xl shadow-md p-6 flex flex-col items-center justify-between
@@ -117,13 +138,23 @@ export default function Plza() {
                                 </p>
                             )}
 
-                            {/* Collected counter */}
-                            <div className="mt-4 w-full flex justify-center">
-                                <div
-                                    className="px-4 py-1 rounded-full bg-gradient-to-r from-purple-400 to-blue-500 text-white text-sm font-bold shadow-md tracking-wide">
-                                    Collected: {Number(localStorage.getItem(`shiny_${entry.id}`)) || 0}
+                            {/* Counter + Timer */}
+                            {activeTab === "collection" && (
+                                <div className="mt-4 w-full flex justify-center">
+                                    <div className="px-4 py-1 rounded-full bg-gradient-to-r from-purple-400 to-blue-500 text-white text-sm font-bold shadow-md tracking-wide text-center">
+                                        Count: {counter} | Time: {formatTime(timer)}
+                                    </div>
                                 </div>
-                            </div>
+                            )}
+
+                            {/* Collected counter voor base tab */}
+                            {activeTab !== "collection" && (
+                                <div className="mt-4 w-full flex justify-center">
+                                    <div className="px-4 py-1 rounded-full bg-gradient-to-r from-purple-400 to-blue-500 text-white text-sm font-bold shadow-md tracking-wide">
+                                        Collected: {Number(localStorage.getItem(`shiny_${entry.id}`)) || 0}
+                                    </div>
+                                </div>
+                            )}
                         </div>
                     );
                 })}
