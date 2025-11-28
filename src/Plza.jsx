@@ -42,9 +42,11 @@ export default function Plza() {
                 if (storedData.isPlaying || storedData.counter > 0) return [{ ...p, storedData }];
                 return [];
             }).sort((a, b) => b.storedData.timestamp - a.storedData.timestamp)
-            : activeTab === "base" || activeTab === "mega"
+            : activeTab === "base"
                 ? plzaPokemon
-                : [];
+                : activeTab === "mega"
+                    ? []  // Mega Dimension voorlopig leeg
+                    : [];
 
     return (
         <div className="relative p-8 min-h-screen bg-gradient-to-b from-gray-50 via-gray-100 to-gray-200 overflow-hidden">
