@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, {useEffect, useState} from "react";
 import plzaPokemon from "./data/PlzaData.js";
 import usePokemon from "./Components/FetchPokemon.jsx";
 import PlzaModal from "./Components/PlzaModal.jsx";
@@ -102,23 +102,23 @@ export default function Plza() {
                             key={activeTab === "collection" ? `${entry.id}_${entry.shinyIndex}` : entry.id}
                             onClick={() => activeTab !== "collection" && openModal(pokemon)}
                             className={`
-                                relative rounded-2xl p-6 flex flex-col items-center justify-between cursor-pointer transition-transform duration-300 overflow-hidden
-                                hover:scale-105
-                                ${isGolden
+                    relative rounded-2xl p-6 flex flex-col items-center justify-between cursor-pointer transition-transform duration-300 overflow-hidden
+                    hover:scale-105
+                    ${isGolden
                                 ? "bg-gradient-to-br from-yellow-200 via-amber-300 to-yellow-400 text-gray-900 shadow-md"
                                 : "bg-gradient-to-br from-gray-100 to-gray-200 text-gray-900 shadow-md"}
-                            `}
+                `}
                         >
                             {/* Top right blob */}
                             <div
                                 className={`absolute -top-4 -right-4 w-16 h-16 rounded-full blur-2xl pointer-events-none
-                                    ${index % 3 === 0 ? "bg-green-400 opacity-40" : index % 3 === 1 ? "bg-pink-400 opacity-40" : "bg-blue-400 opacity-40"}`}
+                        ${index % 3 === 0 ? "bg-green-400 opacity-40" : index % 3 === 1 ? "bg-pink-400 opacity-40" : "bg-blue-400 opacity-40"}`}
                             ></div>
 
                             {/* Bottom left blob */}
                             <div
                                 className={`absolute -bottom-4 -left-4 w-24 h-24 rounded-full blur-3xl pointer-events-none
-                                    ${index % 3 === 0 ? "bg-purple-400 opacity-40" : index % 3 === 1 ? "bg-blue-400 opacity-40" : "bg-green-400 opacity-40"}`}
+                        ${index % 3 === 0 ? "bg-purple-400 opacity-40" : index % 3 === 1 ? "bg-blue-400 opacity-40" : "bg-green-400 opacity-40"}`}
                             ></div>
 
                             <h2 className="text-lg sm:text-xl font-bold mb-4 capitalize tracking-wide">
@@ -131,23 +131,47 @@ export default function Plza() {
                                 className="w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 drop-shadow-md"
                             />
 
-                            {pokemon?.types && (
+                            {/* Alleen types tonen als het niet Active Hunts is */}
+                            {activeTab !== "active" && pokemon?.types && (
                                 <p className="mt-3 text-sm text-gray-600 uppercase tracking-wide">
                                     {pokemon.types.map((t) => t.type.name).join(" / ")}
                                 </p>
                             )}
 
                             {/* Collection info */}
-                            {activeTab === "collection" && (
-                                <div className="mt-4 w-full flex flex-col items-center gap-1">
-                                    <div className="px-4 py-1 rounded-full bg-gradient-to-r from-purple-400 to-blue-500 text-white text-sm font-bold shadow-md tracking-wide">
-                                        Count: {entry.storedData.counter} | Time: {formatTime(entry.storedData.timer)}
+                            {activeTab === "collection" && entry.storedData && (
+                                <div className="mt-4 w-full flex flex-col items-center gap-2">
+                                    <div className="w-full bg-gradient-to-r from-pink-500 to-red-500 text-white text-sm sm:text-base font-bold rounded-xl p-2 shadow-md flex justify-between">
+                                        <span>Encounters:</span>
+                                        <span>{entry.storedData.counter}</span>
+                                    </div>
+                                    <div className="w-full bg-gradient-to-r from-purple-600 to-blue-600 text-white text-sm sm:text-base font-bold rounded-xl p-2 shadow-md flex justify-between">
+                                        <span>Time:</span>
+                                        <span>{formatTime(entry.storedData.timer)}</span>
+                                    </div>
+                                    <div className="w-full bg-gradient-to-r from-green-400 to-teal-500 text-white text-sm sm:text-base font-bold rounded-xl p-2 shadow-md flex justify-between">
+                                        <span>Date:</span>
+                                        <span>{new Date(entry.storedData.timestamp).toLocaleDateString()}</span>
                                     </div>
                                 </div>
                             )}
 
-                            {/* Collected info */}
-                            {activeTab !== "collection" && (
+                            {/* Active Hunts info */}
+                            {activeTab === "active" && entry.storedData && (
+                                <div className="mt-4 w-full flex flex-col items-center gap-2">
+                                    <div className="w-full bg-gradient-to-r from-pink-500 to-red-500 text-white text-sm sm:text-base font-bold rounded-xl p-2 shadow-md flex justify-between">
+                                        <span>Encounters:</span>
+                                        <span>{entry.storedData.counter}</span>
+                                    </div>
+                                    <div className="w-full bg-gradient-to-r from-purple-600 to-blue-600 text-white text-sm sm:text-base font-bold rounded-xl p-2 shadow-md flex justify-between">
+                                        <span>Time:</span>
+                                        <span>{formatTime(entry.storedData.timer)}</span>
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Collected info voor Base/Mega */}
+                            {activeTab !== "collection" && activeTab !== "active" && (
                                 <div className="mt-4 w-full flex justify-center">
                                     <div className="px-4 py-1 rounded-full bg-gradient-to-r from-purple-400 to-blue-500 text-white text-sm font-bold shadow-md tracking-wide">
                                         Collected: {shinyCount}
