@@ -26,6 +26,23 @@ export default function PlzaModal({ selectedPokemon, onClose, index = 0 }) {
         }
     }, [selectedPokemon]);
 
+    useEffect(() => {
+        if (!selectedPokemon) return;
+
+        const storedData = localStorage.getItem(`hunt_${selectedPokemon.id}`);
+        if (storedData) {
+            const { timer, counter} = JSON.parse(storedData);
+            setTimer(timer || 0);
+            setCounter(counter || 0);
+        }
+    }, [selectedPokemon]);
+
+    useEffect(() => {
+        if (!selectedPokemon) return;
+
+        localStorage.setItem(`hunt_${selectedPokemon.id}`, JSON.stringify({ timer, counter }));
+    }, [timer, counter, selectedPokemon]);
+
     if (!selectedPokemon) return null;
 
     const handleClose = () => {
@@ -213,6 +230,7 @@ export default function PlzaModal({ selectedPokemon, onClose, index = 0 }) {
                                     onClick={() => {
                                         setCounter(0);
                                         setTimer(0);
+                                        localStorage.removeItem(`hunt_${selectedPokemon.id}`);
                                         setShowConfirm(false);
                                     }}
                                     className="px-5 py-2 bg-gradient-to-r from-red-400 to-red-600 hover:from-red-500 hover:to-red-700 text-white font-semibold rounded-xl shadow-md transition-all duration-200 transform hover:scale-105 active:scale-95"
@@ -243,6 +261,7 @@ export default function PlzaModal({ selectedPokemon, onClose, index = 0 }) {
                                         setIsPlaying(false);
                                         setCounter(0);
                                         setTimer(0);
+                                        localStorage.removeItem(`hunt_${selectedPokemon.id}`);
                                         setShowGotchaConfirm(false);
                                         alert("Gotcha! 🎉");
                                     }}
