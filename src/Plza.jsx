@@ -39,7 +39,7 @@ export default function Plza() {
         : activeTab === "active"
             ? plzaPokemon.flatMap(p => {
                 const storedData = JSON.parse(localStorage.getItem(`hunt_${p.id}`)) || { timer: 0, counter: 0, isPlaying: false, timestamp: 0 };
-                if (storedData.isPlaying || storedData.counter > 0) return [{ ...p, storedData }];
+                if (storedData.counter >= 1 || storedData.timer >= 1) return [{ ...p, storedData }];
                 return [];
             }).sort((a, b) => b.storedData.timestamp - a.storedData.timestamp)
             : activeTab === "base"
