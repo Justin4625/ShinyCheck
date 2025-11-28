@@ -9,7 +9,7 @@ export default function Plza() {
     const [selectedPokemon, setSelectedPokemon] = useState(null);
     const [activeTab, setActiveTab] = useState("base"); // Nieuwe state voor tabs
     const shinyCount = Number(localStorage.getItem(`shiny_$(entry.id)`)) || 0;
-    const isGolden = shinyCount > 1;
+    const isGolden = shinyCount >= 1;
 
     const openModal = (pokemon) => setSelectedPokemon(pokemon);
     const closeModal = () => setSelectedPokemon(null);
@@ -74,11 +74,22 @@ export default function Plza() {
                     const number = String(index + 1).padStart(3, "0");
                     const pokemon = pokemonList.find((p) => p.id === entry.id);
 
+                    const shinyCount = Number(localStorage.getItem(`shiny_${entry.id}`)) || 0;
+                    const isGolden = shinyCount >= 1;
+
                     return (
                         <div
                             key={entry.id}
                             onClick={() => openModal(pokemon)}
-                            className="relative bg-gradient-to-br from-gray-100 to-gray-200 text-gray-900 rounded-2xl shadow-md p-6 flex flex-col items-center justify-between hover:scale-105 hover:shadow-xl transition-transform duration-300 overflow-hidden cursor-pointer"
+                            className={`
+    relative rounded-2xl shadow-md p-6 flex flex-col items-center justify-between
+    hover:scale-105 hover:shadow-xl transition-transform duration-300 overflow-hidden cursor-pointer
+
+    ${isGolden
+                                ? "bg-gradient-to-br from-yellow-200 via-amber-300 to-yellow-400 text-gray-900 shadow-yellow-400/40"
+                                : "bg-gradient-to-br from-gray-100 to-gray-200 text-gray-900"
+                            }
+`}
                         >
                             {/* Top right blob */}
                             <div
