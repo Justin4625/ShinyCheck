@@ -24,8 +24,8 @@ export default function Plza() {
         const secs = seconds % 60;
         return `${hrs}h ${mins}m ${secs}s`;
     };
-
-    // Collection: alle shinies met timestamp verzamelen en sorteren
+    
+    // Collection: alle shinies verzamelen en sorteren van meest recent naar oudste
     const displayedPokemon = activeTab === "collection"
         ? plzaPokemon.flatMap(p => {
             const shinyCount = Number(localStorage.getItem(`shiny_${p.id}`)) || 0;
@@ -36,7 +36,7 @@ export default function Plza() {
             }
             return hunts;
         })
-            .sort((a, b) => b.storedData.timestamp - a.storedData.timestamp)
+            .sort((a, b) => b.storedData.timestamp - a.storedData.timestamp) // meest recent eerst
         : activeTab === "base"
             ? plzaPokemon
             : [];

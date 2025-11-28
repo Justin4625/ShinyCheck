@@ -1,3 +1,4 @@
+// src/Components/PlzaModal.jsx
 import React, { useEffect, useState } from "react";
 
 export default function PlzaModal({ selectedPokemon, onClose, index = 0 }) {
@@ -26,7 +27,7 @@ export default function PlzaModal({ selectedPokemon, onClose, index = 0 }) {
         }
     }, [selectedPokemon]);
 
-    // Load stored timer & counter
+    // Load previous hunt data
     useEffect(() => {
         if (!selectedPokemon) return;
         const storedData = localStorage.getItem(`hunt_${selectedPokemon.id}`);
@@ -40,7 +41,7 @@ export default function PlzaModal({ selectedPokemon, onClose, index = 0 }) {
         }
     }, [selectedPokemon]);
 
-    // Save timer & counter
+    // Save hunt data while hunting
     useEffect(() => {
         if (!selectedPokemon) return;
         localStorage.setItem(`hunt_${selectedPokemon.id}`, JSON.stringify({ timer, counter }));
@@ -114,12 +115,12 @@ export default function PlzaModal({ selectedPokemon, onClose, index = 0 }) {
                                     height: "42px",
                                 }}
                                 className={`
-                                    text-center font-bold text-base
-                                    transition-all duration-300
-                                    ${isActive
+          text-center font-bold text-base
+          transition-all duration-300
+          ${isActive
                                     ? "bg-gradient-to-r from-purple-400 to-blue-500 text-white shadow-md"
                                     : "bg-gray-300 text-gray-700 hover:bg-gray-400"}
-                                `}
+        `}
                             >
                                 {tab.label}
                             </button>
@@ -127,7 +128,7 @@ export default function PlzaModal({ selectedPokemon, onClose, index = 0 }) {
                     })}
                 </div>
 
-                {/* Pokémon image (altijd zichtbaar) */}
+                {/* Pokémon image */}
                 <img
                     src={selectedPokemon.sprites?.other?.home?.front_shiny || "/placeholder.png"}
                     alt={selectedPokemon.name}
@@ -144,6 +145,7 @@ export default function PlzaModal({ selectedPokemon, onClose, index = 0 }) {
                             <div className="px-4 py-2 sm:px-6 sm:py-3 bg-white rounded-xl shadow-md text-gray-600 font-bold text-base sm:text-xl text-center min-w-[90px]">
                                 {formatTime(timer)}
                             </div>
+
                             <div className="flex items-center gap-2 justify-center">
                                 <div className="px-6 py-2 sm:py-3 bg-white rounded-xl shadow-md text-xl sm:text-2xl font-bold text-gray-900 min-w-[70px] sm:min-w-[80px] text-center">
                                     {counter}
@@ -195,6 +197,7 @@ export default function PlzaModal({ selectedPokemon, onClose, index = 0 }) {
                             >
                                 Reset
                             </button>
+
                             <button
                                 onClick={() => setShowGotchaConfirm(true)}
                                 className="px-5 py-2 bg-gradient-to-r from-green-400 to-green-600 hover:from-green-500 hover:to-green-700 text-white font-semibold rounded-xl shadow-md transition-all duration-200 transform hover:scale-105 active:scale-95"
@@ -205,7 +208,7 @@ export default function PlzaModal({ selectedPokemon, onClose, index = 0 }) {
                     </div>
                 )}
 
-                {/* Reset confirmation */}
+                {/* Reset Confirmation */}
                 {showConfirm && (
                     <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
                         <div className="bg-white rounded-2xl shadow-xl p-6 w-[90%] sm:w-1/2 text-center flex flex-col gap-4">
@@ -235,7 +238,7 @@ export default function PlzaModal({ selectedPokemon, onClose, index = 0 }) {
                     </div>
                 )}
 
-                {/* Gotcha confirmation */}
+                {/* Gotcha Confirmation */}
                 {showGotchaConfirm && (
                     <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
                         <div className="bg-white rounded-2xl shadow-xl p-6 w-[90%] sm:w-1/2 text-center flex flex-col gap-4">
@@ -251,16 +254,13 @@ export default function PlzaModal({ selectedPokemon, onClose, index = 0 }) {
                                 </button>
                                 <button
                                     onClick={() => {
-                                        const key = `shiny_${selectedPokemon.id}`;
-                                        const current = Number(localStorage.getItem(key)) || 0;
-                                        const newIndex = current + 1;
+                                        const current = Number(localStorage.getItem(`shiny_${selectedPokemon.id}`)) || 0;
+                                        localStorage.setItem(`shiny_${selectedPokemon.id}`, current + 1);
 
-                                        localStorage.setItem(key, newIndex);
-                                        localStorage.setItem(`shinyData_${selectedPokemon.id}_${newIndex}`, JSON.stringify({
-                                            timer,
-                                            counter,
-                                            timestamp: Date.now(), // meest recente tijd
-                                        }));
+                                        // Sla alle data van deze hunt op inclusief timestamp
+                                        const key = `shinyData_${selectedPokemon.id}_${current + 1}`;
+                                        const dataToStore = { timer, counter, timestamp: Date.now() };
+                                        localStorage.setItem(key, JSON.stringify(dataToStore));
 
                                         setIsPlaying(false);
                                         setCounter(0);
