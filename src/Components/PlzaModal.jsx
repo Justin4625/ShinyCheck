@@ -258,11 +258,16 @@ export default function PlzaModal({ selectedPokemon, onClose, index = 0 }) {
                                 </button>
                                 <button
                                     onClick={() => {
+                                        const key = `shiny_${selectedPokemon.id}`;
+                                        const current = Number(localStorage.getItem(key)) || 0;
+                                        localStorage.setItem(key, current + 1);
+
                                         setIsPlaying(false);
                                         setCounter(0);
                                         setTimer(0);
                                         localStorage.removeItem(`hunt_${selectedPokemon.id}`);
                                         setShowGotchaConfirm(false);
+
                                         alert("Gotcha! 🎉");
                                     }}
                                     className="px-5 py-2 bg-gradient-to-r from-green-400 to-green-600 hover:from-green-500 hover:to-green-700 text-white font-semibold rounded-xl shadow-md transition-all duration-200 transform hover:scale-105 active:scale-95"

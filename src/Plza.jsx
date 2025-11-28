@@ -8,6 +8,8 @@ export default function Plza() {
     const { pokemonList } = usePokemon(plzaPokemon);
     const [selectedPokemon, setSelectedPokemon] = useState(null);
     const [activeTab, setActiveTab] = useState("base"); // Nieuwe state voor tabs
+    const shinyCount = Number(localStorage.getItem(`shiny_$(entry.id)`)) || 0;
+    const isGolden = shinyCount > 1;
 
     const openModal = (pokemon) => setSelectedPokemon(pokemon);
     const closeModal = () => setSelectedPokemon(null);
@@ -106,20 +108,10 @@ export default function Plza() {
                                 </p>
                             )}
 
-                            {/* Collected balk */}
-                            <div className="mt-5 w-full">
-                                <div className="relative w-full h-7 rounded-2xl bg-gray-300/80 overflow-hidden shadow-inner">
-
-                                    {/* Progress bar (nu 0%) */}
-                                    <div
-                                        className="absolute left-0 top-0 h-full bg-gradient-to-r from-purple-400 to-blue-500 transition-all duration-300"
-                                        style={{ width: "0%" }}
-                                    ></div>
-
-                                    {/* Tekst */}
-                                    <span className="absolute inset-0 flex items-center justify-center text-[12px] font-extrabold tracking-wide text-gray-900 drop-shadow-sm">
-            Collected: 0
-        </span>
+                            {/* Collected counter */}
+                            <div className="mt-4 w-full flex justify-center">
+                                <div className="px-4 py-1 rounded-full bg-gradient-to-r from-purple-400 to-blue-500 text-white text-sm font-bold shadow-md tracking-wide">
+                                    Collected: {Number(localStorage.getItem(`shiny_${entry.id}`)) || 0}
                                 </div>
                             </div>
                         </div>
