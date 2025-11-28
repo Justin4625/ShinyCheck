@@ -1,3 +1,4 @@
+// src/Components/PlzaModal.jsx
 import React, { useEffect, useState } from "react";
 
 export default function PlzaModal({ selectedPokemon, onClose, index = 0 }) {
@@ -31,9 +32,12 @@ export default function PlzaModal({ selectedPokemon, onClose, index = 0 }) {
 
         const storedData = localStorage.getItem(`hunt_${selectedPokemon.id}`);
         if (storedData) {
-            const { timer, counter} = JSON.parse(storedData);
-            setTimer(timer || 0);
-            setCounter(counter || 0);
+            const { timer: storedTimer = 0, counter: storedCounter = 0 } = JSON.parse(storedData);
+            const id = setTimeout(() => {
+                setTimer(storedTimer);
+                setCounter(storedCounter);
+            }, 0);
+            return () => clearTimeout(id);
         }
     }, [selectedPokemon]);
 
@@ -107,8 +111,8 @@ export default function PlzaModal({ selectedPokemon, onClose, index = 0 }) {
                                 onClick={() => setActiveTab(tab.id)}
                                 style={{
                                     clipPath: "polygon(15% 0%, 100% 0%, 85% 100%, 0% 100%)",
-                                    width: "160px",  // iets breder
-                                    height: "42px",  // iets korter
+                                    width: "160px",
+                                    height: "42px",
                                 }}
                                 className={`
           text-center font-bold text-base
@@ -167,7 +171,7 @@ export default function PlzaModal({ selectedPokemon, onClose, index = 0 }) {
                                 px-6 py-3 sm:px-8 sm:py-4 font-bold rounded-xl text-white shadow-lg transform hover:scale-105 transition-all duration-300
                                 bg-gradient-to-r ${isPlaying
                                 ? "from-blue-600 via-purple-600 to-blue-700"
-                                : "from-green-500 via-lime-600 to-green-600"} 
+                                : "from-green-500 via-lime-600 to-green-600"}
                                 bg-[length:200%_200%] bg-[position:0%_50%] hover:bg-[position:100%_50%]
                             `}
                         >
