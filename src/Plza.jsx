@@ -45,7 +45,7 @@ export default function Plza() {
             : activeTab === "base"
                 ? plzaPokemon
                 : activeTab === "mega"
-                    ? []  // Mega Dimension voorlopig leeg
+                    ? [] // Mega Dimension voorlopig leeg
                     : [];
 
     return (
@@ -91,98 +91,113 @@ export default function Plza() {
 
             {/* Pokémon Grid */}
             <div className="relative grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-8 z-10">
-                {displayedPokemon.map((entry, index) => {
-                    const number = String(entry.id).padStart(3, "0");
-                    const pokemon = pokemonList.find((p) => p.id === entry.id);
-                    const shinyCount = Number(localStorage.getItem(`shiny_${entry.id}`)) || 0;
+                {displayedPokemon.length === 0 ? (
+                    <div className="col-span-full flex flex-col justify-center items-center text-center min-h-[300px]">
+        <span className="text-2xl sm:text-3xl font-bold text-gray-700">
+            {activeTab === "active" && "No Active Hunts"}
+            {activeTab === "collection" && "No Shiny Pokémon in Collection"}
+            {activeTab === "mega" && "Coming Soon!"}
+        </span>
+                    </div>
+                ) : (
+                    displayedPokemon.map((entry, index) => {
+                        const number = String(entry.id).padStart(3, "0");
+                        const pokemon = pokemonList.find((p) => p.id === entry.id);
+                        const shinyCount = Number(localStorage.getItem(`shiny_${entry.id}`)) || 0;
 
-                    // Golden alleen bij base & mega
-                    const isGolden = (activeTab === "base" || activeTab === "mega") && shinyCount >= 1;
+                        const isGolden = (activeTab === "base" || activeTab === "mega") && shinyCount >= 1;
 
-                    return (
-                        <div
-                            key={activeTab === "collection" ? `${entry.id}_${entry.shinyIndex}` : entry.id}
-                            onClick={() => activeTab !== "collection" && openModal(pokemon)}
-                            className={`
-                    relative rounded-2xl p-6 flex flex-col items-center justify-between cursor-pointer transition-transform duration-300 overflow-hidden
-                    hover:scale-105
-                    ${isGolden
-                                ? "bg-gradient-to-br from-yellow-200 via-amber-300 to-yellow-400 text-gray-900 shadow-md"
-                                : "bg-gradient-to-br from-gray-100 to-gray-200 text-gray-900 shadow-md"}
-                `}
-                        >
-                            {/* Top right blob */}
+                        return (
                             <div
-                                className={`absolute -top-4 -right-4 w-16 h-16 rounded-full blur-2xl pointer-events-none
-                        ${index % 3 === 0 ? "bg-green-400 opacity-40" : index % 3 === 1 ? "bg-pink-400 opacity-40" : "bg-blue-400 opacity-40"}`}
-                            ></div>
+                                key={activeTab === "collection" ? `${entry.id}_${entry.shinyIndex}` : entry.id}
+                                onClick={() => activeTab !== "collection" && openModal(pokemon)}
+                                className={`
+                                    relative rounded-2xl p-6 flex flex-col items-center justify-between cursor-pointer transition-transform duration-300 overflow-hidden
+                                    hover:scale-105
+                                    ${isGolden
+                                    ? "bg-gradient-to-br from-yellow-200 via-amber-300 to-yellow-400 text-gray-900 shadow-md"
+                                    : "bg-gradient-to-br from-gray-100 to-gray-200 text-gray-900 shadow-md"}
+                                `}
+                            >
+                                {/* Top right blob */}
+                                <div
+                                    className={`absolute -top-4 -right-4 w-16 h-16 rounded-full blur-2xl pointer-events-none
+                                        ${index % 3 === 0 ? "bg-green-400 opacity-40" : index % 3 === 1 ? "bg-pink-400 opacity-40" : "bg-blue-400 opacity-40"}`}
+                                ></div>
 
-                            {/* Bottom left blob */}
-                            <div
-                                className={`absolute -bottom-4 -left-4 w-24 h-24 rounded-full blur-3xl pointer-events-none
-                        ${index % 3 === 0 ? "bg-purple-400 opacity-40" : index % 3 === 1 ? "bg-blue-400 opacity-40" : "bg-green-400 opacity-40"}`}
-                            ></div>
+                                {/* Bottom left blob */}
+                                <div
+                                    className={`absolute -bottom-4 -left-4 w-24 h-24 rounded-full blur-3xl pointer-events-none
+                                        ${index % 3 === 0 ? "bg-purple-400 opacity-40" : index % 3 === 1 ? "bg-blue-400 opacity-40" : "bg-green-400 opacity-40"}`}
+                                ></div>
 
-                            <h2 className="text-lg sm:text-xl font-bold mb-4 capitalize tracking-wide">
-                                {entry.name} (#{number})
-                            </h2>
+                                <h2 className="text-lg sm:text-xl font-bold mb-4 capitalize tracking-wide">
+                                    {entry.name} (#{number})
+                                </h2>
 
-                            <img
-                                src={pokemon?.sprites?.other?.home?.front_shiny || "/placeholder.png"}
-                                alt={entry.name}
-                                className="w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 drop-shadow-md"
-                            />
+                                <img
+                                    src={pokemon?.sprites?.other?.home?.front_shiny || "/placeholder.png"}
+                                    alt={entry.name}
+                                    className="w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 drop-shadow-md"
+                                />
 
-                            {/* Alleen types tonen als het niet Active Hunts is */}
-                            {activeTab !== "active" && pokemon?.types && (
-                                <p className="mt-3 text-sm text-gray-600 uppercase tracking-wide">
-                                    {pokemon.types.map((t) => t.type.name).join(" / ")}
-                                </p>
-                            )}
+                                {/* Alleen types tonen als het niet Active Hunts is */}
+                                {activeTab !== "active" && pokemon?.types && (
+                                    <p className="mt-3 text-sm text-gray-600 uppercase tracking-wide">
+                                        {pokemon.types.map((t) => t.type.name).join(" / ")}
+                                    </p>
+                                )}
 
-                            {/* Collection info */}
-                            {activeTab === "collection" && entry.storedData && (
-                                <div className="mt-4 w-full flex flex-col items-center gap-2">
-                                    <div className="w-full bg-gradient-to-r from-pink-500 to-red-500 text-white text-sm sm:text-base font-bold rounded-xl p-2 shadow-md flex justify-between">
-                                        <span>Encounters:</span>
-                                        <span>{entry.storedData.counter}</span>
+                                {/* Collection info */}
+                                {activeTab === "collection" && entry.storedData && (
+                                    <div className="mt-4 w-full flex flex-col items-center gap-2">
+                                        <div
+                                            className="w-full bg-gradient-to-r from-pink-500 to-red-500 text-white text-sm sm:text-base font-bold rounded-xl p-2 shadow-md flex justify-between">
+                                            <span>Encounters:</span>
+                                            <span>{entry.storedData.counter}</span>
+                                        </div>
+                                        <div
+                                            className="w-full bg-gradient-to-r from-purple-600 to-blue-600 text-white text-sm sm:text-base font-bold rounded-xl p-2 shadow-md flex justify-between">
+                                            <span>Time:</span>
+                                            <span>{formatTime(entry.storedData.timer)}</span>
+                                        </div>
+                                        <div
+                                            className="w-full bg-gradient-to-r from-green-400 to-teal-500 text-white text-sm sm:text-base font-bold rounded-xl p-2 shadow-md flex justify-between">
+                                            <span>Date:</span>
+                                            <span>{new Date(entry.storedData.timestamp).toLocaleDateString()}</span>
+                                        </div>
                                     </div>
-                                    <div className="w-full bg-gradient-to-r from-purple-600 to-blue-600 text-white text-sm sm:text-base font-bold rounded-xl p-2 shadow-md flex justify-between">
-                                        <span>Time:</span>
-                                        <span>{formatTime(entry.storedData.timer)}</span>
-                                    </div>
-                                    <div className="w-full bg-gradient-to-r from-green-400 to-teal-500 text-white text-sm sm:text-base font-bold rounded-xl p-2 shadow-md flex justify-between">
-                                        <span>Date:</span>
-                                        <span>{new Date(entry.storedData.timestamp).toLocaleDateString()}</span>
-                                    </div>
-                                </div>
-                            )}
+                                )}
 
-                            {/* Active Hunts info */}
-                            {activeTab === "active" && entry.storedData && (
-                                <div className="mt-4 w-full flex flex-col items-center gap-2">
-                                    <div className="w-full bg-gradient-to-r from-pink-500 to-red-500 text-white text-sm sm:text-base font-bold rounded-xl p-2 shadow-md flex justify-between">
-                                        <span>Encounters:</span>
-                                        <span>{entry.storedData.counter}</span>
+                                {/* Active Hunts info */}
+                                {activeTab === "active" && entry.storedData && (
+                                    <div className="mt-4 w-full flex flex-col items-center gap-2">
+                                        <div
+                                            className="w-full bg-gradient-to-r from-pink-500 to-red-500 text-white text-sm sm:text-base font-bold rounded-xl p-2 shadow-md flex justify-between">
+                                            <span>Encounters:</span>
+                                            <span>{entry.storedData.counter}</span>
+                                        </div>
+                                        <div
+                                            className="w-full bg-gradient-to-r from-purple-600 to-blue-600 text-white text-sm sm:text-base font-bold rounded-xl p-2 shadow-md flex justify-between">
+                                            <span>Time:</span>
+                                            <span>{formatTime(entry.storedData.timer)}</span>
+                                        </div>
                                     </div>
-                                    <div className="w-full bg-gradient-to-r from-purple-600 to-blue-600 text-white text-sm sm:text-base font-bold rounded-xl p-2 shadow-md flex justify-between">
-                                        <span>Time:</span>
-                                        <span>{formatTime(entry.storedData.timer)}</span>
-                                    </div>
-                                </div>
-                            )}
+                                )}
 
-                            {/* Collected info voor Base/Mega */}
-                            {activeTab !== "collection" && activeTab !== "active" && (
-                                <div className="mt-4 w-full flex justify-center">
-                                    <div className="px-4 py-1 rounded-full bg-gradient-to-r from-purple-400 to-blue-500 text-white text-sm font-bold shadow-md tracking-wide">
-                                        Collected: {shinyCount}
+                                {/* Collected info voor Base/Mega */}
+                                {activeTab !== "collection" && activeTab !== "active" && (
+                                    <div className="mt-4 w-full flex justify-center">
+                                        <div
+                                            className="px-4 py-1 rounded-full bg-gradient-to-r from-purple-400 to-blue-500 text-white text-sm font-bold shadow-md tracking-wide">
+                                            Collected: {shinyCount}
+                                        </div>
                                     </div>
-                                </div>
-                            )}
-                        </div>
-                    );
-                })}
+                                )}
+                            </div>
+                        );
+                    })
+                )}
             </div>
 
             <PlzaModal
