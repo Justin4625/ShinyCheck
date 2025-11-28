@@ -8,8 +8,6 @@ export default function Plza() {
     const { pokemonList } = usePokemon(plzaPokemon);
     const [selectedPokemon, setSelectedPokemon] = useState(null);
     const [activeTab, setActiveTab] = useState("base"); // Nieuwe state voor tabs
-    const shinyCount = Number(localStorage.getItem(`shiny_$(entry.id)`)) || 0;
-    const isGolden = shinyCount >= 1;
 
     const openModal = (pokemon) => setSelectedPokemon(pokemon);
     const closeModal = () => setSelectedPokemon(null);
@@ -75,21 +73,21 @@ export default function Plza() {
                     const pokemon = pokemonList.find((p) => p.id === entry.id);
 
                     const shinyCount = Number(localStorage.getItem(`shiny_${entry.id}`)) || 0;
-                    const isGolden = shinyCount >= 1;
+                    const isGolden = shinyCount >= 1; // ✅ WORDT NU ECHT GEBRUIKT
 
                     return (
                         <div
                             key={entry.id}
                             onClick={() => openModal(pokemon)}
                             className={`
-    relative rounded-2xl shadow-md p-6 flex flex-col items-center justify-between
-    hover:scale-105 hover:shadow-xl transition-transform duration-300 overflow-hidden cursor-pointer
+        relative rounded-2xl shadow-md p-6 flex flex-col items-center justify-between
+        hover:scale-105 hover:shadow-xl transition-transform duration-300 overflow-hidden cursor-pointer
 
-    ${isGolden
+        ${isGolden
                                 ? "bg-gradient-to-br from-yellow-200 via-amber-300 to-yellow-400 text-gray-900 shadow-yellow-400/40"
                                 : "bg-gradient-to-br from-gray-100 to-gray-200 text-gray-900"
                             }
-`}
+    `}
                         >
                             {/* Top right blob */}
                             <div
@@ -121,7 +119,8 @@ export default function Plza() {
 
                             {/* Collected counter */}
                             <div className="mt-4 w-full flex justify-center">
-                                <div className="px-4 py-1 rounded-full bg-gradient-to-r from-purple-400 to-blue-500 text-white text-sm font-bold shadow-md tracking-wide">
+                                <div
+                                    className="px-4 py-1 rounded-full bg-gradient-to-r from-purple-400 to-blue-500 text-white text-sm font-bold shadow-md tracking-wide">
                                     Collected: {Number(localStorage.getItem(`shiny_${entry.id}`)) || 0}
                                 </div>
                             </div>
