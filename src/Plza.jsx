@@ -35,11 +35,19 @@ export default function Plza() {
                 hunts.push({ ...p, storedData, shinyIndex: i });
             }
             return hunts;
-        })
-            .sort((a, b) => b.storedData.timestamp - a.storedData.timestamp) // meest recent eerst
-        : activeTab === "base"
-            ? plzaPokemon
-            : [];
+        }).sort((a, b) => b.storedData.timestamp - a.storedData.timestamp)
+        : activeTab === "active"
+            ? plzaPokemon.flatMap(p => {
+                const storedData = JSON.parse(localStorage.getItem(`hunt_${p.id}`)) || { timer: 0, counter: 0, isPlaying: false, timestamp: 0 };
+                // Alleen actieve hunts tonen
+                if (storedData.isPlaying || storedData.counter > 0) {
+                    return [{ ...p, storedData }];
+                }
+                return [];
+            }).sort((a, b) => b.storedData.timestamp - a.storedData.timestamp) // recentste eerst
+            : activeTab === "base"
+                ? plzaPokemon
+                : [];
 
     return (
         <div className="relative p-8 min-h-screen bg-gradient-to-b from-gray-50 via-gray-100 to-gray-200 overflow-hidden">
@@ -79,7 +87,7 @@ export default function Plza() {
                     const number = String(entry.id).padStart(3, "0");
                     const pokemon = pokemonList.find(p => p.id === entry.id);
                     const shinyCount = Number(localStorage.getItem(`shiny_${entry.id}`)) || 0;
-                    const isGolden = shinyCount >= 1;
+                    const isGolden = (activeTab === "base" || activeTab === "mega") && shinyCount >= 1;
 
                     return (
                         <div

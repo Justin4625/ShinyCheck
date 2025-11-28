@@ -44,8 +44,9 @@ export default function PlzaModal({ selectedPokemon, onClose, index = 0 }) {
     // Save hunt data while hunting
     useEffect(() => {
         if (!selectedPokemon) return;
-        localStorage.setItem(`hunt_${selectedPokemon.id}`, JSON.stringify({ timer, counter }));
-    }, [timer, counter, selectedPokemon]);
+        const currentData = { timer, counter, isPlaying, timestamp: Date.now() };
+        localStorage.setItem(`hunt_${selectedPokemon.id}`, JSON.stringify(currentData));
+    }, [timer, counter, isPlaying, selectedPokemon]);
 
     if (!selectedPokemon) return null;
 
