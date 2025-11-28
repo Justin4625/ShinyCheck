@@ -6,41 +6,39 @@ import PlzaModal from "./Components/PlzaModal.jsx";
 export default function Plza() {
     const { pokemonList } = usePokemon(plzaPokemon);
     const [selectedPokemon, setSelectedPokemon] = useState(null);
-    const [activeTab, setActiveTab] = useState("base"); // Nieuwe state voor tabs
+    const [activeTab, setActiveTab] = useState("base");
 
     const openModal = (pokemon) => setSelectedPokemon(pokemon);
     const closeModal = () => setSelectedPokemon(null);
 
     useEffect(() => {
-        // Blokkeer scroll bij open modal
         document.body.style.overflow = selectedPokemon ? "hidden" : "auto";
         return () => {
             document.body.style.overflow = "auto";
         };
     }, [selectedPokemon]);
 
-    // Functie om seconden om te zetten naar hh:mm:ss
+    // Pokémon weergeven op basis van actieve tab
+    const displayedPokemon = activeTab === "collection"
+        ? plzaPokemon.flatMap(p => {
+            const shinyCount = Number(localStorage.getItem(`shiny_${p.id}`)) || 0;
+            const hunts = [];
+            for (let i = 1; i <= shinyCount; i++) {
+                const storedData = JSON.parse(localStorage.getItem(`shinyData_${p.id}_${i}`)) || { timer: 0, counter: 0 };
+                hunts.push({ ...p, storedData, shinyIndex: i });
+            }
+            return hunts;
+        })
+        : activeTab === "base"
+            ? plzaPokemon
+            : [];
+
     const formatTime = (seconds) => {
         const hrs = Math.floor(seconds / 3600);
         const mins = Math.floor((seconds % 3600) / 60);
         const secs = seconds % 60;
         return `${hrs}h ${mins}m ${secs}s`;
     };
-
-    // Voor weergave per tab
-    const displayedPokemon = activeTab === "base"
-        ? plzaPokemon
-        : activeTab === "collection"
-            ? plzaPokemon.flatMap(p => {
-                const shinyCount = Number(localStorage.getItem(`shiny_${p.id}`)) || 0;
-                const hunts = [];
-                for (let i = 0; i < shinyCount; i++) {
-                    const storedData = JSON.parse(localStorage.getItem(`hunt_${p.id}`)) || { timer: 0, counter: 0 };
-                    hunts.push({ ...p, storedData });
-                }
-                return hunts;
-            })
-            : [];
 
     return (
         <div className="relative p-8 min-h-screen bg-gradient-to-b from-gray-50 via-gray-100 to-gray-200 overflow-hidden">
@@ -62,22 +60,20 @@ export default function Plza() {
                     { id: "base", label: "Base Game" },
                     { id: "mega", label: "Mega Dimension" },
                     { id: "collection", label: "Collection" },
-                ].map((tab) => {
+                ].map(tab => {
                     const isActive = activeTab === tab.id;
                     return (
                         <button
                             key={tab.id}
                             onClick={() => setActiveTab(tab.id)}
-                            style={{
-                                clipPath: "polygon(10% 0%, 100% 0%, 90% 100%, 0% 100%)",
-                            }}
+                            style={{ clipPath: "polygon(10% 0%, 100% 0%, 90% 100%, 0% 100%)" }}
                             className={`
-                    relative flex-auto sm:flex-1 min-w-[100px] sm:min-w-0 px-2 sm:px-4 py-2 sm:py-3 text-center font-bold
-                    text-xs sm:text-sm md:text-base transition-all duration-300
-                    ${isActive
+                                relative flex-auto sm:flex-1 min-w-[100px] sm:min-w-0 px-2 sm:px-4 py-2 sm:py-3 text-center font-bold
+                                text-xs sm:text-sm md:text-base transition-all duration-300
+                                ${isActive
                                 ? "bg-gradient-to-r from-purple-400 via-pink-500 to-blue-500 text-white shadow-lg"
                                 : "bg-gray-300 text-gray-700 hover:bg-gray-400"}
-                `}
+                            `}
                         >
                             {tab.label}
                         </button>
@@ -89,37 +85,31 @@ export default function Plza() {
             <div className="relative grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-8 z-10">
                 {displayedPokemon.map((entry, index) => {
                     const number = String(entry.id).padStart(3, "0");
-                    const pokemon = pokemonList.find((p) => p.id === entry.id);
-
-                    // In Collection-tab is alles shiny
-                    const isGolden = activeTab === "collection" ? true : (Number(localStorage.getItem(`shiny_${entry.id}`)) || 0) >= 1;
-                    const timer = entry.storedData?.timer || 0;
-                    const counter = entry.storedData?.counter || 0;
+                    const pokemon = pokemonList.find(p => p.id === entry.id);
+                    const shinyCount = Number(localStorage.getItem(`shiny_${entry.id}`)) || 0;
+                    const isGolden = shinyCount >= 1;
 
                     return (
                         <div
-                            key={index} // gebruik index voor unieke key bij duplicates
-                            onClick={() => openModal(pokemon)}
+                            key={activeTab === "collection" ? `${entry.id}_${entry.shinyIndex}` : entry.id}
+                            onClick={() => activeTab !== "collection" && openModal(pokemon)}
                             className={`
-        relative rounded-2xl shadow-md p-6 flex flex-col items-center justify-between
-        hover:scale-105 hover:shadow-xl transition-transform duration-300 overflow-hidden cursor-pointer
-
-        ${isGolden
+                                relative rounded-2xl shadow-md p-6 flex flex-col items-center justify-between
+                                hover:scale-105 hover:shadow-xl transition-transform duration-300 overflow-hidden cursor-pointer
+                                ${isGolden
                                 ? "bg-gradient-to-br from-yellow-200 via-amber-300 to-yellow-400 text-gray-900 shadow-yellow-400/40"
                                 : "bg-gradient-to-br from-gray-100 to-gray-200 text-gray-900"
                             }
-    `}
+                            `}
                         >
                             {/* Top right blob */}
-                            <div
-                                className={`absolute -top-4 -right-4 w-16 h-16 rounded-full blur-2xl pointer-events-none
-                                    ${index % 3 === 0 ? "bg-green-400 opacity-40" : index % 3 === 1 ? "bg-pink-400 opacity-40" : "bg-blue-400 opacity-40"}`}
+                            <div className={`absolute -top-4 -right-4 w-16 h-16 rounded-full blur-2xl pointer-events-none
+                                ${index % 3 === 0 ? "bg-green-400 opacity-40" : index % 3 === 1 ? "bg-pink-400 opacity-40" : "bg-blue-400 opacity-40"}`}
                             ></div>
 
                             {/* Bottom left blob */}
-                            <div
-                                className={`absolute -bottom-4 -left-4 w-24 h-24 rounded-full blur-3xl pointer-events-none
-                                    ${index % 3 === 0 ? "bg-purple-400 opacity-40" : index % 3 === 1 ? "bg-blue-400 opacity-40" : "bg-green-400 opacity-40"}`}
+                            <div className={`absolute -bottom-4 -left-4 w-24 h-24 rounded-full blur-3xl pointer-events-none
+                                ${index % 3 === 0 ? "bg-purple-400 opacity-40" : index % 3 === 1 ? "bg-blue-400 opacity-40" : "bg-green-400 opacity-40"}`}
                             ></div>
 
                             <h2 className="text-lg sm:text-xl font-bold mb-4 capitalize tracking-wide">
@@ -134,20 +124,20 @@ export default function Plza() {
 
                             {pokemon?.types && (
                                 <p className="mt-3 text-sm text-gray-600 uppercase tracking-wide">
-                                    {pokemon.types.map((t) => t.type.name).join(" / ")}
+                                    {pokemon.types.map(t => t.type.name).join(" / ")}
                                 </p>
                             )}
 
-                            {/* Counter + Timer */}
+                            {/* Collected info voor Collection */}
                             {activeTab === "collection" && (
-                                <div className="mt-4 w-full flex justify-center">
-                                    <div className="px-4 py-1 rounded-full bg-gradient-to-r from-purple-400 to-blue-500 text-white text-sm font-bold shadow-md tracking-wide text-center">
-                                        Count: {counter} | Time: {formatTime(timer)}
+                                <div className="mt-4 w-full flex flex-col items-center gap-1">
+                                    <div className="px-4 py-1 rounded-full bg-gradient-to-r from-purple-400 to-blue-500 text-white text-sm font-bold shadow-md tracking-wide">
+                                        Count: {entry.storedData.counter} | Time: {formatTime(entry.storedData.timer)}
                                     </div>
                                 </div>
                             )}
 
-                            {/* Collected counter voor base tab */}
+                            {/* Collected counter voor Base */}
                             {activeTab !== "collection" && (
                                 <div className="mt-4 w-full flex justify-center">
                                     <div className="px-4 py-1 rounded-full bg-gradient-to-r from-purple-400 to-blue-500 text-white text-sm font-bold shadow-md tracking-wide">
