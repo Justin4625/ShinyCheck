@@ -161,10 +161,17 @@ export default function Plza() {
                                             <span>Time:</span>
                                             <span>{formatTime(entry.storedData.timer)}</span>
                                         </div>
-                                        <div
-                                            className="w-full bg-gradient-to-r from-green-400 to-teal-500 text-white text-sm sm:text-base font-bold rounded-xl p-2 shadow-md flex justify-between">
-                                            <span>Date:</span>
-                                            <span>{new Date(entry.storedData.timestamp).toLocaleDateString()}</span>
+                                        <div className="w-full flex flex-col gap-2">
+                                            <div
+                                                className="w-full bg-gradient-to-r from-green-400 to-teal-500 text-white text-sm sm:text-base font-bold rounded-xl p-2 shadow-md flex justify-between">
+                                                <span>Date:</span>
+                                                <span>{new Date(entry.storedData.timestamp).toLocaleDateString()}</span>
+                                            </div>
+
+                                            <div
+                                                className="w-full bg-gradient-to-r from-gray-700 via-gray-600 to-gray-500 text-white text-sm sm:text-base font-bold rounded-xl p-2 shadow-md flex justify-center">
+                                                {entry.game}
+                                            </div>
                                         </div>
                                     </div>
                                 )}
@@ -181,6 +188,10 @@ export default function Plza() {
                                             className="w-full bg-gradient-to-r from-purple-600 to-blue-600 text-white text-sm sm:text-base font-bold rounded-xl p-2 shadow-md flex justify-between">
                                             <span>Time:</span>
                                             <span>{formatTime(entry.storedData.timer)}</span>
+                                        </div>
+                                        <div
+                                            className="w-full bg-gradient-to-r from-gray-700 via-gray-600 to-gray-500 text-white text-sm sm:text-base font-bold rounded-xl p-2 shadow-md flex justify-center">
+                                            {entry.game}
                                         </div>
                                     </div>
                                 )}
