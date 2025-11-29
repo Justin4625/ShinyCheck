@@ -136,13 +136,13 @@ export default function Plza() {
                                 </h2>
 
                                 <img
-                                    src={pokemon?.sprites?.other?.home?.front_shiny || "/placeholder.png"}
+                                    src={pokemon?.sprites?.other?.home?.front_shiny}
                                     alt={entry.name}
                                     className="w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 drop-shadow-md"
                                 />
 
-                                {/* Alleen types tonen als het niet Active Hunts is */}
-                                {activeTab !== "active" && pokemon?.types && (
+                                {/* Types altijd onder de afbeelding */}
+                                {pokemon?.types && (
                                     <p className="mt-3 text-sm text-gray-600 uppercase tracking-wide">
                                         {pokemon.types.map((t) => t.type.name).join(" / ")}
                                     </p>
@@ -189,6 +189,7 @@ export default function Plza() {
                                             <span>Time:</span>
                                             <span>{formatTime(entry.storedData.timer)}</span>
                                         </div>
+
                                         <div
                                             className="w-full bg-gradient-to-r from-gray-700 via-gray-600 to-gray-500 text-white text-sm sm:text-base font-bold rounded-xl p-2 shadow-md flex justify-center">
                                             {entry.game}
