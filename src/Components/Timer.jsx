@@ -1,6 +1,33 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 
-export default function PlzaHuntTab({ timer, counter, increment, isPlaying, setIsPlaying, setCounter, formatTime }) {
+export default function Timer({ timer, counter, increment, isPlaying, setTimer, setCounter }) {
+    const timerRef = useRef(timer);
+    const counterRef = useRef(counter);
+
+    useEffect(() => {
+        timerRef.current = timer;
+    }, [timer]);
+
+    useEffect(() => {
+        counterRef.current = counter;
+    }, [counter]);
+
+    // Timer effect
+    useEffect(() => {
+        let interval;
+        if (isPlaying) {
+            interval = setInterval(() => setTimer((prev) => prev + 1), 1000);
+        }
+        return () => clearInterval(interval);
+    }, [isPlaying, setTimer]);
+
+    const formatTime = (seconds) => {
+        const hrs = Math.floor(seconds / 3600);
+        const mins = Math.floor((seconds % 3600) / 60);
+        const secs = seconds % 60;
+        return `${hrs}h ${mins}m ${secs}s`;
+    };
+
     return (
         <div className="flex flex-col items-center gap-6 w-full mt-4">
             <div className="flex items-center gap-4 justify-center flex-wrap sm:flex-nowrap w-full">
@@ -20,21 +47,6 @@ export default function PlzaHuntTab({ timer, counter, increment, isPlaying, setI
                     </button>
                 </div>
             </div>
-
-            <button
-                onClick={() => setIsPlaying((p) => !p)}
-                className={`
-        px-6 py-3 sm:px-8 sm:py-4 font-bold rounded-xl text-white shadow-lg transform hover:scale-105 transition-all duration-300
-        ${isPlaying
-                    ? "bg-gradient-to-r from-blue-600 via-purple-600 to-blue-700"
-                    : timer > 0
-                        ? "bg-gradient-to-r from-purple-400 via-pink-500 to-purple-500"
-                        : "bg-gradient-to-r from-green-500 via-lime-600 to-green-600"}
-        bg-[length:200%_200%] bg-[position:0%_50%] hover:bg-[position:100%_50%]
-    `}
-            >
-                {isPlaying ? "Pause" : timer > 0 ? "Continue" : "Start"}
-            </button>
         </div>
     );
 }

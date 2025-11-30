@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import PlzaHuntTab from "./PlzaHuntTab.jsx";
+import Timer from "../Timer.jsx";
 import PlzaSettingsTab from "./PlzaSettingsTab.jsx";
 
 export default function PlzaModal({ selectedPokemon, onClose, index = 0 }) {
@@ -11,7 +11,6 @@ export default function PlzaModal({ selectedPokemon, onClose, index = 0 }) {
     const [showConfirm, setShowConfirm] = useState(false);
     const [showGotchaConfirm, setShowGotchaConfirm] = useState(false);
 
-    // refs to hold current values so we can compare without adding them to effect deps
     const timerRef = useRef(timer);
     const counterRef = useRef(counter);
 
@@ -23,14 +22,14 @@ export default function PlzaModal({ selectedPokemon, onClose, index = 0 }) {
         counterRef.current = counter;
     }, [counter]);
 
-    // Timer effect
+    // Timer interval
     useEffect(() => {
         let interval;
         if (isPlaying) interval = setInterval(() => setTimer((prev) => prev + 1), 1000);
         return () => clearInterval(interval);
     }, [isPlaying]);
 
-    // Load previous hunt data (only set state if values differ)
+    // Load previous hunt data
     useEffect(() => {
         if (!selectedPokemon) return;
 
@@ -39,12 +38,10 @@ export default function PlzaModal({ selectedPokemon, onClose, index = 0 }) {
 
         const { timer: storedTimer = 0, counter: storedCounter = 0 } = JSON.parse(storedData);
 
-        // Update state asynchronously na render om cascading renders te voorkomen
         setTimeout(() => {
             if (storedTimer !== timerRef.current) setTimer(storedTimer);
             if (storedCounter !== counterRef.current) setCounter(storedCounter);
         }, 0);
-
     }, [selectedPokemon]);
 
     // Save hunt data
@@ -66,13 +63,6 @@ export default function PlzaModal({ selectedPokemon, onClose, index = 0 }) {
         setShowConfirm(false);
         setShowGotchaConfirm(false);
         onClose();
-    };
-
-    const formatTime = (seconds) => {
-        const hrs = Math.floor(seconds / 3600);
-        const mins = Math.floor((seconds % 3600) / 60);
-        const secs = seconds % 60;
-        return `${hrs}h ${mins}m ${secs}s`;
     };
 
     const topRightColor =
@@ -128,17 +118,34 @@ export default function PlzaModal({ selectedPokemon, onClose, index = 0 }) {
                     className="w-40 h-40 sm:w-64 sm:h-64 mx-auto drop-shadow-lg cursor-pointer active:scale-95 transition-transform z-10"
                 />
 
-                {activeTab === "hunt" ? (
-                    <PlzaHuntTab
-                        timer={timer}
-                        counter={counter}
-                        increment={increment}
-                        isPlaying={isPlaying}
-                        setIsPlaying={setIsPlaying}
-                        setCounter={setCounter}
-                        formatTime={formatTime}
-                    />
-                ) : (
+                {activeTab === "hunt" && (
+                    <div className="flex flex-col items-center gap-6 w-full mt-4">
+                        <Timer
+                            timer={timer}
+                            counter={counter}
+                            increment={increment}
+                            isPlaying={isPlaying}
+                            setCounter={setCounter}
+                        />
+
+                        <button
+                            onClick={() => setIsPlaying((p) => !p)}
+                            className={`
+        px-6 py-3 sm:px-8 sm:py-4 font-bold rounded-xl text-white shadow-lg transform hover:scale-105 transition-all duration-300
+        ${isPlaying
+                                ? "bg-gradient-to-r from-blue-600 via-purple-600 to-blue-700"
+                                : timer > 0
+                                    ? "bg-gradient-to-r from-purple-400 via-pink-500 to-purple-500" // Continue knop
+                                    : "bg-gradient-to-r from-green-500 via-lime-600 to-green-600"} // Start knop
+        bg-[length:200%_200%] bg-[position:0%_50%] hover:bg-[position:100%_50%]
+    `}
+                        >
+                            {isPlaying ? "Pause" : timer > 0 ? "Continue" : "Start"}
+                        </button>
+                    </div>
+                )}
+
+                {activeTab === "settings" && (
                     <PlzaSettingsTab
                         increment={increment}
                         setIncrement={setIncrement}
@@ -149,10 +156,12 @@ export default function PlzaModal({ selectedPokemon, onClose, index = 0 }) {
 
                 {showConfirm && (
                     <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
-                        <div className="bg-white rounded-2xl shadow-xl p-6 w-[90%] sm:w-1/2 text-center flex flex-col gap-4">
-                            <p className="text-gray-800 font-semibold text-lg">Are you sure you want to reset the timer and counter?</p>
+                        <div
+                            className="bg-white rounded-2xl shadow-xl p-6 w-[90%] sm:w-1/2 text-center flex flex-col gap-4">
+                            <p className="text-gray-800 font-semibold text-lg">Are you sure you want to reset the timer
+                                and counter?</p>
                             <div className="flex justify-center gap-4 mt-4">
-                                <button onClick={() => setShowConfirm(false)} className="px-5 py-2 bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold rounded-xl shadow-md transition-all duration-200 transform hover:scale-105 active:scale-95">Cancel</button>
+                            <button onClick={() => setShowConfirm(false)} className="px-5 py-2 bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold rounded-xl shadow-md transition-all duration-200 transform hover:scale-105 active:scale-95">Cancel</button>
                                 <button onClick={() => { setCounter(0); setTimer(0); localStorage.removeItem(`hunt_${selectedPokemon.id}`); setShowConfirm(false); }} className="px-5 py-2 bg-gradient-to-r from-red-400 to-red-600 hover:from-red-500 hover:to-red-700 text-white font-semibold rounded-xl shadow-md transition-all duration-200 transform hover:scale-105 active:scale-95">Confirm</button>
                             </div>
                         </div>
