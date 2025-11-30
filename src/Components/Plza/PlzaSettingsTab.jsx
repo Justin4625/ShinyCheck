@@ -25,8 +25,7 @@ export default function PlzaSettingsTab({ increment, setIncrement, timer, counte
     };
 
     return (
-        <div
-            className="px-4 py-3 bg-white rounded-xl shadow-md w-full text-center flex flex-col gap-4 items-center mt-4">
+        <div className="px-4 py-3 bg-white rounded-xl shadow-md w-full text-center flex flex-col gap-4 items-center mt-4">
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-2">
                 <label className="text-gray-700 font-semibold">Increment</label>
@@ -58,10 +57,8 @@ export default function PlzaSettingsTab({ increment, setIncrement, timer, counte
             {/* Confirmation overlays */}
             {showConfirm && (
                 <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
-                    <div
-                        className="bg-white rounded-2xl shadow-xl p-6 w-[90%] sm:w-1/2 text-center flex flex-col gap-4">
-                        <p className="text-gray-800 font-semibold text-lg">Are you sure you want to reset the timer and
-                            counter?</p>
+                    <div className="bg-white rounded-2xl shadow-xl p-6 w-[90%] sm:w-1/2 text-center flex flex-col gap-4">
+                        <p className="text-gray-800 font-semibold text-lg">Are you sure you want to reset the timer and counter?</p>
                         <div className="flex justify-center gap-4 mt-4">
                             <button onClick={() => setShowConfirm(false)}
                                     className="px-5 py-2 bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold rounded-xl shadow-md transition-all duration-200 transform hover:scale-105 active:scale-95">Cancel
@@ -76,8 +73,7 @@ export default function PlzaSettingsTab({ increment, setIncrement, timer, counte
 
             {showGotchaConfirm && (
                 <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
-                    <div
-                        className="bg-white rounded-2xl shadow-xl p-6 w-[90%] sm:w-1/2 text-center flex flex-col gap-4">
+                    <div className="bg-white rounded-2xl shadow-xl p-6 w-[90%] sm:w-1/2 text-center flex flex-col gap-4">
                         <p className="text-gray-800 font-semibold text-lg">Are you sure you want to end this hunt?</p>
                         <div className="flex justify-center gap-4 mt-4">
                             <button onClick={() => setShowGotchaConfirm(false)}

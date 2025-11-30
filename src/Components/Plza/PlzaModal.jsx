@@ -13,12 +13,22 @@ export default function PlzaModal({ selectedPokemon, onClose, index = 0 }) {
     useEffect(() => {
         if (!selectedPokemon) return;
         const storedData = localStorage.getItem(`hunt_${selectedPokemon.id}`);
-        if (!storedData) return;
-        const { timer: storedTimer = 0, counter: storedCounter = 0 } = JSON.parse(storedData);
-        setTimeout(() => {
-            setTimer(storedTimer);
-            setCounter(storedCounter);
-        }, 0);
+        if (!storedData) {
+            setTimer(0);
+            setCounter(0);
+            setIsPlaying(false);
+            return;
+        }
+        const parsed = JSON.parse(storedData);
+        if ((parsed.timer && parsed.timer > 0) || (parsed.counter && parsed.counter > 0) || parsed.isPlaying) {
+            setTimer(parsed.timer || 0);
+            setCounter(parsed.counter || 0);
+            setIsPlaying(parsed.isPlaying || false);
+        } else {
+            setTimer(0);
+            setCounter(0);
+            setIsPlaying(false);
+        }
     }, [selectedPokemon]);
 
     // Save hunt data
@@ -84,8 +94,12 @@ export default function PlzaModal({ selectedPokemon, onClose, index = 0 }) {
                 <img
                     src={selectedPokemon.sprites?.other?.home?.front_shiny}
                     alt={selectedPokemon.name}
-                    onClick={() => { if (isPlaying && activeTab === "hunt") setCounter((prev) => prev + Number(increment)); }}
-                    className="w-40 h-40 sm:w-64 sm:h-64 mx-auto drop-shadow-lg cursor-pointer active:scale-95 transition-transform z-10"
+                    onClick={() => {
+                        if (isPlaying) {
+                            setCounter((prev) => prev + Number(increment));
+                        }
+                    }}
+                    className="w-40 h-40 sm:w-64 sm:h-64 mx-auto drop-shadow-lg cursor-pointer active:scale-95 transition-transform z-10 mb-4"
                 />
 
                 {/* Hunt tab */}
@@ -98,6 +112,7 @@ export default function PlzaModal({ selectedPokemon, onClose, index = 0 }) {
                         setTimer={setTimer}
                         setIsPlaying={setIsPlaying}
                         setCounter={setCounter}
+                        selectedPokemon={selectedPokemon}
                     />
                 )}
 

@@ -50,7 +50,7 @@ export default function PlzaHuntTab({ timer, counter, increment, isPlaying, setT
             <button
                 onClick={() => setIsPlaying((p) => !p)}
                 className={`
-        px-6 py-3 sm:px-8 sm:py-4 font-bold rounded-xl text-white shadow-lg transform hover:scale-105 transition-all duration-300
+        px-6 mt-2 py-3 sm:px-8 sm:py-4 font-bold rounded-xl text-white shadow-lg transform hover:scale-105 transition-all duration-300
         ${isPlaying
                     ? "bg-gradient-to-r from-blue-600 via-purple-600 to-blue-700"
                     : timer > 0
