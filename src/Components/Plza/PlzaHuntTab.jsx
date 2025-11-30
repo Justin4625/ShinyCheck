@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from "react";
 
-export default function PlzaHuntTab({ timer, counter, increment, isPlaying, setTimer, setIsPlaying, setCounter }) {
+export default function PlzaHuntTab({ timer, counter, increment, isPlaying, setTimer, setIsPlaying, setCounter, onClose }) {
     const timerRef = useRef(timer);
     const counterRef = useRef(counter);
 
@@ -8,7 +8,7 @@ export default function PlzaHuntTab({ timer, counter, increment, isPlaying, setT
     useEffect(() => { timerRef.current = timer; }, [timer]);
     useEffect(() => { counterRef.current = counter; }, [counter]);
 
-    // PlzaHuntTab interval
+    // Timer interval
     useEffect(() => {
         let interval;
         if (isPlaying) interval = setInterval(() => setTimer((prev) => prev + 1), 1000);
@@ -24,15 +24,21 @@ export default function PlzaHuntTab({ timer, counter, increment, isPlaying, setT
 
     return (
         <div className="flex flex-col items-center gap-4 w-full">
-            {/* PlzaHuntTab links, Counter rechts */}
+            {/* Close button rechtsboven van hunt-tab */}
+            <button
+                onClick={onClose}
+                className="absolute top-4 right-4 w-10 h-10 sm:w-11 sm:h-11 flex items-center justify-center rounded-full bg-gradient-to-br from-purple-400 to-pink-500 text-white text-xl font-bold shadow-md shadow-purple-500/40 transition-all duration-200 hover:scale-110 hover:shadow-purple-600/50 active:scale-95 z-20"
+            >
+                ✕
+            </button>
+
+            {/* Timer links, counter rechts */}
             <div className="flex items-center gap-4 justify-center flex-wrap sm:flex-nowrap w-full">
-                {/* PlzaHuntTab display */}
                 <div
                     className="px-4 py-2 sm:px-6 sm:py-3 bg-white rounded-xl shadow-md text-gray-600 font-bold text-base sm:text-xl text-center min-w-[90px]">
                     {formatTime(timer)}
                 </div>
 
-                {/* Counter + decrement */}
                 <div className="flex items-center gap-2">
                     <div
                         className="px-6 py-2 sm:py-3 bg-white rounded-xl shadow-md text-xl sm:text-2xl font-bold text-gray-900 min-w-[70px] sm:min-w-[80px] text-center">
@@ -55,8 +61,8 @@ export default function PlzaHuntTab({ timer, counter, increment, isPlaying, setT
         ${isPlaying
                     ? "bg-gradient-to-r from-blue-600 via-purple-600 to-blue-700"
                     : timer > 0
-                        ? "bg-gradient-to-r from-purple-400 via-pink-500 to-purple-500" // Continue knop
-                        : "bg-gradient-to-r from-green-500 via-lime-600 to-green-600"} // Start knop
+                        ? "bg-gradient-to-r from-purple-400 via-pink-500 to-purple-500"
+                        : "bg-gradient-to-r from-green-500 via-lime-600 to-green-600"} 
         bg-[length:200%_200%] bg-[position:0%_50%] hover:bg-[position:100%_50%]
     `}
             >
