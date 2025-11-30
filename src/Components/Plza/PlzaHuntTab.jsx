@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from "react";
 
-export default function Timer({ timer, counter, increment, isPlaying, setTimer, setIsPlaying, setCounter }) {
+export default function PlzaHuntTab({ timer, counter, increment, isPlaying, setTimer, setIsPlaying, setCounter }) {
     const timerRef = useRef(timer);
     const counterRef = useRef(counter);
 
@@ -8,7 +8,7 @@ export default function Timer({ timer, counter, increment, isPlaying, setTimer, 
     useEffect(() => { timerRef.current = timer; }, [timer]);
     useEffect(() => { counterRef.current = counter; }, [counter]);
 
-    // Timer interval
+    // PlzaHuntTab interval
     useEffect(() => {
         let interval;
         if (isPlaying) interval = setInterval(() => setTimer((prev) => prev + 1), 1000);
@@ -24,9 +24,9 @@ export default function Timer({ timer, counter, increment, isPlaying, setTimer, 
 
     return (
         <div className="flex flex-col items-center gap-4 w-full">
-            {/* Timer links, Counter rechts */}
+            {/* PlzaHuntTab links, Counter rechts */}
             <div className="flex items-center gap-4 justify-center flex-wrap sm:flex-nowrap w-full">
-                {/* Timer display */}
+                {/* PlzaHuntTab display */}
                 <div
                     className="px-4 py-2 sm:px-6 sm:py-3 bg-white rounded-xl shadow-md text-gray-600 font-bold text-base sm:text-xl text-center min-w-[90px]">
                     {formatTime(timer)}

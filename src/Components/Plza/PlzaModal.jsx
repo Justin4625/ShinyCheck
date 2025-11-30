@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import Timer from "../Timer.jsx";
+import PlzaHuntTab from "./PlzaHuntTab.jsx";
 import PlzaSettingsTab from "./PlzaSettingsTab.jsx";
 
 export default function PlzaModal({ selectedPokemon, onClose, index = 0 }) {
@@ -110,7 +110,7 @@ export default function PlzaModal({ selectedPokemon, onClose, index = 0 }) {
                 {/* Hunt tab */}
                 {activeTab === "hunt" && (
                     <div className="flex flex-col items-center gap-6 w-full mt-4">
-                        <Timer
+                        <PlzaHuntTab
                             timer={timer}
                             counter={counter}
                             increment={increment}
