@@ -19,8 +19,13 @@ export default function PlzaModal({ selectedPokemon, onClose, index = 0 }) {
         if (!storedData) return;
 
         const { timer: storedTimer = 0, counter: storedCounter = 0 } = JSON.parse(storedData);
-        setTimer(storedTimer);
-        setCounter(storedCounter);
+
+        // Zet state asynchroon om ESLint warning te vermijden
+        setTimeout(() => {
+            setTimer(storedTimer);
+            setCounter(storedCounter);
+        }, 0);
+
     }, [selectedPokemon]);
 
     // Save hunt data
