@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import plzaPokemon from "./data/PlzaData.js";
 import usePokemon from "./Components/FetchPokemon.jsx";
-import PlzaModal from "./Components/PlzaModal.jsx";
-import PlzaTabs from "./Components/PlzaTabs.jsx";
-import PlzaCollection from "./Components/PlzaCollection.jsx";
-import PlzaActiveHunts from "./Components/PlzaActiveHunts.jsx";
-import PlzaCards from "./Components/PlzaCards.jsx";
+import PlzaModal from "./Components/Plza/PlzaModal.jsx";
+import PlzaTabs from "./Components/Plza/PlzaTabs.jsx";
+import PlzaCollection from "./Components/Plza/PlzaCollection.jsx";
+import PlzaActiveHunts from "./Components/Plza/PlzaActiveHunts.jsx";
+import PlzaCards from "./Components/Plza/PlzaCards.jsx";
 
 export default function Plza() {
     const { pokemonList } = usePokemon(plzaPokemon);
