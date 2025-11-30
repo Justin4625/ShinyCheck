@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import PlzaHuntTab from "./PlzaHuntTab.jsx";
 import PlzaSettingsTab from "./PlzaSettingsTab.jsx";
 
@@ -11,6 +11,18 @@ export default function PlzaModal({ selectedPokemon, onClose, index = 0 }) {
     const [showConfirm, setShowConfirm] = useState(false);
     const [showGotchaConfirm, setShowGotchaConfirm] = useState(false);
 
+    // refs to hold current values so we can compare without adding them to effect deps
+    const timerRef = useRef(timer);
+    const counterRef = useRef(counter);
+
+    useEffect(() => {
+        timerRef.current = timer;
+    }, [timer]);
+
+    useEffect(() => {
+        counterRef.current = counter;
+    }, [counter]);
+
     // Timer effect
     useEffect(() => {
         let interval;
@@ -18,15 +30,21 @@ export default function PlzaModal({ selectedPokemon, onClose, index = 0 }) {
         return () => clearInterval(interval);
     }, [isPlaying]);
 
-    // Load previous hunt data
+    // Load previous hunt data (only set state if values differ)
     useEffect(() => {
         if (!selectedPokemon) return;
+
         const storedData = localStorage.getItem(`hunt_${selectedPokemon.id}`);
-        if (storedData) {
-            const { timer: storedTimer = 0, counter: storedCounter = 0 } = JSON.parse(storedData);
-            setTimer(storedTimer);
-            setCounter(storedCounter);
-        }
+        if (!storedData) return;
+
+        const { timer: storedTimer = 0, counter: storedCounter = 0 } = JSON.parse(storedData);
+
+        // Update state asynchronously na render om cascading renders te voorkomen
+        setTimeout(() => {
+            if (storedTimer !== timerRef.current) setTimer(storedTimer);
+            if (storedCounter !== counterRef.current) setCounter(storedCounter);
+        }, 0);
+
     }, [selectedPokemon]);
 
     // Save hunt data
@@ -68,11 +86,9 @@ export default function PlzaModal({ selectedPokemon, onClose, index = 0 }) {
                 onClick={(e) => e.stopPropagation()}
                 className="relative bg-gradient-to-br from-gray-100 to-gray-200 text-gray-900 rounded-2xl shadow-xl p-6 sm:p-10 w-[95%] sm:w-[90%] max-w-3xl max-h-[90vh] flex flex-col items-center overflow-hidden"
             >
-                {/* Blobs */}
                 <div className={`absolute -top-6 -right-6 w-36 h-36 sm:w-40 sm:h-40 ${topRightColor} opacity-40 blur-3xl pointer-events-none`} />
                 <div className={`absolute -bottom-10 -left-10 w-48 h-48 sm:w-56 sm:h-56 ${bottomLeftColor} opacity-40 blur-3xl pointer-events-none`} />
 
-                {/* Sluit-knop */}
                 <button
                     onClick={handleClose}
                     className="absolute top-4 right-4 w-10 h-10 sm:w-11 sm:h-11 flex items-center justify-center rounded-full bg-gradient-to-br from-purple-400 to-pink-500 text-white text-xl font-bold shadow-md shadow-purple-500/40 transition-all duration-200 hover:scale-110 hover:shadow-purple-600/50 active:scale-95"
@@ -84,7 +100,6 @@ export default function PlzaModal({ selectedPokemon, onClose, index = 0 }) {
                     #{String(selectedPokemon.id).padStart(3, "0")} - {selectedPokemon.name}
                 </h2>
 
-                {/* Tabs */}
                 <div className="flex justify-center mb-6 gap-[2px] z-10">
                     {[
                         { id: "hunt", label: "Hunt" },
@@ -106,7 +121,6 @@ export default function PlzaModal({ selectedPokemon, onClose, index = 0 }) {
                     })}
                 </div>
 
-                {/* Pokémon Image */}
                 <img
                     src={selectedPokemon.sprites?.other?.home?.front_shiny}
                     alt={selectedPokemon.name}
@@ -114,7 +128,6 @@ export default function PlzaModal({ selectedPokemon, onClose, index = 0 }) {
                     className="w-40 h-40 sm:w-64 sm:h-64 mx-auto drop-shadow-lg cursor-pointer active:scale-95 transition-transform z-10"
                 />
 
-                {/* Tab content */}
                 {activeTab === "hunt" ? (
                     <PlzaHuntTab
                         timer={timer}
@@ -134,7 +147,6 @@ export default function PlzaModal({ selectedPokemon, onClose, index = 0 }) {
                     />
                 )}
 
-                {/* Reset en Gotcha modals blijven ongewijzigd */}
                 {showConfirm && (
                     <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
                         <div className="bg-white rounded-2xl shadow-xl p-6 w-[90%] sm:w-1/2 text-center flex flex-col gap-4">
