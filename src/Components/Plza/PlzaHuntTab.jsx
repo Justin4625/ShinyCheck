@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from "react";
 
-export default function PlzaHuntTab({ timer, counter, increment, isPlaying, setTimer, setIsPlaying, setCounter, onClose }) {
+export default function PlzaHuntTab({ timer, counter, increment, isPlaying, setTimer, setIsPlaying, setCounter }) {
     const timerRef = useRef(timer);
     const counterRef = useRef(counter);
 
@@ -24,13 +24,6 @@ export default function PlzaHuntTab({ timer, counter, increment, isPlaying, setT
 
     return (
         <div className="flex flex-col items-center gap-4 w-full">
-            {/* Close button rechtsboven van hunt-tab */}
-            <button
-                onClick={onClose}
-                className="absolute top-4 right-4 w-10 h-10 sm:w-11 sm:h-11 flex items-center justify-center rounded-full bg-gradient-to-br from-purple-400 to-pink-500 text-white text-xl font-bold shadow-md shadow-purple-500/40 transition-all duration-200 hover:scale-110 hover:shadow-purple-600/50 active:scale-95 z-20"
-            >
-                ✕
-            </button>
 
             {/* Timer links, counter rechts */}
             <div className="flex items-center gap-4 justify-center flex-wrap sm:flex-nowrap w-full">

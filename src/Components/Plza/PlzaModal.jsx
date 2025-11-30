@@ -45,6 +45,14 @@ export default function PlzaModal({ selectedPokemon, onClose, index = 0 }) {
                 <div className={`absolute -top-6 -right-6 w-36 h-36 sm:w-40 sm:h-40 ${topRightColor} opacity-40 blur-3xl pointer-events-none`} />
                 <div className={`absolute -bottom-10 -left-10 w-48 h-48 sm:w-56 sm:h-56 ${bottomLeftColor} opacity-40 blur-3xl pointer-events-none`} />
 
+                {/* Close button */}
+                <button
+                    onClick={onClose}
+                    className="absolute top-4 right-4 w-10 h-10 sm:w-11 sm:h-11 flex items-center justify-center rounded-full bg-gradient-to-br from-purple-400 to-pink-500 text-white text-xl font-bold shadow-md shadow-purple-500/40 transition-all duration-200 hover:scale-110 hover:shadow-purple-600/50 active:scale-95"
+                >
+                    ✕
+                </button>
+
                 {/* Pokémon title */}
                 <h2 className="text-2xl sm:text-4xl font-extrabold mb-2 sm:mb-4 capitalize tracking-wider z-10 text-center">
                     #{String(selectedPokemon.id).padStart(3, "0")} - {selectedPokemon.name}
@@ -90,7 +98,6 @@ export default function PlzaModal({ selectedPokemon, onClose, index = 0 }) {
                         setTimer={setTimer}
                         setIsPlaying={setIsPlaying}
                         setCounter={setCounter}
-                        onClose={onClose} // Close button kan hier ook gebruikt worden
                     />
                 )}
 
