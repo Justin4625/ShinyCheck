@@ -1,9 +1,10 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import plzaPokemon from "./data/PlzaData.js";
 import usePokemon from "./Components/FetchPokemon.jsx";
 import PlzaModal from "./Components/PlzaModal.jsx";
 import PlzaCollection from "./Components/PlzaCollection.jsx";
 import PlzaActiveHunts from "./Components/PlzaActiveHunts.jsx";
+import PlzaTabs from "./Components/PlzaTabs.jsx";
 
 export default function Plza() {
     const { pokemonList } = usePokemon(plzaPokemon);
@@ -27,6 +28,7 @@ export default function Plza() {
         return `${hrs}h ${mins}m ${secs}s`;
     };
 
+    // Alleen base game en mega blijven hier, Active/Collection in eigen componenten
     const displayedPokemon =
         activeTab === "base"
             ? plzaPokemon
@@ -48,32 +50,7 @@ export default function Plza() {
             </h1>
 
             {/* Tabs */}
-            <div className="flex flex-wrap justify-center mb-8 sm:mb-10 z-10 gap-1 sm:gap-2">
-                {[
-                    { id: "active", label: "Active Hunts" },
-                    { id: "base", label: "Base Game" },
-                    { id: "mega", label: "Mega Dimension" },
-                    { id: "collection", label: "Collection" },
-                ].map((tab) => {
-                    const isActive = activeTab === tab.id;
-                    return (
-                        <button
-                            key={tab.id}
-                            onClick={() => setActiveTab(tab.id)}
-                            style={{ clipPath: "polygon(10% 0%, 100% 0%, 90% 100%, 0% 100%)" }}
-                            className={`
-                                relative flex-auto sm:flex-1 min-w-[88px] sm:min-w-0 px-2 sm:px-4 py-2 sm:py-3 text-center font-bold
-                                text-[11px] sm:text-sm md:text-base transition-all duration-300
-                                ${isActive
-                                ? "bg-gradient-to-r from-purple-400 via-pink-500 to-blue-500 text-white shadow-lg"
-                                : "bg-gray-300 text-gray-700 hover:bg-gray-400"}
-                            `}
-                        >
-                            {tab.label}
-                        </button>
-                    );
-                })}
-            </div>
+            <PlzaTabs activeTab={activeTab} setActiveTab={setActiveTab} />
 
             {/* CONTENT */}
             {activeTab === "collection" ? (
