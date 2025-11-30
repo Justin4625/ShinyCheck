@@ -1,23 +1,17 @@
 import React, { useEffect, useRef } from "react";
 
-export default function Timer({ timer, counter, increment, isPlaying, setTimer, setCounter }) {
+export default function Timer({ timer, counter, increment, isPlaying, setTimer, setIsPlaying, setCounter }) {
     const timerRef = useRef(timer);
     const counterRef = useRef(counter);
 
-    useEffect(() => {
-        timerRef.current = timer;
-    }, [timer]);
+    // Keep refs updated
+    useEffect(() => { timerRef.current = timer; }, [timer]);
+    useEffect(() => { counterRef.current = counter; }, [counter]);
 
-    useEffect(() => {
-        counterRef.current = counter;
-    }, [counter]);
-
-    // Timer effect
+    // Timer interval
     useEffect(() => {
         let interval;
-        if (isPlaying) {
-            interval = setInterval(() => setTimer((prev) => prev + 1), 1000);
-        }
+        if (isPlaying) interval = setInterval(() => setTimer((prev) => prev + 1), 1000);
         return () => clearInterval(interval);
     }, [isPlaying, setTimer]);
 
@@ -29,14 +23,19 @@ export default function Timer({ timer, counter, increment, isPlaying, setTimer, 
     };
 
     return (
-        <div className="flex flex-col items-center gap-6 w-full mt-4">
+        <div className="flex flex-col items-center gap-4 w-full">
+            {/* Timer links, Counter rechts */}
             <div className="flex items-center gap-4 justify-center flex-wrap sm:flex-nowrap w-full">
-                <div className="px-4 py-2 sm:px-6 sm:py-3 bg-white rounded-xl shadow-md text-gray-600 font-bold text-base sm:text-xl text-center min-w-[90px]">
+                {/* Timer display */}
+                <div
+                    className="px-4 py-2 sm:px-6 sm:py-3 bg-white rounded-xl shadow-md text-gray-600 font-bold text-base sm:text-xl text-center min-w-[90px]">
                     {formatTime(timer)}
                 </div>
 
-                <div className="flex items-center gap-2 justify-center">
-                    <div className="px-6 py-2 sm:py-3 bg-white rounded-xl shadow-md text-xl sm:text-2xl font-bold text-gray-900 min-w-[70px] sm:min-w-[80px] text-center">
+                {/* Counter + decrement */}
+                <div className="flex items-center gap-2">
+                    <div
+                        className="px-6 py-2 sm:py-3 bg-white rounded-xl shadow-md text-xl sm:text-2xl font-bold text-gray-900 min-w-[70px] sm:min-w-[80px] text-center">
                         {counter}
                     </div>
                     <button
@@ -47,6 +46,22 @@ export default function Timer({ timer, counter, increment, isPlaying, setTimer, 
                     </button>
                 </div>
             </div>
+
+            {/* Start / Continue / Pause button */}
+            <button
+                onClick={() => setIsPlaying((p) => !p)}
+                className={`
+        px-6 py-3 sm:px-8 sm:py-4 font-bold rounded-xl text-white shadow-lg transform hover:scale-105 transition-all duration-300
+        ${isPlaying
+                    ? "bg-gradient-to-r from-blue-600 via-purple-600 to-blue-700"
+                    : timer > 0
+                        ? "bg-gradient-to-r from-purple-400 via-pink-500 to-purple-500" // Continue knop
+                        : "bg-gradient-to-r from-green-500 via-lime-600 to-green-600"} // Start knop
+        bg-[length:200%_200%] bg-[position:0%_50%] hover:bg-[position:100%_50%]
+    `}
+            >
+                {isPlaying ? "Pause" : timer > 0 ? "Continue" : "Start"}
+            </button>
         </div>
     );
 }
