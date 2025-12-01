@@ -7,7 +7,7 @@ import ShinyDexTabs from "./Components/ShinyDexTabs.jsx";
 export default function ShinyDex() {
     const { pokemonList } = usePokemon(shinyDexPokemon);
     const [selectedPokemon, setSelectedPokemon] = useState(null);
-    const [activeTab, setActiveTab] = useState("all");
+    const [activeTab, setActiveTab] = useState("kanto"); // <-- default op Kanto
 
     const openModal = (pokemon) => setSelectedPokemon(pokemon);
 
@@ -19,10 +19,7 @@ export default function ShinyDex() {
     }, [selectedPokemon]);
 
     // Filter Pokémon op actieve tab
-    const displayedPokemon =
-        activeTab === "all"
-            ? pokemonList
-            : pokemonList.filter((p) => p.region === activeTab);
+    const displayedPokemon = pokemonList.filter((p) => p.region === activeTab);
 
     return (
         <div className="relative p-4 sm:p-6 lg:p-8 min-h-screen bg-gradient-to-b from-gray-50 via-gray-100 to-gray-200 overflow-hidden">

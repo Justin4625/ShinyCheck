@@ -6,15 +6,12 @@ export default function ShinyDexCards({ displayedPokemon, openModal }) {
             {displayedPokemon.length === 0 ? (
                 <div className="col-span-full flex flex-col justify-center items-center text-center min-h-[240px] sm:min-h-[300px]">
                     <span className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-700">
-                        No Pokémon found
+                        Loading...
                     </span>
                 </div>
             ) : (
                 displayedPokemon.map((entry, index) => {
                     const number = String(entry.id).padStart(3, "0");
-                    const shinyCount = Number(localStorage.getItem(`shiny_${entry.id}`)) || 0;
-
-                    const isGolden = shinyCount >= 1;
 
                     return (
                         <div
@@ -23,9 +20,7 @@ export default function ShinyDexCards({ displayedPokemon, openModal }) {
                             className={`
                                 relative rounded-2xl p-4 sm:p-5 lg:p-6 flex flex-col items-center justify-between cursor-pointer transition-transform duration-300 overflow-hidden
                                 hover:scale-105
-                                ${isGolden
-                                ? "bg-gradient-to-br from-yellow-200 via-amber-300 to-yellow-400 text-gray-900 shadow-md"
-                                : "bg-gradient-to-br from-gray-100 to-gray-200 text-gray-900 shadow-md"}
+                                bg-gradient-to-br from-gray-100 to-gray-200 text-gray-900 shadow-md
                             `}
                         >
                             {/* Blobs */}
@@ -56,13 +51,6 @@ export default function ShinyDexCards({ displayedPokemon, openModal }) {
                                     {entry.types.map((t) => t.type.name).join(" / ")}
                                 </p>
                             )}
-
-                            {/* Collected badge */}
-                            <div className="mt-4 w-full flex justify-center">
-                                <div className="px-4 py-1 rounded-full bg-gradient-to-r from-purple-400 to-blue-500 text-white text-xs sm:text-sm font-bold shadow-md tracking-wide">
-                                    Collected: {shinyCount}
-                                </div>
-                            </div>
                         </div>
                     );
                 })

@@ -2,7 +2,6 @@ import React from "react";
 
 export default function ShinyDexTabs({ activeTab, setActiveTab }) {
     const tabs = [
-        { id: "all", label: "All" },
         { id: "kanto", label: "Kanto" },
         { id: "johto", label: "Johto" },
         { id: "hoenn", label: "Hoenn" },
