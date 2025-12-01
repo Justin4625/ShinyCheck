@@ -152,6 +152,7 @@ export default function PlzaModal({ selectedPokemon, onClose, index = 0 }) {
                         setTimer={setTimer}
                         setCounter={setCounter}
                         selectedPokemon={selectedPokemon}
+                        onClose={onClose}
                     />
                 )}
             </div>

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-export default function SettingsTab({ increment, setIncrement, timer, counter, setTimer, setCounter, selectedPokemon }) {
+export default function SettingsTab({ increment, setIncrement, timer, counter, setTimer, setCounter, selectedPokemon, onClose }) {
     const [showConfirm, setShowConfirm] = useState(false);
     const [showGotchaConfirm, setShowGotchaConfirm] = useState(false);
 
@@ -21,7 +21,7 @@ export default function SettingsTab({ increment, setIncrement, timer, counter, s
         setTimer(0);
         localStorage.removeItem(`hunt_${selectedPokemon.id}`);
         setShowGotchaConfirm(false);
-        alert("Gotcha! 🎉");
+        onClose();
     };
 
     return (
