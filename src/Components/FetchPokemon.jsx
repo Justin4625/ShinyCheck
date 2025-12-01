@@ -20,7 +20,6 @@ export default function usePokemon(entries = []) {
 
     useEffect(() => {
         if (!Array.isArray(entries) || entries.length === 0) {
-            // Defer clearing state to avoid synchronous setState inside effect
             if (mountedRef.current) {
                 Promise.resolve().then(() => {
                     if (mountedRef.current) setPokemonList([]);
@@ -40,7 +39,8 @@ export default function usePokemon(entries = []) {
                             const resp = await fetch(`https://pokeapi.co/api/v2/pokemon/${apiName}`);
                             if (!resp.ok) return null;
                             const json = await resp.json();
-                            return { ...json, id: entry.id }; // keep local id
+                            // ✅ Voeg region toe
+                            return { ...json, id: entry.id, region: entry.region };
                         } catch {
                             return null;
                         }
