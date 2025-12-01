@@ -15,18 +15,19 @@ export default function ShinyDexTabs({ activeTab, setActiveTab }) {
     ];
 
     return (
-        <div className="flex justify-center gap-2 sm:gap-4 mb-6 z-10">
+        <div className="flex flex-wrap justify-center gap-3 mb-6 z-10">
             {tabs.map((tab) => {
                 const isActive = activeTab === tab.id;
                 return (
                     <button
                         key={tab.id}
                         onClick={() => setActiveTab(tab.id)}
-                        className={`px-4 py-2 font-semibold rounded-full transition-all duration-300 ${
-                            isActive
-                                ? "bg-gradient-to-r from-purple-400 to-blue-500 text-white shadow-md"
-                                : "bg-gray-200 text-gray-700 hover:bg-gray-300"
-                        }`}
+                        className={`
+                            px-5 py-2 sm:py-3 text-sm sm:text-base font-semibold rounded-full backdrop-blur-md border border-gray-700/30 transition-all duration-300
+                            ${isActive
+                            ? "bg-gradient-to-r from-red-500 to-purple-600 text-white shadow-[0_0_15px_rgba(255,0,255,0.7)]"
+                            : "bg-white/10 text-gray-200 hover:bg-white/20 hover:shadow-[0_0_10px_rgba(200,100,255,0.4)]"}
+                        `}
                     >
                         {tab.label}
                     </button>

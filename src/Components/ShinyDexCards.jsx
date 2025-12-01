@@ -2,55 +2,46 @@ import React from "react";
 
 export default function ShinyDexCards({ displayedPokemon, openModal }) {
     return (
-        <div className="relative grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 sm:gap-6 lg:gap-8 z-10">
+        <div className="relative grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 z-10">
             {displayedPokemon.length === 0 ? (
                 <div className="col-span-full flex flex-col justify-center items-center text-center min-h-[240px] sm:min-h-[300px]">
-                    <span className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-700">
+                    <span className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-400 animate-pulse">
                         Loading...
                     </span>
                 </div>
             ) : (
-                displayedPokemon.map((entry, index) => {
-                    const number = String(entry.id).padStart(3, "0");
+                displayedPokemon.map((entry) => {
+                    const number = String(entry.id).padStart(4, "0");
 
                     return (
                         <div
                             key={entry.id}
                             onClick={() => openModal(entry)}
-                            className={`
-                                relative rounded-2xl p-4 sm:p-5 lg:p-6 flex flex-col items-center justify-between cursor-pointer transition-transform duration-300 overflow-hidden
-                                hover:scale-105
-                                bg-gradient-to-br from-gray-100 to-gray-200 text-gray-900 shadow-md
-                            `}
+                            className="relative w-full bg-gradient-to-br from-gray-900/20 to-gray-800/30 backdrop-blur-lg border border-gray-700/40 rounded-3xl shadow-[0_4px_30px_rgba(0,0,0,0.3)] hover:shadow-[0_8px_50px_rgba(0,0,0,0.5)] hover:scale-105 transition-all duration-300 cursor-pointer flex flex-col items-center p-5 sm:p-6"
                         >
-                            {/* Blobs */}
-                            <div
-                                className={`absolute -top-4 -right-4 w-16 h-16 rounded-full blur-2xl pointer-events-none
-                                ${index % 3 === 0 ? "bg-green-400 opacity-40" : index % 3 === 1 ? "bg-pink-400 opacity-40" : "bg-blue-400 opacity-40"}`}
-                            ></div>
-
-                            <div
-                                className={`absolute -bottom-4 -left-4 w-24 h-24 rounded-full blur-3xl pointer-events-none
-                                ${index % 3 === 0 ? "bg-purple-400 opacity-40" : index % 3 === 1 ? "bg-blue-400 opacity-40" : "bg-green-400 opacity-40"}`}
-                            ></div>
-
-                            <h2 className="text-sm sm:text-lg md:text-xl font-bold mb-3 sm:mb-4 capitalize tracking-wide text-center">
-                                {entry.name} (#{number})
-                            </h2>
+                            {/* Nummer en naam */}
+                            <div className="w-full flex justify-between items-center mb-3">
+                                <h2 className="text-base sm:text-lg md:text-xl font-extrabold capitalize tracking-wide text-white text-left">
+                                    {entry.name}
+                                </h2>
+                                <span className="px-2 py-1 text-xs sm:text-sm font-bold bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-500 text-white rounded-full shadow-[0_2px_10px_rgba(0,255,255,0.5)]">
+                                    #{number}
+                                </span>
+                            </div>
 
                             {/* Pokémon Sprite */}
-                            <img
-                                src={entry?.sprites?.other?.home?.front_shiny}
-                                alt={entry.name}
-                                className="w-20 h-20 sm:w-28 sm:h-28 md:w-32 md:h-32 drop-shadow-md"
-                            />
+                            <div className="relative">
+                                <img
+                                    src={entry?.sprites?.other?.home?.front_shiny}
+                                    alt={entry.name}
+                                    className="w-28 h-28 sm:w-32 sm:h-32 md:w-36 md:h-36 drop-shadow-[0_0_15px_rgba(0,255,255,0.5)]"
+                                />
+                                {/* Neon glow overlay */}
+                                <div className="absolute inset-0 rounded-3xl ring-1 ring-cyan-400/50 pointer-events-none animate-pulse"></div>
+                            </div>
 
-                            {/* Types */}
-                            {entry?.types && (
-                                <p className="mt-2 sm:mt-3 text-xs sm:text-sm text-gray-600 uppercase tracking-wide">
-                                    {entry.types.map((t) => t.type.name).join(" / ")}
-                                </p>
-                            )}
+                            {/* Bottom accent bar */}
+                            <div className="w-3/4 h-1 bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-500 rounded-full mt-4 animate-pulse"></div>
                         </div>
                     );
                 })
