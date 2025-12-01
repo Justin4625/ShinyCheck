@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from "react";
 
-export default function PlzaHuntTab({ timer, counter, increment, isPlaying, setTimer, setIsPlaying, setCounter }) {
+export default function HuntTab({ timer, counter, increment, isPlaying, setTimer, setIsPlaying, setCounter }) {
     const timerRef = useRef(timer);
     const counterRef = useRef(counter);
 
@@ -49,15 +49,11 @@ export default function PlzaHuntTab({ timer, counter, increment, isPlaying, setT
             {/* Start / Continue / Pause button */}
             <button
                 onClick={() => setIsPlaying((p) => !p)}
-                className={`
-        px-6 mt-2 py-3 sm:px-8 sm:py-4 font-bold rounded-xl text-white shadow-lg transform hover:scale-105 transition-all duration-300
-        ${isPlaying
-                    ? "bg-gradient-to-r from-blue-600 via-purple-600 to-blue-700"
+                className={`px-6 mt-2 py-3 sm:px-8 sm:py-4 font-bold rounded-xl text-white shadow-lg transform hover:scale-105 transition-all duration-300
+                ${isPlaying ? "bg-gradient-to-r from-blue-600 via-purple-600 to-blue-700"
                     : timer > 0
                         ? "bg-gradient-to-r from-purple-400 via-pink-500 to-purple-500"
-                        : "bg-gradient-to-r from-green-500 via-lime-600 to-green-600"} 
-        bg-[length:200%_200%] bg-[position:0%_50%] hover:bg-[position:100%_50%]
-    `}
+                        : "bg-gradient-to-r from-green-500 via-lime-600 to-green-600"} bg-[length:200%_200%] bg-[position:0%_50%] hover:bg-[position:100%_50%]`}
             >
                 {isPlaying ? "Pause" : timer > 0 ? "Continue" : "Start"}
             </button>

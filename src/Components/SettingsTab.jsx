@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-export default function PlzaSettingsTab({ increment, setIncrement, timer, counter, setTimer, setCounter, selectedPokemon }) {
+export default function SettingsTab({ increment, setIncrement, timer, counter, setTimer, setCounter, selectedPokemon }) {
     const [showConfirm, setShowConfirm] = useState(false);
     const [showGotchaConfirm, setShowGotchaConfirm] = useState(false);
 

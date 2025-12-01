@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import PlzaHuntTab from "./PlzaHuntTab.jsx";
-import PlzaSettingsTab from "./PlzaSettingsTab.jsx";
+import HuntTab from "../HuntTab.jsx";
+import SettingsTab from "../SettingsTab.jsx";
 
 export default function PlzaModal({ selectedPokemon, onClose, index = 0 }) {
     const [isPlaying, setIsPlaying] = useState(false);
@@ -117,7 +117,7 @@ export default function PlzaModal({ selectedPokemon, onClose, index = 0 }) {
                 />
 
                 {activeTab === "hunt" && (
-                    <PlzaHuntTab
+                    <HuntTab
                         timer={timer}
                         counter={counter}
                         increment={increment}
@@ -130,7 +130,7 @@ export default function PlzaModal({ selectedPokemon, onClose, index = 0 }) {
                 )}
 
                 {activeTab === "settings" && (
-                    <PlzaSettingsTab
+                    <SettingsTab
                         increment={increment}
                         setIncrement={setIncrement}
                         timer={timer}
