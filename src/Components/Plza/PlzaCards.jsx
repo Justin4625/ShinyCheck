@@ -1,12 +1,24 @@
 import React from "react";
 
 export default function PlzaCards({ displayedPokemon, pokemonList, openModal, activeTab }) {
+    // Check of er Pokémon zijn en of de sprites geladen zijn
+    const isLoading = displayedPokemon.length > 0 && displayedPokemon.some((entry) => {
+        const pokemon = pokemonList.find((p) => p.id === entry.id);
+        return !pokemon?.sprites?.other?.home?.front_shiny;
+    });
+
     return (
         <div className="relative grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 sm:gap-6 lg:gap-8 z-10">
             {displayedPokemon.length === 0 ? (
                 <div className="col-span-full flex flex-col justify-center items-center text-center min-h-[240px] sm:min-h-[300px]">
                     <span className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-700">
-                        {activeTab === "mega" && "Coming Soon!"}
+                        {activeTab === "mega" ? "Coming Soon!" : "No Pokémon found"}
+                    </span>
+                </div>
+            ) : isLoading ? (
+                <div className="col-span-full flex flex-col justify-center items-center text-center min-h-[240px] sm:min-h-[300px]">
+                    <span className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-700 animate-pulse">
+                        Loading...
                     </span>
                 </div>
             ) : (
