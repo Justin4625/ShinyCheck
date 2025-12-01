@@ -62,11 +62,29 @@ export default function PlzaModal({ selectedPokemon, onClose, index = 0 }) {
                 onClick={(e) => e.stopPropagation()}
                 className="relative bg-gradient-to-br from-gray-100 to-gray-200 text-gray-900 rounded-2xl shadow-xl p-6 sm:p-10 w-[95%] sm:w-[90%] max-w-3xl max-h-[90vh] flex flex-col items-center overflow-hidden"
             >
-                <div className={`absolute -top-6 -right-6 w-36 h-36 sm:w-40 sm:h-40 ${topRightColor} opacity-40 blur-3xl pointer-events-none`} />
-                <div className={`absolute -bottom-10 -left-10 w-48 h-48 sm:w-56 sm:h-56 ${bottomLeftColor} opacity-40 blur-3xl pointer-events-none`} />
+                <div
+                    className={`absolute -top-6 -right-6 w-36 h-36 sm:w-40 sm:h-40 ${topRightColor} opacity-40 blur-3xl pointer-events-none`}/>
+                <div
+                    className={`absolute -bottom-10 -left-10 w-48 h-48 sm:w-56 sm:h-56 ${bottomLeftColor} opacity-40 blur-3xl pointer-events-none`}/>
 
                 <button
-                    onClick={onClose}
+                    onClick={() => {
+                        if (!selectedPokemon) return;
+
+                        // ✅ Forceer pauze in localStorage
+                        localStorage.setItem(
+                            `hunt_${selectedPokemon.id}`,
+                            JSON.stringify({
+                                timer,
+                                counter,
+                                isPlaying: false, // ✅ HIER gebeurt de echte pauze
+                                timestamp: Date.now()
+                            })
+                        );
+
+                        setIsPlaying(false); // ✅ UI pauze
+                        onClose();           // ✅ Modal sluiten
+                    }}
                     className="absolute top-4 right-4 w-10 h-10 sm:w-11 sm:h-11 flex items-center justify-center rounded-full bg-gradient-to-br from-purple-400 to-pink-500 text-white text-xl font-bold shadow-md shadow-purple-500/40 transition-all duration-200 hover:scale-110 hover:shadow-purple-600/50 active:scale-95"
                 >
                     ✕
@@ -78,15 +96,19 @@ export default function PlzaModal({ selectedPokemon, onClose, index = 0 }) {
 
                 <div className="flex justify-center mb-6 gap-[2px] z-10">
                     {[
-                        { id: "hunt", label: "Hunt" },
-                        { id: "settings", label: "Settings" },
+                        {id: "hunt", label: "Hunt"},
+                        {id: "settings", label: "Settings"},
                     ].map((tab) => {
                         const isActive = activeTab === tab.id;
                         return (
                             <button
                                 key={tab.id}
                                 onClick={() => setActiveTab(tab.id)}
-                                style={{ clipPath: "polygon(15% 0%, 100% 0%, 85% 100%, 0% 100%)", width: "160px", height: "42px" }}
+                                style={{
+                                    clipPath: "polygon(15% 0%, 100% 0%, 85% 100%, 0% 100%)",
+                                    width: "160px",
+                                    height: "42px"
+                                }}
                                 className={`text-center font-bold text-base transition-all duration-300 ${isActive
                                     ? "bg-gradient-to-r from-purple-400 to-blue-500 text-white shadow-md"
                                     : "bg-gray-300 text-gray-700 hover:bg-gray-400"}`}
