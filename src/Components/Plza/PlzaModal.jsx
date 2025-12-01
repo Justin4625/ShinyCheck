@@ -12,42 +12,34 @@ export default function PlzaModal({ selectedPokemon, onClose, index = 0 }) {
     // Load previous hunt data
     useEffect(() => {
         if (!selectedPokemon) return;
+
+        // Stel de tab uit naar de volgende tick (vermijdt directe setState in effect)
+        const t = setTimeout(() => setActiveTab("hunt"), 0);
+
         const storedData = localStorage.getItem(`hunt_${selectedPokemon.id}`);
         let newTimer = 0;
         let newCounter = 0;
         let newIsPlaying = false;
 
-        if (!storedData) {
-            newTimer = 0;
-            newCounter = 0;
-            newIsPlaying = false;
-        } else {
+        if (storedData) {
             try {
                 const parsed = JSON.parse(storedData);
-                if ((parsed.timer && parsed.timer > 0) || (parsed.counter && parsed.counter > 0) || parsed.isPlaying) {
-                    newTimer = parsed.timer || 0;
-                    newCounter = parsed.counter || 0;
-                    newIsPlaying = parsed.isPlaying || false;
-                } else {
-                    newTimer = 0;
-                    newCounter = 0;
-                    newIsPlaying = false;
-                }
-                // eslint-disable-next-line no-unused-vars
-            } catch (e) {
-                newTimer = 0;
-                newCounter = 0;
-                newIsPlaying = false;
-            }
+                newTimer = parsed.timer || 0;
+                newCounter = parsed.counter || 0;
+                newIsPlaying = parsed.isPlaying || false;
+            } catch { /* empty */ }
         }
 
         const id = setTimeout(() => {
-            setTimer((prev) => (prev !== newTimer ? newTimer : prev));
-            setCounter((prev) => (prev !== newCounter ? newCounter : prev));
-            setIsPlaying((prev) => (prev !== newIsPlaying ? newIsPlaying : prev));
+            setTimer(newTimer);
+            setCounter(newCounter);
+            setIsPlaying(newIsPlaying);
         }, 0);
 
-        return () => clearTimeout(id);
+        return () => {
+            clearTimeout(t);
+            clearTimeout(id);
+        };
     }, [selectedPokemon]);
 
     // Save hunt data
