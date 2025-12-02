@@ -42,16 +42,23 @@ export default function PlzaActiveHunts({
                         >
                             {/* Blobs */}
                             <div className={`absolute -top-4 -right-4 w-16 h-16 rounded-full blur-2xl pointer-events-none
-                                ${index % 3 === 0 ? "bg-green-400 opacity-40" : index % 3 === 1 ? "bg-pink-400 opacity-40" : "bg-blue-400 opacity-40"}`}
+                                ${index % 3 === 0 ? "bg-green-400 opacity-60" : index % 3 === 1 ? "bg-pink-400 opacity-60" : "bg-blue-400 opacity-60"}`}
                             ></div>
 
                             <div className={`absolute -bottom-4 -left-4 w-24 h-24 rounded-full blur-3xl pointer-events-none
-                                ${index % 3 === 0 ? "bg-purple-400 opacity-40" : index % 3 === 1 ? "bg-blue-400 opacity-40" : "bg-green-400 opacity-40"}`}
+                                ${index % 3 === 0 ? "bg-purple-400 opacity-60" : index % 3 === 1 ? "bg-blue-400 opacity-60" : "bg-green-400 opacity-60"}`}
                             ></div>
 
-                            <h2 className="text-sm sm:text-lg md:text-xl font-bold mb-3 sm:mb-4 capitalize tracking-wide text-center">
-                                {entry.name} (#{number})
-                            </h2>
+                            {/* Naam en nummer */}
+                            <div className="w-full flex justify-between items-center mb-3 relative z-10">
+                                <h2 className="text-base sm:text-lg md:text-xl font-extrabold capitalize tracking-wide text-gray-900 text-left">
+                                    {entry.name}
+                                </h2>
+                                <span
+                                    className="px-2 py-1 text-xs sm:text-sm font-bold bg-gradient-to-r from-purple-400 to-blue-500 text-white rounded-full shadow-md relative z-10">
+                                    #{number}
+                                </span>
+                            </div>
 
                             <img
                                 src={pokemon?.sprites?.other?.home?.front_shiny}
