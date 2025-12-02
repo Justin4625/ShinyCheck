@@ -10,7 +10,7 @@ export default function SettingsTab({ increment, setIncrement, timer, setTimer, 
 
     useEffect(() => {
         setTimer(hours * 3600 + minutes * 60 + seconds);
-    }, [hours, minutes, seconds]);
+    }, [hours, minutes, seconds, setTimer]);
 
     const resetHunt = () => {
         setCounter(0);
