@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import shinyDexPokemon from "./data/ShinyDexData.js";
 import usePokemon from "./Components/FetchPokemon.jsx";
-import ShinyDexCards from "./Components/ShinyDexCards.jsx";
-import ShinyDexTabs from "./Components/ShinyDexTabs.jsx";
+import ShinyDexCards from "./Components/ShinyDex/ShinyDexCards.jsx";
+import ShinyDexTabs from "./Components/ShinyDex/ShinyDexTabs.jsx";
 
 export default function ShinyDex() {
     const { pokemonList } = usePokemon(shinyDexPokemon);
