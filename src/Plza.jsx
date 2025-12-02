@@ -11,9 +11,20 @@ export default function Plza() {
     const { pokemonList } = usePokemon(plzaPokemon);
     const [selectedPokemon, setSelectedPokemon] = useState(null);
     const [activeTab, setActiveTab] = useState("base");
+    const [shinyProgress, setShinyProgress] = useState({ count: 0, total: plzaPokemon.length });
 
     const openModal = (pokemon) => setSelectedPokemon(pokemon);
     const closeModal = () => setSelectedPokemon(null);
+
+    // Bereken shiny progress
+    useEffect(() => {
+        let count = 0;
+        plzaPokemon.forEach(p => {
+            const shinyCount = Number(localStorage.getItem(`shiny_${p.id}`)) || 0;
+            if (shinyCount > 0) count++;
+        });
+        setShinyProgress({ count, total: plzaPokemon.length });
+    }, [pokemonList, selectedPokemon]); // refresh ook bij modal open/close
 
     useEffect(() => {
         document.body.style.overflow = selectedPokemon ? "hidden" : "auto";
@@ -29,13 +40,14 @@ export default function Plza() {
         return `${hrs}h ${mins}m ${secs}s`;
     };
 
-    // Alleen Base/Mega wordt hier direct getoond
     const displayedPokemon =
         activeTab === "base"
             ? plzaPokemon
             : activeTab === "mega"
                 ? [] // Voor Mega Dimension, momenteel leeg
                 : [];
+
+    const shinyPercentage = ((shinyProgress.count / shinyProgress.total) * 100).toFixed(1);
 
     return (
         <div className="relative p-4 sm:p-6 lg:p-8 min-h-screen bg-gradient-to-b from-gray-50 via-gray-100 to-gray-200 overflow-hidden">
@@ -46,9 +58,25 @@ export default function Plza() {
             <div className="absolute -top-20 -left-10 w-48 sm:w-60 h-48 sm:h-60 bg-blue-400 rounded-full opacity-15 blur-3xl pointer-events-none"></div>
             <div className="absolute -bottom-32 -right-20 w-64 sm:w-80 h-64 sm:h-80 bg-purple-400 rounded-full opacity-15 blur-3xl pointer-events-none"></div>
 
-            <h1 className="relative text-2xl sm:text-3xl md:text-4xl font-extrabold text-center text-gray-900 mb-4 sm:mb-6 tracking-wide z-10">
+            <h1 className="relative text-2xl sm:text-3xl md:text-4xl font-extrabold text-center text-gray-900 mb-2 sm:mb-4 tracking-wide z-10">
                 Pokémon Legends: Z-A
             </h1>
+
+            {/* Shiny Progress */}
+            <div className="relative w-full max-w-xl mx-auto mb-6">
+                <p className="text-center text-gray-700 font-bold mb-2">
+                    Shiny Progress: {shinyProgress.count}/{shinyProgress.total} ({shinyPercentage}%)
+                </p>
+
+                {/* Achtergrond van de bar */}
+                <div className="w-full h-6 rounded-full bg-gray-300/30 overflow-hidden">
+                    {/* Voorgrond van de bar */}
+                    <div
+                        className="h-6 rounded-full bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-600 transition-all duration-700 ease-out"
+                        style={{ width: `${shinyPercentage}%` }}
+                    />
+                </div>
+            </div>
 
             {/* Tabs */}
             <PlzaTabs activeTab={activeTab} setActiveTab={setActiveTab} />
