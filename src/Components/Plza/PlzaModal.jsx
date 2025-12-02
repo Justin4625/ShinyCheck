@@ -53,6 +53,7 @@ export default function PlzaModal({ selectedPokemon, onClose, index = 0 }) {
         setTimer(0);
         localStorage.removeItem(`hunt_${selectedPokemon.id}`);
         setShowConfirm(false);
+        setActiveTab("hunt");
     };
 
     // Gotcha hunt
