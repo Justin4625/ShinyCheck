@@ -37,7 +37,7 @@ export default function SettingsTab({ increment, setIncrement, timer, setTimer, 
         w-24 px-3 py-2 rounded-xl border-2 border-transparent 
         bg-white/90 backdrop-blur-sm text-center font-bold text-gray-900 
         shadow-md focus:outline-none focus:ring-2 focus:ring-blue-400 
-        focus:ring-offset-1 transition-all duration-300 h-12
+        focus:ring-offset-1 transition-all duration-300 h-10
     `;
 
     const buttonClass = `
