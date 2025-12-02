@@ -25,6 +25,34 @@ export default function PlzaCollectionModal({ data, onClose, pokemon, shinyIndex
     const topRightColor = colors[Math.floor(Math.random() * colors.length)];
     const bottomLeftColor = colors[Math.floor(Math.random() * colors.length)];
 
+    // Delete shiny entry uit localStorage
+    const deleteShiny = () => {
+        const shinyCount = Number(localStorage.getItem(`shiny_${pokemon.id}`)) || 0;
+        if (shinyCount === 0) return;
+
+        // Verwijder de geselecteerde shiny
+        localStorage.removeItem(`shinyData_${pokemon.id}_${shinyIndex}`);
+
+        // Verplaats hogere indices naar beneden
+        for (let i = shinyIndex + 1; i <= shinyCount; i++) {
+            const data = localStorage.getItem(`shinyData_${pokemon.id}_${i}`);
+            if (data) {
+                localStorage.setItem(`shinyData_${pokemon.id}_${i - 1}`, data);
+                localStorage.removeItem(`shinyData_${pokemon.id}_${i}`);
+            }
+        }
+
+        // Update shiny count
+        const newCount = shinyCount - 1;
+        if (newCount > 0) {
+            localStorage.setItem(`shiny_${pokemon.id}`, newCount);
+        } else {
+            localStorage.removeItem(`shiny_${pokemon.id}`);
+        }
+
+        onClose();
+    };
+
     return (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
             <div
@@ -97,6 +125,14 @@ export default function PlzaCollectionModal({ data, onClose, pokemon, shinyIndex
                             </div>
                         </div>
                     </div>
+
+                    {/* Delete button */}
+                    <button
+                        onClick={deleteShiny}
+                        className="mt-4 w-full py-2 bg-red-500 text-white font-bold rounded-xl shadow-md hover:bg-red-600 transition-colors duration-300"
+                    >
+                        Delete Shiny
+                    </button>
                 </div>
             </div>
         </div>
