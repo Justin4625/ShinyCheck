@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import HuntTab from "../HuntTab.jsx";
 import SettingsTab from "../SettingsTab.jsx";
 import PokemonSpriteModal from "../PokemonSpriteModal.jsx";
+import GotchaResetPopups from "../GotchaResetPopups.jsx";
 
 export default function PlzaModal({ selectedPokemon, onClose, index = 0 }) {
     const [isPlaying, setIsPlaying] = useState(false);
@@ -17,29 +18,18 @@ export default function PlzaModal({ selectedPokemon, onClose, index = 0 }) {
     // Load previous hunt data
     useEffect(() => {
         if (!selectedPokemon) return;
-        const t = setTimeout(() => setActiveTab("hunt"), 0);
+
         const storedData = localStorage.getItem(`hunt_${selectedPokemon.id}`);
-        let newTimer = 0;
-        let newCounter = 0;
-        let newIsPlaying = false;
         if (storedData) {
             try {
                 const parsed = JSON.parse(storedData);
-                newTimer = parsed.timer || 0;
-                newCounter = parsed.counter || 0;
-                newIsPlaying = parsed.isPlaying || false;
+                // eslint-disable-next-line react-hooks/set-state-in-effect
+                setTimer(parsed.timer || 0);
+                setCounter(parsed.counter || 0);
+                setIsPlaying(parsed.isPlaying || false);
             } catch { /* empty */ }
         }
-        const id = setTimeout(() => {
-            setTimer(newTimer);
-            setCounter(newCounter);
-            setIsPlaying(newIsPlaying);
-        }, 0);
-
-        return () => {
-            clearTimeout(t);
-            clearTimeout(id);
-        };
+        setActiveTab("hunt");
     }, [selectedPokemon]);
 
     // Save hunt data
@@ -53,9 +43,11 @@ export default function PlzaModal({ selectedPokemon, onClose, index = 0 }) {
 
     if (!selectedPokemon) return null;
 
+    // Glow blob colors
     const topRightColor = index % 3 === 0 ? "bg-green-400" : index % 3 === 1 ? "bg-pink-400" : "bg-blue-400";
     const bottomLeftColor = index % 3 === 0 ? "bg-purple-400" : index % 3 === 1 ? "bg-blue-400" : "bg-green-400";
 
+    // Reset hunt
     const resetHunt = () => {
         setCounter(0);
         setTimer(0);
@@ -63,6 +55,7 @@ export default function PlzaModal({ selectedPokemon, onClose, index = 0 }) {
         setShowConfirm(false);
     };
 
+    // Gotcha hunt
     const gotchaHunt = () => {
         const current = Number(localStorage.getItem(`shiny_${selectedPokemon.id}`)) || 0;
         localStorage.setItem(`shiny_${selectedPokemon.id}`, current + 1);
@@ -84,10 +77,9 @@ export default function PlzaModal({ selectedPokemon, onClose, index = 0 }) {
                 <div className={`absolute -top-6 -right-6 w-36 h-36 sm:w-40 sm:h-40 ${topRightColor} opacity-40 blur-3xl pointer-events-none`} />
                 <div className={`absolute -bottom-10 -left-10 w-48 h-48 sm:w-56 sm:h-56 ${bottomLeftColor} opacity-40 blur-3xl pointer-events-none`} />
 
-                {/* Close */}
+                {/* Close button */}
                 <button
                     onClick={() => {
-                        if (!selectedPokemon) return;
                         localStorage.setItem(
                             `hunt_${selectedPokemon.id}`,
                             JSON.stringify({ timer, counter, isPlaying: false, timestamp: Date.now() })
@@ -165,31 +157,24 @@ export default function PlzaModal({ selectedPokemon, onClose, index = 0 }) {
                     />
                 )}
 
-                {/* ✅ Popups over hele modal */}
+                {/* Popups */}
                 {showConfirm && (
-                    <div className="absolute inset-0 flex items-center justify-center z-50 bg-black/20">
-                        <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl p-6 w-[90%] sm:w-1/2 text-center flex flex-col gap-4 border border-gray-200">
-                            <p className="text-gray-900 font-semibold text-lg">Are you sure you want to reset the timer and counter?</p>
-                            <div className="flex justify-center gap-4 mt-4">
-                                <button onClick={() => setShowConfirm(false)} className="px-5 py-2 bg-gray-200 hover:bg-gray-300 text-gray-900 font-semibold rounded-xl shadow-md transition-all duration-200">Cancel</button>
-                                <button onClick={resetHunt} className="px-5 py-2 bg-red-500 text-white font-semibold rounded-xl shadow-md transition-all duration-200">Confirm</button>
-                            </div>
-                        </div>
-                    </div>
+                    <GotchaResetPopups
+                        message="Are you sure you want to reset the timer and counter?"
+                        onCancel={() => setShowConfirm(false)}
+                        onConfirm={resetHunt}
+                        confirmColor="bg-red-500"
+                    />
                 )}
 
                 {showGotchaConfirm && (
-                    <div className="absolute inset-0 flex items-center justify-center z-50 bg-black/20">
-                        <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl p-6 w-[90%] sm:w-1/2 text-center flex flex-col gap-4 border border-gray-200">
-                            <p className="text-gray-900 font-semibold text-lg">Are you sure you want to end this hunt?</p>
-                            <div className="flex justify-center gap-4 mt-4">
-                                <button onClick={() => setShowGotchaConfirm(false)} className="px-5 py-2 bg-gray-200 hover:bg-gray-300 text-gray-900 font-semibold rounded-xl shadow-md transition-all duration-200">Cancel</button>
-                                <button onClick={gotchaHunt} className="px-5 py-2 bg-green-500 text-white font-semibold rounded-xl shadow-md transition-all duration-200">Confirm</button>
-                            </div>
-                        </div>
-                    </div>
+                    <GotchaResetPopups
+                        message="Are you sure you want to end this hunt?"
+                        onCancel={() => setShowGotchaConfirm(false)}
+                        onConfirm={gotchaHunt}
+                        confirmColor="bg-green-500"
+                    />
                 )}
-
             </div>
         </div>
     );
