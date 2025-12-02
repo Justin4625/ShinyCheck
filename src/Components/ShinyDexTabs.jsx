@@ -23,10 +23,10 @@ export default function ShinyDexTabs({ activeTab, setActiveTab }) {
                         key={tab.id}
                         onClick={() => setActiveTab(tab.id)}
                         className={`
-                            px-5 py-2 sm:py-3 text-sm sm:text-base font-semibold rounded-full backdrop-blur-md border border-gray-700/30 transition-all duration-300
+                            px-5 py-2 sm:py-3 text-sm sm:text-base font-semibold rounded-full backdrop-blur-md border border-gray-300 transition-all duration-300
                             ${isActive
-                            ? "bg-gradient-to-r from-red-500 to-purple-600 text-white shadow-[0_0_15px_rgba(255,0,255,0.7)]"
-                            : "bg-white/10 text-gray-200 hover:bg-white/20 hover:shadow-[0_0_10px_rgba(200,100,255,0.4)]"}
+                            ? "bg-gradient-to-r from-purple-300 via-pink-300 to-red-300 text-gray-900 shadow-md"
+                            : "bg-white text-gray-800 hover:bg-gray-100 hover:shadow-sm"}
                         `}
                     >
                         {tab.label}
