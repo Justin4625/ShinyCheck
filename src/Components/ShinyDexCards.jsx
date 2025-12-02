@@ -38,6 +38,13 @@ export default function ShinyDexCards({ displayedPokemon, openModal }) {
                                 />
                             </div>
 
+                            {/* Types onder de sprite */}
+                            {entry?.types && (
+                                <p className="mt-2 sm:mt-3 text-xs sm:text-sm text-gray-600 uppercase tracking-wide relative z-10">
+                                    {entry.types.map((t) => t.type.name).join(" / ")}
+                                </p>
+                            )}
+
                             {/* Bottom accent bar */}
                             <div className="w-3/4 h-1 bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-500 rounded-full mt-4"></div>
                         </div>
