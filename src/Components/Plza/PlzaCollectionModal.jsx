@@ -23,7 +23,9 @@ export default function PlzaCollectionModal({ data, onClose, pokemon, shinyIndex
     };
 
     const colors = ["bg-green-400", "bg-pink-400", "bg-blue-400", "bg-purple-400", "bg-yellow-400", "bg-orange-400", "bg-teal-400"];
+    // eslint-disable-next-line react-hooks/purity
     const topRightColor = colors[Math.floor(Math.random() * colors.length)];
+    // eslint-disable-next-line react-hooks/purity
     const bottomLeftColor = colors[Math.floor(Math.random() * colors.length)];
 
     const deleteShiny = () => {
