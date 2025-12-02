@@ -36,8 +36,7 @@ export default function Plza() {
             : activeTab === "mega"
                 ? [] // Voor Mega Dimension, momenteel leeg
                 : [];
-
-    // Shiny progress afleiden met useMemo (geen setState nodig)
+    
     // Shiny progress afleiden met useMemo (alleen unieke Pokémon met shiny)
     const shinyProgress = useMemo(() => {
         let uniqueShinyCount = 0;
