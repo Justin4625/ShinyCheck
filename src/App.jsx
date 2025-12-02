@@ -16,7 +16,7 @@ const router = createBrowserRouter([{
         }
         ]
     }],
-    { basename: "/Shinycheck" }
+    { basename: "/ShinyCheck" }
 );
 
 function App() {
