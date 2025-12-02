@@ -1,6 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 
 export default function PlzaCollectionModal({ data, onClose, pokemon, shinyIndex, gameName }) {
+    const [showConfirm, setShowConfirm] = useState(false);
+
     if (!data || !pokemon) return null;
 
     const formatTime = (seconds) => {
@@ -20,29 +22,24 @@ export default function PlzaCollectionModal({ data, onClose, pokemon, shinyIndex
         });
     };
 
-    // 🔹 Random colors voor glow blobs
     const colors = ["bg-green-400", "bg-pink-400", "bg-blue-400", "bg-purple-400", "bg-yellow-400", "bg-orange-400", "bg-teal-400"];
     const topRightColor = colors[Math.floor(Math.random() * colors.length)];
     const bottomLeftColor = colors[Math.floor(Math.random() * colors.length)];
 
-    // Delete shiny entry uit localStorage
     const deleteShiny = () => {
         const shinyCount = Number(localStorage.getItem(`shiny_${pokemon.id}`)) || 0;
         if (shinyCount === 0) return;
 
-        // Verwijder de geselecteerde shiny
         localStorage.removeItem(`shinyData_${pokemon.id}_${shinyIndex}`);
 
-        // Verplaats hogere indices naar beneden
         for (let i = shinyIndex + 1; i <= shinyCount; i++) {
-            const data = localStorage.getItem(`shinyData_${pokemon.id}_${i}`);
-            if (data) {
-                localStorage.setItem(`shinyData_${pokemon.id}_${i - 1}`, data);
+            const entry = localStorage.getItem(`shinyData_${pokemon.id}_${i}`);
+            if (entry) {
+                localStorage.setItem(`shinyData_${pokemon.id}_${i - 1}`, entry);
                 localStorage.removeItem(`shinyData_${pokemon.id}_${i}`);
             }
         }
 
-        // Update shiny count
         const newCount = shinyCount - 1;
         if (newCount > 0) {
             localStorage.setItem(`shiny_${pokemon.id}`, newCount);
@@ -59,13 +56,9 @@ export default function PlzaCollectionModal({ data, onClose, pokemon, shinyIndex
                 onClick={(e) => e.stopPropagation()}
                 className="relative bg-gradient-to-br from-gray-100 to-gray-200 text-gray-900 rounded-2xl shadow-xl p-6 sm:p-10 w-[95%] sm:w-[90%] max-w-3xl max-h-[90vh] flex flex-col items-center overflow-hidden"
             >
-                {/* 🔹 Random glow blobs */}
-                <div
-                    className={`absolute -top-6 -right-6 w-36 h-36 sm:w-40 sm:h-40 ${topRightColor} opacity-40 blur-3xl pointer-events-none`}
-                />
-                <div
-                    className={`absolute -bottom-10 -left-10 w-48 h-48 sm:w-56 sm:h-56 ${bottomLeftColor} opacity-40 blur-3xl pointer-events-none`}
-                />
+                {/* Glow blobs */}
+                <div className={`absolute -top-6 -right-6 w-36 h-36 sm:w-40 sm:h-40 ${topRightColor} opacity-40 blur-3xl pointer-events-none`} />
+                <div className={`absolute -bottom-10 -left-10 w-48 h-48 sm:w-56 sm:h-56 ${bottomLeftColor} opacity-40 blur-3xl pointer-events-none`} />
 
                 {/* Close button */}
                 <button
@@ -75,7 +68,7 @@ export default function PlzaCollectionModal({ data, onClose, pokemon, shinyIndex
                     ✕
                 </button>
 
-                {/* Dex nummer + naam boven sprite */}
+                {/* Dex + naam */}
                 <h2 className="text-2xl sm:text-4xl font-extrabold mb-2 sm:mb-4 capitalize tracking-wider z-10 text-center">
                     #{String(pokemon.id).padStart(3, "0")} - {pokemon.name}
                 </h2>
@@ -95,7 +88,7 @@ export default function PlzaCollectionModal({ data, onClose, pokemon, shinyIndex
                 />
 
                 {/* Info box */}
-                <div className="w-full max-w-xl backdrop-blur-md bg-white/90 rounded-2xl shadow-lg border border-gray-200 p-6 flex flex-col gap-6 z-10">
+                <div className="w-full max-w-xl backdrop-blur-md rounded-2xl shadow-lg border border-gray-200 p-6 flex flex-col gap-6 z-10">
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-center">
                         <div>
                             <p className="text-sm text-gray-600 font-bold mb-1">Encounters</p>
@@ -126,14 +119,39 @@ export default function PlzaCollectionModal({ data, onClose, pokemon, shinyIndex
                         </div>
                     </div>
 
-                    {/* Delete button */}
-                    <button
-                        onClick={deleteShiny}
-                        className="mt-4 w-full py-2 bg-red-500 text-white font-bold rounded-xl shadow-md hover:bg-red-600 transition-colors duration-300"
-                    >
-                        Delete Shiny
-                    </button>
+                    {/* Delete button in center (oude gradient-stijl) */}
+                    <div className="flex justify-center mt-4">
+                        <button
+                            onClick={() => setShowConfirm(true)}
+                            className="px-6 py-2 rounded-xl font-bold shadow-lg text-white transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-1 bg-gradient-to-r from-red-400 to-red-600 hover:from-red-500 hover:to-red-700"
+                        >
+                            Delete Shiny
+                        </button>
+                    </div>
                 </div>
+
+                {/* Bevestigingspopup (knoppen gecentreerd) */}
+                {showConfirm && (
+                    <div className="absolute inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
+                        <div className="bg-white rounded-2xl p-6 w-96 text-center shadow-xl flex flex-col gap-4">
+                            <p className="font-bold text-gray-800">Are you sure you want to delete this shiny?</p>
+                            <div className="flex justify-center gap-4 mt-2">
+                                <button
+                                    onClick={() => setShowConfirm(false)}
+                                    className="px-4 py-2 bg-gray-300 text-gray-800 font-bold rounded-xl hover:bg-gray-400 transition-colors"
+                                >
+                                    Cancel
+                                </button>
+                                <button
+                                    onClick={deleteShiny}
+                                    className="px-4 py-2 bg-red-500 text-white font-bold rounded-xl hover:bg-red-600 transition-colors"
+                                >
+                                    Yes
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                )}
             </div>
         </div>
     );
