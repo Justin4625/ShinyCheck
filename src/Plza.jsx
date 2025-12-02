@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useMemo } from "react";
 import plzaPokemon from "./data/PlzaData.js";
 import usePokemon from "./Components/FetchPokemon.jsx";
 import PlzaModal from "./Components/Plza/PlzaModal.jsx";
@@ -11,22 +11,12 @@ export default function Plza() {
     const { pokemonList } = usePokemon(plzaPokemon);
     const [selectedPokemon, setSelectedPokemon] = useState(null);
     const [activeTab, setActiveTab] = useState("base");
-    const [shinyProgress, setShinyProgress] = useState({ count: 0, total: plzaPokemon.length });
 
     const openModal = (pokemon) => setSelectedPokemon(pokemon);
     const closeModal = () => setSelectedPokemon(null);
 
-    // Bereken shiny progress
-    useEffect(() => {
-        let count = 0;
-        plzaPokemon.forEach(p => {
-            const shinyCount = Number(localStorage.getItem(`shiny_${p.id}`)) || 0;
-            if (shinyCount > 0) count++;
-        });
-        setShinyProgress({ count, total: plzaPokemon.length });
-    }, [pokemonList, selectedPokemon]); // refresh ook bij modal open/close
-
-    useEffect(() => {
+    // Modal scroll lock
+    React.useEffect(() => {
         document.body.style.overflow = selectedPokemon ? "hidden" : "auto";
         return () => {
             document.body.style.overflow = "auto";
@@ -47,7 +37,22 @@ export default function Plza() {
                 ? [] // Voor Mega Dimension, momenteel leeg
                 : [];
 
+    // Shiny progress afleiden met useMemo (geen setState nodig)
+    // Shiny progress afleiden met useMemo (alleen unieke Pokémon met shiny)
+    const shinyProgress = useMemo(() => {
+        let uniqueShinyCount = 0;
+        plzaPokemon.forEach(p => {
+            const count = Number(localStorage.getItem(`shiny_${p.id}`)) || 0;
+            if (count > 0) uniqueShinyCount += 1; // alleen tellen als er minstens 1 shiny van deze Pokémon is
+        });
+        return { count: uniqueShinyCount, total: 232 };
+    }, [pokemonList, selectedPokemon]);
+
     const shinyPercentage = ((shinyProgress.count / shinyProgress.total) * 100).toFixed(1);
+
+    const modalIndex = selectedPokemon
+        ? plzaPokemon.findIndex(p => p.id === selectedPokemon.id)
+        : -1;
 
     return (
         <div className="relative p-4 sm:p-6 lg:p-8 min-h-screen bg-gradient-to-b from-gray-50 via-gray-100 to-gray-200 overflow-hidden">
@@ -65,16 +70,16 @@ export default function Plza() {
             {/* Shiny Progress */}
             <div className="relative w-full max-w-xl mx-auto mb-6">
                 <p className="text-center text-gray-700 font-bold mb-2">
-                    Shiny Progress: {shinyProgress.count}/{shinyProgress.total} ({shinyPercentage}%)
+                    Shiny Progress: {shinyProgress.count}/232 ({shinyPercentage}%)
                 </p>
 
-                {/* Achtergrond van de bar */}
-                <div className="w-full h-6 rounded-full bg-gray-300/30 overflow-hidden">
-                    {/* Voorgrond van de bar */}
+                {/* Progress bar achtergrond */}
+                <div className="w-full h-6 rounded-full bg-gray-300/30 overflow-hidden relative">
+                    {/* Voorgrond bar */}
                     <div
                         className="h-6 rounded-full bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-600 transition-all duration-700 ease-out"
-                        style={{ width: `${shinyPercentage}%` }}
-                    />
+                        style={{ width: shinyPercentage + '%' }}
+                    ></div>
                 </div>
             </div>
 
@@ -108,7 +113,7 @@ export default function Plza() {
             <PlzaModal
                 selectedPokemon={selectedPokemon}
                 onClose={closeModal}
-                index={plzaPokemon.findIndex(p => p.id === selectedPokemon?.id)}
+                index={modalIndex}
             />
         </div>
     );
