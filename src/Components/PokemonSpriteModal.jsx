@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function PokemonSprite({selectedPokemon, isPlaying, increment, setCounter}) {
+export default function PokemonSpriteModal({selectedPokemon, isPlaying, increment, setCounter}) {
     if (!selectedPokemon) return null;
 
     return (

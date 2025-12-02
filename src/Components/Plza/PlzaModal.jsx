@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import HuntTab from "../HuntTab.jsx";
 import SettingsTab from "../SettingsTab.jsx";
-import PokemonSprite from "../PokemonSprite.jsx";
+import PokemonSpriteModal from "../PokemonSpriteModal.jsx";
 
 export default function PlzaModal({ selectedPokemon, onClose, index = 0 }) {
     const [isPlaying, setIsPlaying] = useState(false);
@@ -120,7 +120,7 @@ export default function PlzaModal({ selectedPokemon, onClose, index = 0 }) {
                     })}
                 </div>
 
-                <PokemonSprite
+                <PokemonSpriteModal
                     selectedPokemon={selectedPokemon}
                     isPlaying={isPlaying}
                     increment={increment}
