@@ -33,126 +33,129 @@ export default function SettingsTab({ increment, setIncrement, timer, setTimer, 
         onClose();
     };
 
-    const inputClass = "w-24 px-3 py-2 rounded-xl border border-gray-200 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 text-center font-semibold transition-all duration-200 h-12";
+    const inputClass = `
+        w-24 px-3 py-2 rounded-xl border-2 border-transparent 
+        bg-white/90 backdrop-blur-sm text-center font-bold text-gray-900 
+        shadow-md focus:outline-none focus:ring-2 focus:ring-blue-400 
+        focus:ring-offset-1 transition-all duration-300 h-12
+    `;
+
+    const buttonClass = `
+        px-6 py-2 rounded-xl font-bold shadow-lg text-white
+        transition-all duration-300 transform hover:scale-105
+        focus:outline-none focus:ring-2 focus:ring-offset-1
+    `;
 
     return (
-        <div className="px-4 py-6 bg-white rounded-2xl shadow-lg w-full max-w-3xl mx-auto flex flex-col gap-6">
+        <div className="relative w-full max-w-3xl mx-auto">
 
-            {/* Increment, Counter, Timer */}
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
+            {/* Content */}
+            <div className="relative z-10 px-6 py-3 backdrop-blur-md rounded-2xl flex flex-col gap-6 border border-gray-200 shadow-lg">
 
-                {/* Increment */}
-                <div className="flex flex-col items-center">
-                    <label className="text-gray-600 font-bold text-sm mb-1 text-center">Increment</label>
-                    <input
-                        type="number"
-                        min="1"
-                        value={increment}
-                        onChange={(e) => setIncrement(Math.max(1, Number(e.target.value)))}
-                        className={inputClass}
-                    />
-                </div>
+                {/* Increment + Counter | Timer */}
+                <div className="flex flex-col sm:flex-row items-center justify-center gap-12 overflow-x-auto py-2">
 
-                {/* Counter */}
-                <div className="flex flex-col items-center">
-                    <label className="text-gray-600 font-bold text-sm mb-1 text-center">Counter</label>
-                    <input
-                        type="number"
-                        min="0"
-                        value={counter}
-                        onChange={(e) => setCounter(Math.max(0, Number(e.target.value)))}
-                        className={inputClass}
-                    />
-                </div>
-
-                {/* Timer */}
-                <div className="flex flex-col items-center mt-1">
-                    <div className="flex gap-3 justify-center">
+                    {/* Left: Increment + Counter */}
+                    <div className="flex gap-6 flex-shrink-0 items-center">
                         <div className="flex flex-col items-center">
-                            <span className="text-sm font-bold text-gray-600 mb-1">Hours</span>
+                            <label className="text-gray-700 font-bold text-sm mb-1 text-center">Increment</label>
                             <input
                                 type="number"
-                                min="0"
-                                value={hours}
-                                onChange={(e) => setHours(Math.max(0, Number(e.target.value)))}
-                                className="w-16 px-2 py-1 rounded-lg border border-gray-300 text-center text-gray-800 font-medium"
+                                min="1"
+                                value={increment}
+                                onChange={(e) => setIncrement(Math.max(1, Number(e.target.value)))}
+                                className={inputClass}
                             />
                         </div>
+
                         <div className="flex flex-col items-center">
-                            <span className="text-sm font-bold text-gray-600 mb-1">Mins</span>
+                            <label className="text-gray-700 font-bold text-sm mb-1 text-center">Encounters</label>
                             <input
                                 type="number"
                                 min="0"
-                                max="59"
-                                value={minutes}
-                                onChange={(e) => setMinutes(Math.min(59, Math.max(0, Number(e.target.value))))}
-                                className="w-16 px-2 py-1 rounded-lg border border-gray-300 text-center text-gray-800 font-medium"
-                            />
-                        </div>
-                        <div className="flex flex-col items-center">
-                            <span className="text-sm font-bold text-gray-600 mb-1">Secs</span>
-                            <input
-                                type="number"
-                                min="0"
-                                max="59"
-                                value={seconds}
-                                onChange={(e) => setSeconds(Math.min(59, Math.max(0, Number(e.target.value))))}
-                                className="w-16 px-2 py-1 rounded-lg border border-gray-300 text-center text-gray-800 font-medium"
+                                value={counter}
+                                onChange={(e) => setCounter(Math.max(0, Number(e.target.value)))}
+                                className={inputClass}
                             />
                         </div>
                     </div>
+
+                    {/* Right: Timer */}
+                    <div className="flex flex-col items-center flex-shrink-0">
+                        <div className="flex gap-3 justify-center flex-wrap sm:flex-nowrap">
+                            {["Hour", "Min", "Sec"].map((label, i) => {
+                                const value = i === 0 ? hours : i === 1 ? minutes : seconds;
+                                const setter = i === 0 ? setHours : i === 1 ? setMinutes : setSeconds;
+                                const min = 0;
+                                const max = i === 0 ? undefined : 59;
+                                return (
+                                    <div key={label} className="flex flex-col items-center">
+                                        <span className="text-sm font-bold text-gray-700 mb-1">{label}</span>
+                                        <input
+                                            type="number"
+                                            min={min}
+                                            max={max}
+                                            value={value}
+                                            onChange={(e) => setter(Math.min(max ?? Infinity, Math.max(min, Number(e.target.value))))}
+                                            className={inputClass}
+                                        />
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    </div>
                 </div>
+
+                {/* Buttons */}
+                <div className="flex flex-col sm:flex-row justify-center gap-4">
+                    <button
+                        onClick={() => setShowConfirm(true)}
+                        className={`${buttonClass} bg-gradient-to-r from-red-400 to-red-600 hover:from-red-500 hover:to-red-700`}
+                    >
+                        Reset
+                    </button>
+                    <button
+                        onClick={() => setShowGotchaConfirm(true)}
+                        className={`${buttonClass} bg-gradient-to-r from-green-400 to-green-600 hover:from-green-500 hover:to-green-700`}
+                    >
+                        Gotcha
+                    </button>
+                </div>
+
+                {/* Confirmation overlays */}
+                {showConfirm && (
+                    <div className="absolute inset-0 bg-black bg-opacity-20 flex items-center justify-center z-50">
+                        <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl p-6 w-[90%] sm:w-1/2 text-center flex flex-col gap-4 border border-gray-200">
+                            <p className="text-gray-900 font-semibold text-lg">Are you sure you want to reset the timer and counter?</p>
+                            <div className="flex justify-center gap-4 mt-4">
+                                <button onClick={() => setShowConfirm(false)}
+                                        className="px-5 py-2 bg-gray-200 hover:bg-gray-300 text-gray-900 font-semibold rounded-xl shadow-md transition-all duration-200">Cancel
+                                </button>
+                                <button onClick={resetHunt}
+                                        className="px-5 py-2 bg-gradient-to-r from-red-400 to-red-600 hover:from-red-500 hover:to-red-700 text-white font-semibold rounded-xl shadow-md transition-all duration-200">Confirm
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
+                {showGotchaConfirm && (
+                    <div className="absolute inset-0 bg-black bg-opacity-20 flex items-center justify-center z-50">
+                        <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl p-6 w-[90%] sm:w-1/2 text-center flex flex-col gap-4 border border-gray-200">
+                            <p className="text-gray-900 font-semibold text-lg">Are you sure you want to end this hunt?</p>
+                            <div className="flex justify-center gap-4 mt-4">
+                                <button onClick={() => setShowGotchaConfirm(false)}
+                                        className="px-5 py-2 bg-gray-200 hover:bg-gray-300 text-gray-900 font-semibold rounded-xl shadow-md transition-all duration-200">Cancel
+                                </button>
+                                <button onClick={gotchaHunt}
+                                        className="px-5 py-2 bg-gradient-to-r from-green-400 to-green-600 hover:from-green-500 hover:to-green-700 text-white font-semibold rounded-xl shadow-md transition-all duration-200">Confirm
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
             </div>
-
-            {/* Buttons */}
-            <div className="flex flex-col sm:flex-row justify-center gap-4">
-                <button
-                    onClick={() => setShowConfirm(true)}
-                    className="px-5 py-2 bg-gradient-to-r from-red-500 to-red-700 hover:from-red-600 hover:to-red-800 text-white font-semibold rounded-xl shadow-lg transition-all duration-200 transform hover:scale-105 active:scale-95"
-                >
-                    Reset
-                </button>
-                <button
-                    onClick={() => setShowGotchaConfirm(true)}
-                    className="px-5 py-2 bg-gradient-to-r from-green-400 to-green-600 hover:from-green-500 hover:to-green-700 text-white font-semibold rounded-xl shadow-lg transition-all duration-200 transform hover:scale-105 active:scale-95"
-                >
-                    Gotcha
-                </button>
-            </div>
-
-            {/* Confirmation overlays */}
-            {showConfirm && (
-                <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
-                    <div className="bg-white rounded-2xl shadow-xl p-6 w-[90%] sm:w-1/2 text-center flex flex-col gap-4">
-                        <p className="text-gray-800 font-semibold text-lg">Are you sure you want to reset the timer and counter?</p>
-                        <div className="flex justify-center gap-4 mt-4">
-                            <button onClick={() => setShowConfirm(false)}
-                                    className="px-5 py-2 bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold rounded-xl shadow-md transition-all duration-200">Cancel
-                            </button>
-                            <button onClick={resetHunt}
-                                    className="px-5 py-2 bg-gradient-to-r from-red-500 to-red-700 hover:from-red-600 hover:to-red-800 text-white font-semibold rounded-xl shadow-md transition-all duration-200">Confirm
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            )}
-
-            {showGotchaConfirm && (
-                <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
-                    <div className="bg-white rounded-2xl shadow-xl p-6 w-[90%] sm:w-1/2 text-center flex flex-col gap-4">
-                        <p className="text-gray-800 font-semibold text-lg">Are you sure you want to end this hunt?</p>
-                        <div className="flex justify-center gap-4 mt-4">
-                            <button onClick={() => setShowGotchaConfirm(false)}
-                                    className="px-5 py-2 bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold rounded-xl shadow-md transition-all duration-200">Cancel
-                            </button>
-                            <button onClick={gotchaHunt}
-                                    className="px-5 py-2 bg-gradient-to-r from-green-400 to-green-600 hover:from-green-500 hover:to-green-700 text-white font-semibold rounded-xl shadow-md transition-all duration-200">Confirm
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            )}
-
         </div>
     );
 }
