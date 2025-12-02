@@ -137,6 +137,7 @@ export default function PlzaCollection({ plzaPokemon = [], pokemonList = [], for
                 <PlzaCollectionModal
                     data={selectedEntry.storedData}
                     pokemon={selectedPokemon}
+                    shinyIndex={selectedEntry.shinyIndex}
                     gameName={
                         plzaPokemon.find(
                             (p) =>

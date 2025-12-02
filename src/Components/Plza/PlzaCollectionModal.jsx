@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function PlzaCollectionModal({ data, onClose, pokemon, gameName }) {
+export default function PlzaCollectionModal({ data, onClose, pokemon, shinyIndex, gameName }) {
     if (!data || !pokemon) return null;
 
     const formatTime = (seconds) => {
@@ -20,62 +20,80 @@ export default function PlzaCollectionModal({ data, onClose, pokemon, gameName }
         });
     };
 
-    const capitalizedName =
-        pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1);
+    // 🔹 Random colors voor glow blobs
+    const colors = ["bg-green-400", "bg-pink-400", "bg-blue-400", "bg-purple-400", "bg-yellow-400", "bg-orange-400", "bg-teal-400"];
+    const topRightColor = colors[Math.floor(Math.random() * colors.length)];
+    const bottomLeftColor = colors[Math.floor(Math.random() * colors.length)];
 
     return (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div className="relative w-[95%] sm:w-[90%] max-w-2xl max-h-[90vh] flex flex-col items-center overflow-hidden">
+            <div
+                onClick={(e) => e.stopPropagation()}
+                className="relative bg-gradient-to-br from-gray-100 to-gray-200 text-gray-900 rounded-2xl shadow-xl p-6 sm:p-10 w-[95%] sm:w-[90%] max-w-3xl max-h-[90vh] flex flex-col items-center overflow-hidden"
+            >
+                {/* 🔹 Random glow blobs */}
+                <div
+                    className={`absolute -top-6 -right-6 w-36 h-36 sm:w-40 sm:h-40 ${topRightColor} opacity-40 blur-3xl pointer-events-none`}
+                />
+                <div
+                    className={`absolute -bottom-10 -left-10 w-48 h-48 sm:w-56 sm:h-56 ${bottomLeftColor} opacity-40 blur-3xl pointer-events-none`}
+                />
 
-                {/* ✅ GLOWS ACHTER WIT VLAK */}
-                <div className="absolute -top-14 -right-14 w-56 h-56 bg-purple-400 opacity-40 blur-3xl pointer-events-none"></div>
-                <div className="absolute -bottom-20 -left-20 w-72 h-72 bg-blue-400 opacity-40 blur-3xl pointer-events-none"></div>
+                {/* Close button */}
+                <button
+                    onClick={onClose}
+                    className="absolute top-4 right-4 w-10 h-10 sm:w-11 sm:h-11 flex items-center justify-center rounded-full bg-gradient-to-br from-purple-400 to-pink-500 text-white text-xl font-bold shadow-md shadow-purple-500/40 transition-all duration-200 hover:scale-110 hover:shadow-purple-600/50 active:scale-95"
+                >
+                    ✕
+                </button>
 
-                {/* ✅ WITTE MODAL */}
-                <div className="relative bg-gradient-to-br from-gray-100 to-gray-200 text-gray-900 rounded-2xl shadow-xl p-6 sm:p-10 w-full flex flex-col items-center z-10">
+                {/* Dex nummer + naam boven sprite */}
+                <h2 className="text-2xl sm:text-4xl font-extrabold mb-2 sm:mb-4 capitalize tracking-wider z-10 text-center">
+                    #{String(pokemon.id).padStart(3, "0")} - {pokemon.name}
+                </h2>
 
-                    {/* Close */}
-                    <button
-                        onClick={onClose}
-                        className="absolute top-4 right-4 w-10 h-10 flex items-center justify-center rounded-full bg-gradient-to-br from-purple-400 to-pink-500 text-white text-xl font-bold shadow-md hover:scale-110 transition"
-                    >
-                        ✕
-                    </button>
+                {/* Shiny index badge */}
+                {shinyIndex && (
+                    <div className="absolute top-4 left-4 px-4 py-1 rounded-full text-sm font-extrabold bg-gradient-to-r from-yellow-400 to-orange-500 text-black shadow-md">
+                        Shiny #{shinyIndex}
+                    </div>
+                )}
 
-                    {/* Titel */}
-                    <h2 className="text-2xl sm:text-3xl font-extrabold mb-6 text-center tracking-wide">
-                        {capitalizedName} — Capture Info
-                    </h2>
+                {/* Shiny sprite */}
+                <img
+                    src={pokemon?.sprites?.other?.home?.front_shiny}
+                    alt={pokemon.name}
+                    className="w-32 h-32 sm:w-40 sm:h-40 mb-6 drop-shadow-xl z-10"
+                />
 
-                    {/* ✅ INFO VLAK */}
-                    <div className="w-full max-w-xl backdrop-blur-md bg-white/90 rounded-2xl shadow-lg border border-gray-200 p-6 flex flex-col gap-6">
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-center">
-                            <div>
-                                <p className="text-sm text-gray-600 font-bold mb-1">Encounters</p>
-                                <div className="font-extrabold text-xl bg-white rounded-xl py-2 shadow">
-                                    {data.counter}
-                                </div>
+                {/* Info box */}
+                <div className="w-full max-w-xl backdrop-blur-md bg-white/90 rounded-2xl shadow-lg border border-gray-200 p-6 flex flex-col gap-6 z-10">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-center">
+                        <div>
+                            <p className="text-sm text-gray-600 font-bold mb-1">Encounters</p>
+                            <div className="font-extrabold text-xl bg-white rounded-xl py-2 shadow">
+                                {data.counter}
                             </div>
+                        </div>
 
-                            <div>
-                                <p className="text-sm text-gray-600 font-bold mb-1">Timer</p>
-                                <div className="font-extrabold text-xl bg-white rounded-xl py-2 shadow">
-                                    {formatTime(data.timer)}
-                                </div>
+                        <div>
+                            <p className="text-sm text-gray-600 font-bold mb-1">Timer</p>
+                            <div className="font-extrabold text-xl bg-white rounded-xl py-2 shadow">
+                                {formatTime(data.timer)}
                             </div>
+                        </div>
 
-                            <div>
-                                <p className="text-sm text-gray-600 font-bold mb-1">Date</p>
-                                <div className="font-extrabold text-md bg-white rounded-xl py-2 shadow">
-                                    {formatDate(data.timestamp)}
-                                </div>
+                        <div>
+                            <p className="text-sm text-gray-600 font-bold mb-1">Date</p>
+                            <div className="font-extrabold text-md bg-white rounded-xl py-2 shadow">
+                                {formatDate(data.timestamp)}
                             </div>
+                        </div>
 
-                            <div>
-                                <p className="text-sm text-gray-600 font-bold mb-1">Game</p>
-                                <div className="font-extrabold text-md bg-white rounded-xl py-2 shadow">
-                                    {gameName || "Unknown Game"}
-                                </div>
+                        <div>
+                            <p className="text-sm text-gray-600 font-bold mb-1">Game</p>
+                            <div className="font-extrabold text-md bg-white rounded-xl py-2 shadow">
+                                {gameName || "Unknown Game"}
                             </div>
                         </div>
                     </div>
