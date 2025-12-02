@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState } from "react";
 import plzaPokemon from "./data/PlzaData.js";
 import usePokemon from "./Components/FetchPokemon.jsx";
 import PlzaModal from "./Components/Plza/PlzaModal.jsx";
@@ -38,15 +38,16 @@ export default function Plza() {
                 : [];
     
     // Shiny progress afleiden met useMemo (alleen unieke Pokémon met shiny)
-    const shinyProgress = useMemo(() => {
+    const getShinyProgress = () => {
         let uniqueShinyCount = 0;
         plzaPokemon.forEach(p => {
             const count = Number(localStorage.getItem(`shiny_${p.id}`)) || 0;
-            if (count > 0) uniqueShinyCount += 1; // alleen tellen als er minstens 1 shiny van deze Pokémon is
+            if (count > 0) uniqueShinyCount += 1;
         });
         return { count: uniqueShinyCount, total: 232 };
-    }, [pokemonList, selectedPokemon]);
+    };
 
+    const shinyProgress = getShinyProgress();
     const shinyPercentage = ((shinyProgress.count / shinyProgress.total) * 100).toFixed(1);
 
     const modalIndex = selectedPokemon
