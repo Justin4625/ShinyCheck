@@ -1,9 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
-export default function SettingsTab({ increment, setIncrement, timer, setTimer, counter, setCounter, selectedPokemon, onClose }) {
-    const [showConfirm, setShowConfirm] = useState(false);
-    const [showGotchaConfirm, setShowGotchaConfirm] = useState(false);
-
+export default function SettingsTab({ increment, setIncrement, timer, setTimer, counter, setCounter, onShowConfirm, onShowGotcha }) {
     const [hours, setHours] = useState(Math.floor(timer / 3600));
     const [minutes, setMinutes] = useState(Math.floor((timer % 3600) / 60));
     const [seconds, setSeconds] = useState(timer % 60);
@@ -11,27 +8,6 @@ export default function SettingsTab({ increment, setIncrement, timer, setTimer, 
     useEffect(() => {
         setTimer(hours * 3600 + minutes * 60 + seconds);
     }, [hours, minutes, seconds, setTimer]);
-
-    const resetHunt = () => {
-        setCounter(0);
-        setTimer(0);
-        setHours(0);
-        setMinutes(0);
-        setSeconds(0);
-        localStorage.removeItem(`hunt_${selectedPokemon.id}`);
-        setShowConfirm(false);
-    };
-
-    const gotchaHunt = () => {
-        const current = Number(localStorage.getItem(`shiny_${selectedPokemon.id}`)) || 0;
-        localStorage.setItem(`shiny_${selectedPokemon.id}`, current + 1);
-        const key = `shinyData_${selectedPokemon.id}_${current + 1}`;
-        const dataToStore = { timer, counter, timestamp: Date.now() };
-        localStorage.setItem(key, JSON.stringify(dataToStore));
-        resetHunt();
-        setShowGotchaConfirm(false);
-        onClose();
-    };
 
     const inputClass = `
         w-24 px-3 py-2 rounded-xl border-2 border-transparent 
@@ -49,7 +25,7 @@ export default function SettingsTab({ increment, setIncrement, timer, setTimer, 
     return (
         <div className="relative w-full max-w-3xl mx-auto">
 
-            {/* Content */}
+            {/* Modal content */}
             <div className="relative z-10 px-6 py-3 backdrop-blur-md rounded-2xl flex flex-col gap-6 border border-gray-200 shadow-lg">
 
                 {/* Increment + Counter | Timer */}
@@ -109,52 +85,18 @@ export default function SettingsTab({ increment, setIncrement, timer, setTimer, 
                 {/* Buttons */}
                 <div className="flex flex-col sm:flex-row justify-center gap-4">
                     <button
-                        onClick={() => setShowConfirm(true)}
+                        onClick={onShowConfirm}
                         className={`${buttonClass} bg-gradient-to-r from-red-400 to-red-600 hover:from-red-500 hover:to-red-700`}
                     >
                         Reset
                     </button>
                     <button
-                        onClick={() => setShowGotchaConfirm(true)}
+                        onClick={onShowGotcha}
                         className={`${buttonClass} bg-gradient-to-r from-green-400 to-green-600 hover:from-green-500 hover:to-green-700`}
                     >
                         Gotcha
                     </button>
                 </div>
-
-                {/* Confirmation overlays */}
-                {showConfirm && (
-                    <div className="absolute inset-0 bg-black bg-opacity-20 flex items-center justify-center z-50">
-                        <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl p-6 w-[90%] sm:w-1/2 text-center flex flex-col gap-4 border border-gray-200">
-                            <p className="text-gray-900 font-semibold text-lg">Are you sure you want to reset the timer and counter?</p>
-                            <div className="flex justify-center gap-4 mt-4">
-                                <button onClick={() => setShowConfirm(false)}
-                                        className="px-5 py-2 bg-gray-200 hover:bg-gray-300 text-gray-900 font-semibold rounded-xl shadow-md transition-all duration-200">Cancel
-                                </button>
-                                <button onClick={resetHunt}
-                                        className="px-5 py-2 bg-gradient-to-r from-red-400 to-red-600 hover:from-red-500 hover:to-red-700 text-white font-semibold rounded-xl shadow-md transition-all duration-200">Confirm
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                )}
-
-                {showGotchaConfirm && (
-                    <div className="absolute inset-0 bg-black bg-opacity-20 flex items-center justify-center z-50">
-                        <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl p-6 w-[90%] sm:w-1/2 text-center flex flex-col gap-4 border border-gray-200">
-                            <p className="text-gray-900 font-semibold text-lg">Are you sure you want to end this hunt?</p>
-                            <div className="flex justify-center gap-4 mt-4">
-                                <button onClick={() => setShowGotchaConfirm(false)}
-                                        className="px-5 py-2 bg-gray-200 hover:bg-gray-300 text-gray-900 font-semibold rounded-xl shadow-md transition-all duration-200">Cancel
-                                </button>
-                                <button onClick={gotchaHunt}
-                                        className="px-5 py-2 bg-gradient-to-r from-green-400 to-green-600 hover:from-green-500 hover:to-green-700 text-white font-semibold rounded-xl shadow-md transition-all duration-200">Confirm
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                )}
-
             </div>
         </div>
     );
