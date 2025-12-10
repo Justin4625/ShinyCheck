@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import plzaPokemon from "./data/PlzaData.js";
+import plzaMdPokemon from "./data/PlzaMdData.js";
 import usePokemon from "./Components/FetchPokemon.jsx";
 import PlzaModal from "./Components/Plza/PlzaModal.jsx";
 import PlzaTabs from "./Components/Plza/PlzaTabs.jsx";
@@ -8,14 +9,13 @@ import PlzaActiveHunts from "./Components/Plza/PlzaActiveHunts.jsx";
 import PlzaCards from "./Components/Plza/PlzaCards.jsx";
 
 export default function Plza() {
-    const { pokemonList } = usePokemon(plzaPokemon);
+    const { pokemonList } = usePokemon(plzaPokemon.concat(plzaMdPokemon));
     const [selectedPokemon, setSelectedPokemon] = useState(null);
     const [activeTab, setActiveTab] = useState("base");
 
     const openModal = (pokemon) => setSelectedPokemon(pokemon);
     const closeModal = () => setSelectedPokemon(null);
 
-    // Modal scroll lock
     React.useEffect(() => {
         document.body.style.overflow = selectedPokemon ? "hidden" : "auto";
         return () => {
@@ -30,14 +30,15 @@ export default function Plza() {
         return `${hrs}h ${mins}m ${secs}s`;
     };
 
+    // Kies welke Pokémon weergegeven worden per tab
     const displayedPokemon =
         activeTab === "base"
             ? plzaPokemon
             : activeTab === "mega"
-                ? [] // Voor Mega Dimension, momenteel leeg
+                ? plzaMdPokemon
                 : [];
-    
-    // Shiny progress afleiden met useMemo (alleen unieke Pokémon met shiny)
+
+    // Shiny progress (optioneel, kan ook voor Mega Dimension aangepast worden)
     const getShinyProgress = () => {
         let uniqueShinyCount = 0;
         plzaPokemon.forEach(p => {
@@ -46,19 +47,17 @@ export default function Plza() {
         });
         return { count: uniqueShinyCount, total: 232 };
     };
-
     const shinyProgress = getShinyProgress();
     const shinyPercentage = ((shinyProgress.count / shinyProgress.total) * 100).toFixed(1);
 
     const modalIndex = selectedPokemon
-        ? plzaPokemon.findIndex(p => p.id === selectedPokemon.id)
+        ? pokemonList.findIndex(p => p.id === selectedPokemon.id)
         : -1;
 
     return (
         <div className="relative p-4 sm:p-6 lg:p-8 min-h-screen bg-gradient-to-b from-gray-50 via-gray-100 to-gray-200 overflow-hidden">
             {/* Achtergrond lijnen */}
             <div className="absolute inset-0 bg-[repeating-linear-gradient(90deg,rgba(200,200,255,0.05) 0 1px,transparent 1px 20px),repeating-linear-gradient(rgba(200,200,255,0.05) 0 1px,transparent 1px 20px)] pointer-events-none"></div>
-
             {/* Achtergrond blobs */}
             <div className="absolute -top-20 -left-10 w-48 sm:w-60 h-48 sm:h-60 bg-blue-400 rounded-full opacity-15 blur-3xl pointer-events-none"></div>
             <div className="absolute -bottom-32 -right-20 w-64 sm:w-80 h-64 sm:h-80 bg-purple-400 rounded-full opacity-15 blur-3xl pointer-events-none"></div>
@@ -72,10 +71,7 @@ export default function Plza() {
                 <p className="text-center text-gray-700 font-bold mb-2">
                     Shiny Progress: {shinyProgress.count}/232 ({shinyPercentage}%)
                 </p>
-
-                {/* Progress bar achtergrond */}
                 <div className="w-full h-6 rounded-full bg-gray-300/30 overflow-hidden relative">
-                    {/* Voorgrond bar */}
                     <div
                         className="h-6 rounded-full bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-600 transition-all duration-700 ease-out"
                         style={{ width: shinyPercentage + '%' }}
