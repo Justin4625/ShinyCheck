@@ -36,16 +36,18 @@ export default function Plza() {
             ? plzaPokemon
             : activeTab === "mega"
                 ? plzaMdPokemon
-                : [];
+                : activeTab === "collection" || activeTab === "active"
+                    ? plzaPokemon.concat(plzaMdPokemon)
+                    : [];
 
-    // Shiny progress (optioneel, kan ook voor Mega Dimension aangepast worden)
+    // Shiny progress
     const getShinyProgress = () => {
         let uniqueShinyCount = 0;
-        plzaPokemon.forEach(p => {
+        plzaPokemon.concat(plzaMdPokemon).forEach(p => {
             const count = Number(localStorage.getItem(`shiny_${p.id}`)) || 0;
             if (count > 0) uniqueShinyCount += 1;
         });
-        return { count: uniqueShinyCount, total: 232 };
+        return { count: uniqueShinyCount, total: 364 };
     };
     const shinyProgress = getShinyProgress();
     const shinyPercentage = ((shinyProgress.count / shinyProgress.total) * 100).toFixed(1);
@@ -69,7 +71,7 @@ export default function Plza() {
             {/* Shiny Progress */}
             <div className="relative w-full max-w-xl mx-auto mb-6">
                 <p className="text-center text-gray-700 font-bold mb-2">
-                    Shiny Progress: {shinyProgress.count}/232 ({shinyPercentage}%)
+                    Shiny Progress: {shinyProgress.count}/364 ({shinyPercentage}%)
                 </p>
                 <div className="w-full h-6 rounded-full bg-gray-300/30 overflow-hidden relative">
                     <div
@@ -85,13 +87,13 @@ export default function Plza() {
             {/* Content per tab */}
             {activeTab === "collection" ? (
                 <PlzaCollection
-                    plzaPokemon={plzaPokemon}
+                    plzaPokemon={plzaPokemon.concat(plzaMdPokemon)}
                     pokemonList={pokemonList}
                     formatTime={formatTime}
                 />
             ) : activeTab === "active" ? (
                 <PlzaActiveHunts
-                    plzaPokemon={plzaPokemon}
+                    plzaPokemon={plzaPokemon.concat(plzaMdPokemon)}
                     pokemonList={pokemonList}
                     formatTime={formatTime}
                     openModal={openModal}

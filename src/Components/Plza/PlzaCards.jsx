@@ -22,7 +22,6 @@ export default function PlzaCards({ displayedPokemon, pokemonList, openModal, ac
                 </div>
             ) : (
                 displayedPokemon.map((entry, index) => {
-                    const number = String(entry.id).padStart(3, "0");
                     const pokemon = pokemonList.find((p) => p.id === entry.id);
                     const shinyCount = Number(localStorage.getItem(`shiny_${entry.id}`)) || 0;
                     const isGolden = (activeTab === "base" || activeTab === "mega") && shinyCount >= 1;
@@ -38,7 +37,6 @@ export default function PlzaCards({ displayedPokemon, pokemonList, openModal, ac
                                 ${isGolden ? "before:absolute before:inset-0 before:bg-gradient-to-br before:from-yellow-200 before:via-yellow-100/100 before:to-transparent before:pointer-events-none before:rounded-2xl" : ""}
                             `}
                         >
-                            {/* Blobs */}
                             <div className={`absolute -top-4 -right-4 w-16 h-16 rounded-full blur-2xl pointer-events-none
                                 ${index % 3 === 0 ? "bg-green-400 opacity-60" : index % 3 === 1 ? "bg-pink-400 opacity-60" : "bg-blue-400 opacity-60"}`}
                             ></div>
@@ -47,31 +45,28 @@ export default function PlzaCards({ displayedPokemon, pokemonList, openModal, ac
                                 ${index % 3 === 0 ? "bg-purple-400 opacity-60" : index % 3 === 1 ? "bg-blue-400 opacity-60" : "bg-green-400 opacity-60"}`}
                             ></div>
 
-                            {/* Naam en nummer */}
                             <div className="w-full flex justify-between items-center mb-3 relative z-10">
                                 <h2 className="text-base sm:text-lg md:text-xl font-extrabold capitalize tracking-wide text-gray-900 text-left">
                                     {entry.name}
                                 </h2>
                                 <span
-                                    className="px-2 py-1 text-xs sm:text-sm font-bold bg-gradient-to-r from-purple-400 to-blue-500 text-white rounded-full shadow-md relative z-10">#{String(index + 1).padStart(3, "0")}</span>
+                                    className="px-2 py-1 text-xs sm:text-sm font-bold bg-gradient-to-r from-purple-400 to-blue-500 text-white rounded-full shadow-md relative z-10">
+                                    #{String(index + 1).padStart(3, "0")}
+                                </span>
                             </div>
 
-
-                            {/* Pokémon Sprite */}
                             <img
                                 src={pokemon?.sprites?.other?.home?.front_shiny}
                                 alt={entry.name}
                                 className="w-20 h-20 sm:w-28 sm:h-28 md:w-32 md:h-32 drop-shadow-md relative z-10"
                             />
 
-                            {/* Types */}
                             {pokemon?.types && (
                                 <p className="mt-2 sm:mt-3 text-xs sm:text-sm text-gray-600 uppercase tracking-wide relative z-10">
                                     {pokemon.types.map((t) => t.type.name).join(" / ")}
                                 </p>
                             )}
 
-                            {/* Collected badge */}
                             <div className="mt-4 w-full flex justify-center relative z-10">
                                 <div
                                     className="px-4 py-1 rounded-full bg-gradient-to-r from-purple-400 to-blue-500 text-white text-xs sm:text-sm font-bold shadow-md tracking-wide">
