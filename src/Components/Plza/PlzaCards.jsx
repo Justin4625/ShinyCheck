@@ -53,10 +53,9 @@ export default function PlzaCards({ displayedPokemon, pokemonList, openModal, ac
                                     {entry.name}
                                 </h2>
                                 <span
-                                    className="px-2 py-1 text-xs sm:text-sm font-bold bg-gradient-to-r from-purple-400 to-blue-500 text-white rounded-full shadow-md relative z-10">
-                                    #{number}
-                                </span>
+                                    className="px-2 py-1 text-xs sm:text-sm font-bold bg-gradient-to-r from-purple-400 to-blue-500 text-white rounded-full shadow-md relative z-10">#{String(index + 1).padStart(3, "0")}</span>
                             </div>
+
 
                             {/* Pokémon Sprite */}
                             <img
