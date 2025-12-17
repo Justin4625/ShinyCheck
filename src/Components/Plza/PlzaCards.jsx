@@ -11,7 +11,7 @@ export default function PlzaCards({ displayedPokemon, pokemonList, openModal, ac
             {displayedPokemon.length === 0 ? (
                 <div className="col-span-full flex flex-col justify-center items-center text-center min-h-[240px] sm:min-h-[300px]">
                     <span className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-700">
-                        {activeTab === "mega" ? "Coming Soon!" : "No Pokémon found"}
+                        No Pokémon found
                     </span>
                 </div>
             ) : isLoading ? (
