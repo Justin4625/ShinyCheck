@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import PlzaHuntTab from "./PlzaHuntTab.jsx";
 import PlzaSettingsTab from "./PlzaSettingsTab.jsx";
 import PokemonSpriteModal from "../PokemonSpriteModal.jsx";
-import GotchaResetPopups from "../GotchaResetPopups.jsx";
+import PlzaGotchaReset from "./PlzaGotchaReset.jsx";
 
 export default function PlzaModal({ selectedPokemon, onClose, index = 0 }) {
     const [isPlaying, setIsPlaying] = useState(false);
@@ -95,8 +95,8 @@ export default function PlzaModal({ selectedPokemon, onClose, index = 0 }) {
                     <PlzaSettingsTab increment={increment} setIncrement={setIncrement} timer={timer} counter={counter} setTimer={setTimer} setCounter={setCounter} selectedPokemon={selectedPokemon} onShowConfirm={() => setShowConfirm(true)} onShowGotcha={() => setShowGotchaConfirm(true)} />
                 )}
 
-                {showConfirm && <GotchaResetPopups message="Are you sure you want to reset?" onCancel={() => setShowConfirm(false)} onConfirm={resetHunt} confirmColor="from-red-400 to-red-600" />}
-                {showGotchaConfirm && <GotchaResetPopups message="End this hunt?" onCancel={() => setShowGotchaConfirm(false)} onConfirm={gotchaHunt} confirmColor="from-green-400 to-green-600" />}
+                {showConfirm && <PlzaGotchaReset message="Are you sure you want to reset?" onCancel={() => setShowConfirm(false)} onConfirm={resetHunt} confirmColor="from-red-400 to-red-600" />}
+                {showGotchaConfirm && <PlzaGotchaReset message="End this hunt?" onCancel={() => setShowGotchaConfirm(false)} onConfirm={gotchaHunt} confirmColor="from-green-400 to-green-600" />}
             </div>
         </div>
     );

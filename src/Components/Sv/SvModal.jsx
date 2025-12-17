@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 import PokemonSpriteModal from "../PokemonSpriteModal.jsx";
-import GotchaResetPopups from "../GotchaResetPopups.jsx";
+import PlzaGotchaReset from "../Plza/PlzaGotchaReset.jsx";
 import SvHuntTab from "./SvHuntTab.jsx";
 import SvSettingsTab from "./SvSettingsTab.jsx";
+import SvGotchaReset from "./SvGotchaReset.jsx";
 
 export default function SvModal({ selectedPokemon, onClose, index = 0 }) {
     const [isPlaying, setIsPlaying] = useState(false);
@@ -122,8 +123,8 @@ export default function SvModal({ selectedPokemon, onClose, index = 0 }) {
                     )}
                 </div>
 
-                {showConfirm && <GotchaResetPopups message="RESET HUNT DATA?" onCancel={() => setShowConfirm(false)} onConfirm={resetHunt} confirmColor="from-red-500 to-red-600" />}
-                {showGotchaConfirm && <GotchaResetPopups message="SHINY CAUGHT?" onCancel={() => setShowGotchaConfirm(false)} onConfirm={gotchaHunt} confirmColor="from-green-500 to-green-600" />}
+                {showConfirm && <SvGotchaReset message="RESET HUNT DATA?" onCancel={() => setShowConfirm(false)} onConfirm={resetHunt} confirmColor="from-red-500 to-red-600" />}
+                {showGotchaConfirm && <SvGotchaReset message="SHINY CAUGHT?" onCancel={() => setShowGotchaConfirm(false)} onConfirm={gotchaHunt} confirmColor="from-green-500 to-green-600" />}
             </div>
         </div>
     );
