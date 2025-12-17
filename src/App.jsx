@@ -1,7 +1,7 @@
 import {createBrowserRouter, RouterProvider} from "react-router-dom";
-import Plza from "./Plza.jsx";
+import Plza from "./Components/Plza/Plza.jsx";
 import Layout from "./Components/Layout.jsx";
-import ShinyDex from "./ShinyDex.jsx";
+import ShinyDex from "./Components/ShinyDex/ShinyDex.jsx";
 import Sv from "./Components/Sv/Sv.jsx";
 
 const router = createBrowserRouter([{
