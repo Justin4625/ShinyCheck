@@ -12,7 +12,6 @@ import shinyDexPart1 from "./data/ShinyDexData.js";
 import shinyDexPart2 from "./data/ShinyDexData2.js";
 import shinyDexPart3 from "./data/ShinyDexData3.js";
 
-// Combineer alle data
 const pokemonList = [...shinyDexPart1, ...shinyDexPart2, ...shinyDexPart3];
 
 const router = createBrowserRouter([{

@@ -4,7 +4,6 @@ import plzaMdPokemon from "../../data/PlzaMdData.js";
 import usePokemon from "../FetchPokemon.jsx";
 import PlzaModal from "./PlzaModal.jsx";
 import PlzaTabs from "./PlzaTabs.jsx";
-import PlzaCollection from "./PlzaCollection.jsx";
 import PlzaActiveHunts from "./PlzaActiveHunts.jsx";
 import PlzaCards from "./PlzaCards.jsx";
 
@@ -36,7 +35,7 @@ export default function Plza() {
             ? plzaPokemon
             : activeTab === "mega"
                 ? plzaMdPokemon
-                : activeTab === "collection" || activeTab === "active"
+                : activeTab === "active"
                     ? plzaPokemon.concat(plzaMdPokemon)
                     : [];
 
@@ -76,12 +75,10 @@ export default function Plza() {
 
     return (
         <div className="relative p-2 sm:p-4 min-h-screen bg-white text-slate-900 overflow-hidden font-sans">
-            {/* Achtergrond: Kleiner Grid */}
             <div className="absolute inset-0 pointer-events-none opacity-20">
                 <div className="absolute inset-0 bg-[linear-gradient(to_right,#e2e8f0_1px,transparent_1px),linear-gradient(to_bottom,#e2e8f0_1px,transparent_1px)] bg-[size:30px_30px]"></div>
             </div>
 
-            {/* Header: Compacter */}
             <div className="relative z-10 flex flex-col items-center mb-6">
                 <h1 className="text-3xl sm:text-5xl font-black tracking-tighter uppercase italic flex items-center">
                     <span className="text-slate-800">Legends:</span>
@@ -96,7 +93,6 @@ export default function Plza() {
                 </p>
             </div>
 
-            {/* Progress Section: Kleiner en minder breed */}
             <div className="relative z-10 max-w-lg mx-auto mb-8">
                 <div className="bg-white border border-slate-100 p-3 rounded-2xl shadow-lg shadow-slate-200/30">
                     <div className="flex justify-between items-end mb-2 px-1">
@@ -120,13 +116,11 @@ export default function Plza() {
                 </div>
             </div>
 
-            {/* Controls Sectie: Compacter op mobiel en desktop */}
             <div className="relative z-10 max-w-6xl mx-auto mb-6 flex flex-col lg:flex-row items-center gap-4">
                 <div className="flex-1 w-full overflow-x-auto">
                     <PlzaTabs activeTab={activeTab} setActiveTab={setActiveTab} />
                 </div>
 
-                {/* Zoeken & Filteren: Kleiner formaat */}
                 <div className="w-full lg:w-[320px] bg-slate-50/50 backdrop-blur-sm p-3 rounded-2xl border border-white shadow-sm flex flex-col gap-2">
                     <div className="flex items-center justify-between px-1">
                         <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Unregistered</label>
@@ -155,11 +149,8 @@ export default function Plza() {
                 </div>
             </div>
 
-            {/* Main Content Area */}
             <div className="relative z-10 max-w-7xl mx-auto min-h-[300px]">
-                {activeTab === "collection" ? (
-                    <PlzaCollection plzaPokemon={filteredPokemon} pokemonList={pokemonList} formatTime={formatTime} />
-                ) : activeTab === "active" ? (
+                {activeTab === "active" ? (
                     <PlzaActiveHunts plzaPokemon={filteredPokemon} pokemonList={pokemonList} formatTime={formatTime} openModal={openModal} />
                 ) : (
                     <PlzaCards displayedPokemon={filteredPokemon} pokemonList={pokemonList} openModal={openModal} activeTab={activeTab} />

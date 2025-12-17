@@ -3,7 +3,6 @@ import svPokemon from "../../data/SvData.js";
 import usePokemon from "../FetchPokemon.jsx";
 import SvModal from "./SvModal.jsx";
 import SvTabs from "./SvTabs.jsx";
-import SvCollection from "./SvCollection.jsx";
 import SvCards from "./SvCards.jsx";
 import SvActiveHunts from "./SvActiveHunts.jsx";
 
@@ -57,13 +56,11 @@ export default function Sv() {
 
     return (
         <div className="relative p-3 sm:p-6 min-h-screen bg-[#f8f9fa] overflow-hidden font-sans">
-            {/* Achtergrond decoratie */}
             <div className="absolute top-0 left-0 w-full h-full pointer-events-none z-0">
                 <div className="absolute top-[-5%] left-[-5%] w-[30%] h-[100%] bg-[#ff4d00] opacity-[0.03] rotate-12"></div>
                 <div className="absolute bottom-[-5%] right-[-5%] w-[30%] h-[100%] bg-[#8c00ff] opacity-[0.03] rotate-12"></div>
             </div>
 
-            {/* Header met Logo-stijl */}
             <div className="relative z-10 flex flex-col items-center mb-6">
                 <div className="bg-white py-1.5 px-8 shadow-sm border-y-2 border-[#ff4d00] transform -rotate-1 mb-4">
                     <h1 className="text-2xl sm:text-3xl font-black italic tracking-tighter text-[#333] uppercase">
@@ -71,12 +68,10 @@ export default function Sv() {
                     </h1>
                 </div>
 
-                {/* Progress Bar met Percentage */}
                 <div className="w-full max-w-lg bg-white p-3 rounded-xl shadow-sm border border-gray-100">
                     <div className="flex justify-between items-end mb-1.5 px-1">
                         <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Shiny Progress</span>
                         <div className="flex items-baseline gap-2">
-                            {/* Visueel percentage toegevoegd */}
                             <span className="text-xs font-bold text-[#ff4d00] tabular-nums">
                                 {shinyPercentage}%
                             </span>
@@ -96,14 +91,11 @@ export default function Sv() {
                 </div>
             </div>
 
-            {/* Controls Sectie */}
             <div className="relative z-10 max-w-6xl mx-auto mb-8 flex flex-col lg:flex-row items-center gap-4">
-                {/* Tabs Component */}
                 <div className="flex-1 w-full overflow-x-auto">
                     <SvTabs activeTab={activeTab} setActiveTab={setActiveTab} />
                 </div>
 
-                {/* Filter & Search Box */}
                 <div className="w-full lg:w-[300px] bg-white p-3 rounded-lg shadow-sm border-b-2 border-gray-200 flex flex-col gap-2">
                     <div className="flex items-center justify-between">
                         <label className="text-[9px] font-black text-gray-400 uppercase tracking-widest">Unregistered</label>
@@ -132,11 +124,8 @@ export default function Sv() {
                 </div>
             </div>
 
-            {/* Main Content Area */}
             <div className="relative z-10 max-w-7xl mx-auto min-h-[400px]">
-                {activeTab === "collection" ? (
-                    <SvCollection svPokemon={filteredPokemon} pokemonList={pokemonList} formatTime={formatTime} />
-                ) : activeTab === "active" ? (
+                {activeTab === "active" ? (
                     <SvActiveHunts svPokemon={filteredPokemon} pokemonList={pokemonList} formatTime={formatTime} openModal={openModal} />
                 ) : (
                     <SvCards displayedPokemon={filteredPokemon} pokemonList={pokemonList} openModal={openModal} activeTab={activeTab} />

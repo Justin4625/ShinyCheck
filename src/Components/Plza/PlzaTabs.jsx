@@ -5,7 +5,6 @@ export default function PlzaTabs({ activeTab, setActiveTab }) {
         { id: "active", label: "Active Hunts" },
         { id: "base", label: "Base Game" },
         { id: "mega", label: "Mega Dimension" },
-        { id: "collection", label: "Collection" },
     ];
 
     return (

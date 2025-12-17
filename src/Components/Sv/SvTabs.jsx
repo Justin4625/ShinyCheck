@@ -1,22 +1,17 @@
 import React from "react";
 
 export default function SvTabs({ activeTab, setActiveTab }) {
-    // Active Hunts vooraan gezet
     const tabs = [
         { id: "active", label: "ACTIVE HUNTS", disabled: false },
         { id: "base", label: "BASE GAME", disabled: false },
         { id: "teal", label: "TEAL MASK", disabled: true },
         { id: "indigo", label: "INDIGO DISK", disabled: true },
-        { id: "collection", label: "COLLECTION", disabled: false },
     ];
 
     return (
         <div className="flex flex-wrap lg:flex-nowrap w-full gap-1.5 sm:gap-2">
             {tabs.map((tab, index) => {
                 const isActive = activeTab === tab.id;
-
-                // Wissel af tussen Scarlet (Oranje) en Violet (Paars) voor actieve tabs
-                // "Active Hunts" krijgt vaak de hoofdkleur van de huidige game-focus
                 const accentColor = index % 2 === 0 ? "from-[#ff4d00] to-[#ff6a00]" : "from-[#8c00ff] to-[#a23dff]";
 
                 return (
