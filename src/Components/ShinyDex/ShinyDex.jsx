@@ -20,7 +20,7 @@ export default function ShinyDex() {
 
     // Bereken algemene progressie over de hele National Dex
     const globalStats = useMemo(() => {
-        let count = 0;
+        let count;
         // We gebruiken een Set om unieke namen te tellen, mocht een pokemon in meerdere games gevangen zijn
         const caughtNames = new Set();
 
