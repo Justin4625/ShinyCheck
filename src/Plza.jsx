@@ -14,6 +14,7 @@ export default function Plza() {
     const [selectedPokemon, setSelectedPokemon] = useState(null);
     const [activeTab, setActiveTab] = useState("base");
     const [searchQuery, setSearchQuery] = useState("");
+    const [showMissingOnly, setShowMissingOnly] = useState(false);
 
     const openModal = (pokemon) => setSelectedPokemon(pokemon);
     const closeModal = () => setSelectedPokemon(null);
@@ -42,13 +43,19 @@ export default function Plza() {
                     ? plzaPokemon.concat(plzaMdPokemon)
                     : [];
 
-    // 🔍 Zoekfilter (naam + type)
+    // 🔍 Gecombineerd filter: Zoekopdracht + Missing Shiny Switch
     const filteredPokemon = displayedPokemon.filter((p) => {
-        if (!searchQuery) return true;
+        // 1. Check shiny status indien de switch aan staat
+        if (showMissingOnly) {
+            const count = Number(localStorage.getItem(`shiny_${p.id}`)) || 0;
+            if (count > 0) return false;
+        }
 
+        // 2. Zoekfilter (naam + type)
         const query = searchQuery.toLowerCase();
-        const nameMatch = p.name.toLowerCase().includes(query);
+        if (!query) return true;
 
+        const nameMatch = p.name.toLowerCase().includes(query);
         const apiPokemon = pokemonList.find(api => api.id === p.id);
         const typeMatch = apiPokemon?.types?.some(t =>
             t.type.name.toLowerCase().includes(query)
@@ -57,7 +64,6 @@ export default function Plza() {
         return nameMatch || typeMatch;
     });
 
-    // Shiny progress
     const getShinyProgress = () => {
         let uniqueShinyCount = 0;
         plzaPokemon.concat(plzaMdPokemon).forEach(p => {
@@ -75,21 +81,15 @@ export default function Plza() {
         : -1;
 
     return (
-        <div
-            className="relative p-4 sm:p-6 lg:p-8 min-h-screen bg-gradient-to-b from-gray-50 via-gray-100 to-gray-200 overflow-hidden">
-            {/* Achtergrond */}
-            <div
-                className="absolute inset-0 bg-[repeating-linear-gradient(90deg,rgba(200,200,255,0.05) 0 1px,transparent 1px 20px),repeating-linear-gradient(rgba(200,200,255,0.05) 0 1px,transparent 1px 20px)] pointer-events-none"></div>
-            <div
-                className="absolute -top-20 -left-10 w-48 sm:w-60 h-48 sm:h-60 bg-blue-400 rounded-full opacity-15 blur-3xl pointer-events-none"></div>
-            <div
-                className="absolute -bottom-32 -right-20 w-64 sm:w-80 h-64 sm:h-80 bg-purple-400 rounded-full opacity-15 blur-3xl pointer-events-none"></div>
+        <div className="relative p-4 sm:p-6 lg:p-8 min-h-screen bg-gradient-to-b from-gray-50 via-gray-100 to-gray-200 overflow-hidden">
+            <div className="absolute inset-0 bg-[repeating-linear-gradient(90deg,rgba(200,200,255,0.05) 0 1px,transparent 1px 20px),repeating-linear-gradient(rgba(200,200,255,0.05) 0 1px,transparent 1px 20px)] pointer-events-none"></div>
+            <div className="absolute -top-20 -left-10 w-48 sm:w-60 h-48 sm:h-60 bg-blue-400 rounded-full opacity-15 blur-3xl pointer-events-none"></div>
+            <div className="absolute -bottom-32 -right-20 w-64 sm:w-80 h-64 sm:h-80 bg-purple-400 rounded-full opacity-15 blur-3xl pointer-events-none"></div>
 
             <h1 className="relative text-2xl sm:text-3xl md:text-4xl font-extrabold text-center text-gray-900 mb-4 tracking-wide z-10">
                 Pokémon Legends: Z-A
             </h1>
 
-            {/* Shiny Progress */}
             <div className="relative w-full max-w-xl mx-auto mb-6">
                 <p className="text-center text-gray-700 font-bold mb-2">
                     Shiny Progress: {shinyProgress.count}/364 ({shinyPercentage}%)
@@ -102,36 +102,39 @@ export default function Plza() {
                 </div>
             </div>
 
-            {/* Tabs + Search */}
-            <div className="relative z-10 flex flex-col lg:flex-row lg:items-center gap-4 mb-8">
-                {/* Tabs nemen alle beschikbare ruimte */}
+            <div className="relative z-10 flex flex-col lg:flex-row lg:items-end gap-4 mb-8">
                 <div className="flex flex-wrap lg:flex-nowrap flex-1 gap-1 sm:gap-2">
                     <PlzaTabs activeTab={activeTab} setActiveTab={setActiveTab} />
                 </div>
 
-                {/* 🔍 Zoekbalk rechts – subtiele gradient + iets donkerdere rand */}
-                <div className="w-full lg:flex-shrink-0 lg:max-w-[280px]">
+                <div className="w-full lg:flex-shrink-0 lg:max-w-[280px] flex flex-col gap-2">
+                    {/* Toggle Switch */}
+                    <div className="flex items-center justify-between lg:justify-end gap-3 px-1 mb-1">
+                        <span className="text-xs sm:text-sm font-bold text-gray-600 uppercase tracking-tighter">Missing Shinies Only</span>
+                        <button
+                            onClick={() => setShowMissingOnly(!showMissingOnly)}
+                            className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-300 focus:outline-none shadow-inner ${
+                                showMissingOnly ? 'bg-gradient-to-r from-purple-500 to-pink-500' : 'bg-gray-300'
+                            }`}
+                        >
+                            <span
+                                className={`${
+                                    showMissingOnly ? 'translate-x-6' : 'translate-x-1'
+                                } inline-block h-4 w-4 transform rounded-full bg-white shadow-md transition duration-300 ease-in-out`}
+                            />
+                        </button>
+                    </div>
+
                     <input
                         type="text"
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
                         placeholder="Search by name or type"
-                        className="
-            w-full px-4 py-2
-            rounded-xl
-            bg-gradient-to-r from-purple-200/40 via-pink-200/30 to-blue-200/30
-            text-gray-900 placeholder-gray-500 font-medium
-            shadow-sm
-            focus:outline-none
-            focus:ring-2 focus:ring-purple-300/40
-            border border-gray-400
-            transition-all duration-300
-        "
+                        className="w-full px-4 py-2 rounded-xl bg-gradient-to-r from-purple-200/40 via-pink-200/30 to-blue-200/30 text-gray-900 placeholder-gray-500 font-medium shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-300/40 border border-gray-400 transition-all duration-300"
                     />
                 </div>
             </div>
 
-            {/* Content */}
             {activeTab === "collection" ? (
                 <PlzaCollection
                     plzaPokemon={filteredPokemon}
@@ -154,7 +157,6 @@ export default function Plza() {
                 />
             )}
 
-            {/* Modal */}
             <PlzaModal
                 selectedPokemon={selectedPokemon}
                 onClose={closeModal}
