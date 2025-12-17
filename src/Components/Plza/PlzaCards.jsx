@@ -1,10 +1,28 @@
 import React from "react";
+// Importeer de bronbestanden om de originele index te bepalen
+import plzaPokemon from "../../data/PlzaData.js";
+import plzaMdPokemon from "../../data/PlzaMdData.js";
 
 export default function PlzaCards({ displayedPokemon, pokemonList, openModal, activeTab }) {
     const isLoading = displayedPokemon.length > 0 && displayedPokemon.some((entry) => {
         const pokemon = pokemonList.find((p) => p.id === entry.id);
         return !pokemon?.sprites?.other?.home?.front_shiny;
     });
+
+    // Hulpfunctie om het vaste nummer te bepalen op basis van de tab
+    const getStaticIndex = (entry) => {
+        if (activeTab === "mega") {
+            const index = plzaMdPokemon.findIndex(p => p.id === entry.id);
+            return index + 1;
+        }
+        // Voor base, collection of active gebruiken we de base lijst indexering
+        const index = plzaPokemon.findIndex(p => p.id === entry.id);
+        // Als hij niet in base staat (bijv. in collection tab), check dan mega
+        if (index === -1) {
+            return plzaMdPokemon.findIndex(p => p.id === entry.id) + 1;
+        }
+        return index + 1;
+    };
 
     return (
         <div className="relative grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 sm:gap-6 lg:gap-8 z-10">
@@ -25,6 +43,9 @@ export default function PlzaCards({ displayedPokemon, pokemonList, openModal, ac
                     const pokemon = pokemonList.find((p) => p.id === entry.id);
                     const shinyCount = Number(localStorage.getItem(`shiny_${entry.id}`)) || 0;
                     const isGolden = (activeTab === "base" || activeTab === "mega") && shinyCount >= 1;
+
+                    // Bepaal het nummer dat altijd hetzelfde blijft voor deze Pokémon in deze tab
+                    const staticNumber = getStaticIndex(entry);
 
                     return (
                         <div
@@ -51,7 +72,7 @@ export default function PlzaCards({ displayedPokemon, pokemonList, openModal, ac
                                 </h2>
                                 <span
                                     className="px-2 py-1 text-xs sm:text-sm font-bold bg-gradient-to-r from-purple-400 to-blue-500 text-white rounded-full shadow-md relative z-10">
-                                    #{String(index + 1).padStart(3, "0")}
+                                    #{String(staticNumber).padStart(3, "0")}
                                 </span>
                             </div>
 
