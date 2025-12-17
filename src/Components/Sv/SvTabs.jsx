@@ -35,7 +35,7 @@ export default function SvTabs({ activeTab, setActiveTab }) {
 
                             {tab.disabled && (
                                 <span className="absolute -bottom-4 left-0 w-full text-[7px] font-black uppercase tracking-tighter text-red-500 whitespace-nowrap">
-                                    Locked
+                                    Coming Soon
                                 </span>
                             )}
 
