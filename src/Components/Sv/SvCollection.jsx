@@ -20,7 +20,7 @@ export default function SvCollection({ svPokemon, pokemonList, formatTime }) {
                 <div className="flex flex-col justify-center items-center text-center min-h-[200px]">
                     <div className="bg-white/50 backdrop-blur-sm p-6 rounded-2xl border-2 border-dashed border-gray-200">
                         <span className="text-xs font-black text-gray-400 uppercase tracking-widest italic">
-                            Your Paldea Collection is empty
+                            Your Shiny Collection is empty
                         </span>
                     </div>
                 </div>

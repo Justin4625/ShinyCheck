@@ -24,7 +24,7 @@ export default function SvActiveHunts({ svPokemon, pokemonList, formatTime, open
                 <div className="flex flex-col justify-center items-center text-center min-h-[300px]">
                     <div className="bg-white/50 backdrop-blur-sm p-8 rounded-3xl border-2 border-dashed border-gray-300 transform -rotate-1">
                         <span className="text-xl font-black text-gray-400 uppercase tracking-[0.2em] italic">
-                            No Active Hunts in Paldea
+                            No Active Hunts
                         </span>
                     </div>
                 </div>
