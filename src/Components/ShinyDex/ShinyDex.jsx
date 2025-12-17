@@ -7,81 +7,71 @@ import usePokemon from "../FetchPokemon.jsx";
 import ShinyDexCards from "./ShinyDexCards.jsx";
 import ShinyDexTabs from "./ShinyDexTabs.jsx";
 
-// Voeg de delen samen tot één National Dex lijst
 const fullShinyDex = [...shinyDexPart1, ...shinyDexPart2, ...shinyDexPart3];
 
 export default function ShinyDex() {
     const [activeTab, setActiveTab] = useState("kanto");
     const [searchQuery, setSearchQuery] = useState("");
+    const [showUnregisteredOnly, setShowUnregisteredOnly] = useState(false);
 
-    // Filter de lokale data op regio voor de fetcher
     const regionEntries = fullShinyDex.filter((p) => p.region === activeTab);
     const { pokemonList } = usePokemon(regionEntries);
 
-    // Bereken algemene progressie over de hele National Dex
-    const globalStats = useMemo(() => {
-        let count;
-        // We gebruiken een Set om unieke namen te tellen, mocht een pokemon in meerdere games gevangen zijn
-        const caughtNames = new Set();
-
+    const isCaught = (name) => {
+        const lowerName = name.toLowerCase();
         for (let i = 0; i < localStorage.length; i++) {
             const key = localStorage.key(i);
             if (key.startsWith("plza_shinyData_") || key.startsWith("sv_shinyData_")) {
                 const data = JSON.parse(localStorage.getItem(key));
-                if (data?.pokemonName) {
-                    caughtNames.add(data.pokemonName.toLowerCase());
-                }
+                if (data?.pokemonName?.toLowerCase() === lowerName) return true;
             }
         }
+        return false;
+    };
 
-        count = caughtNames.size;
+    const globalStats = useMemo(() => {
+        const caughtNames = new Set();
+        for (let i = 0; i < localStorage.length; i++) {
+            const key = localStorage.key(i);
+            if (key.startsWith("plza_shinyData_") || key.startsWith("sv_shinyData_")) {
+                const data = JSON.parse(localStorage.getItem(key));
+                if (data?.pokemonName) caughtNames.add(data.pokemonName.toLowerCase());
+            }
+        }
+        const count = caughtNames.size;
         const total = fullShinyDex.length;
         const percentage = total > 0 ? ((count / total) * 100).toFixed(1) : 0;
         return { count, total, percentage };
     }, []);
 
-    // Bereken regio-specifieke progressie
     const regionStats = useMemo(() => {
         let count = 0;
         regionEntries.forEach(p => {
-            const lowerName = p.name.toLowerCase();
-            for (let i = 0; i < localStorage.length; i++) {
-                const key = localStorage.key(i);
-                if (key.startsWith("plza_shinyData_") || key.startsWith("sv_shinyData_")) {
-                    const data = JSON.parse(localStorage.getItem(key));
-                    if (data?.pokemonName?.toLowerCase() === lowerName) {
-                        count++;
-                        break;
-                    }
-                }
-            }
+            if (isCaught(p.name)) count++;
         });
         const total = regionEntries.length;
         const percentage = total > 0 ? ((count / total) * 100).toFixed(1) : 0;
         return { count, total, percentage };
     }, [regionEntries]);
 
-    // Filter de lijst op basis van zoekopdracht (Naam of ID)
-    const filteredList = pokemonList.filter(p =>
-        p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        p.id.toString().includes(searchQuery)
-    );
+    const filteredList = pokemonList.filter(p => {
+        const matchesSearch = p.name.toLowerCase().includes(searchQuery.toLowerCase()) || p.id.toString().includes(searchQuery);
+        const matchesUnregistered = showUnregisteredOnly ? !isCaught(p.name) : true;
+        return matchesSearch && matchesUnregistered;
+    });
 
     return (
         <div className="relative min-h-screen bg-[#f8fafc] p-4 sm:p-8 font-sans overflow-hidden text-slate-900">
-            {/* Achtergrond Decoratie */}
             <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-orange-200/40 rounded-full blur-[120px] pointer-events-none"></div>
             <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-cyan-200/40 rounded-full blur-[120px] pointer-events-none"></div>
 
             <div className="relative z-10 max-w-7xl mx-auto">
-                {/* Header Area */}
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-8 px-4 gap-6">
                     <div className="flex flex-col w-full md:w-auto">
                         <h1 className="text-3xl sm:text-5xl font-black tracking-tighter uppercase italic text-slate-900">
                             Shiny<span className="text-[#ff4d29]">Check</span>
                         </h1>
 
-                        {/* Global Progress Bar met Teller */}
                         <div className="mt-4 w-full md:w-72">
                             <div className="flex justify-between items-end mb-1">
                                 <div className="flex flex-col">
@@ -101,7 +91,6 @@ export default function ShinyDex() {
                         </div>
                     </div>
 
-                    {/* Search Bar */}
                     <div className="w-full md:w-80 bg-white/80 backdrop-blur-md border border-slate-200 p-2 px-4 rounded-2xl shadow-sm flex items-center gap-3 group focus-within:border-[#ff4d29] transition-all">
                         <svg className="w-4 h-4 text-slate-400 group-focus-within:text-[#ff4d29]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -116,20 +105,22 @@ export default function ShinyDex() {
                     </div>
                 </div>
 
-                {/* Region Selection (Tabs) */}
                 <ShinyDexTabs activeTab={activeTab} setActiveTab={setActiveTab} />
 
-                {/* Main Viewport */}
                 <div className="mt-8 bg-white/40 backdrop-blur-2xl rounded-[3rem] border border-white shadow-xl p-6 sm:p-10 relative overflow-hidden">
                     <div className="absolute inset-0 opacity-[0.05] pointer-events-none bg-[linear-gradient(to_right,#64748b_1px,transparent_1px),linear-gradient(to_bottom,#64748b_1px,transparent_1px)] bg-[size:40px_40px]"></div>
 
-                    {/* Region Progress Header */}
-                    <div className="relative z-10 mb-8 flex flex-col sm:flex-row justify-between items-center gap-4 bg-white/50 p-4 rounded-2xl border border-white shadow-sm">
-                        <div className="flex flex-col items-center sm:items-start">
+                    {/* Region Progress Header - Toggle en Progress gewisseld */}
+                    <div className="relative z-10 mb-8 flex flex-col lg:flex-row justify-between items-center gap-6 bg-white/50 p-5 rounded-3xl border border-white shadow-sm">
+
+                        {/* 1. Region Name (Links) */}
+                        <div className="flex flex-col items-center lg:items-start shrink-0">
                             <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Region Completion</span>
                             <h2 className="text-xl font-black uppercase italic text-slate-800">{activeTab} Dex</h2>
                         </div>
-                        <div className="flex flex-col items-center sm:items-end w-full sm:w-48">
+
+                        {/* 2. Progressie (Midden) */}
+                        <div className="flex flex-col items-center w-full max-w-md">
                             <div className="flex items-baseline gap-2 mb-1">
                                 <span className="text-2xl font-black text-slate-900">{regionStats.count}</span>
                                 <span className="text-slate-400 font-bold">/</span>
@@ -143,11 +134,21 @@ export default function ShinyDex() {
                                 />
                             </div>
                         </div>
+
+                        {/* 3. Toggle Unregistered (Rechts) */}
+                        <div className="flex items-center gap-3 bg-slate-100/50 p-2 px-4 rounded-2xl border border-slate-200 shrink-0">
+                            <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest">Unregistered</span>
+                            <button
+                                onClick={() => setShowUnregisteredOnly(!showUnregisteredOnly)}
+                                className={`relative w-10 h-5 rounded-full transition-colors duration-300 focus:outline-none ${showUnregisteredOnly ? 'bg-[#ff4d29]' : 'bg-slate-300'}`}
+                            >
+                                <div className={`absolute top-1 left-1 bg-white w-3 h-3 rounded-full transition-transform duration-300 ${showUnregisteredOnly ? 'translate-x-5' : ''}`}></div>
+                            </button>
+                        </div>
+
                     </div>
 
-                    <ShinyDexCards
-                        displayedPokemon={filteredList}
-                    />
+                    <ShinyDexCards displayedPokemon={filteredList} />
                 </div>
             </div>
         </div>
