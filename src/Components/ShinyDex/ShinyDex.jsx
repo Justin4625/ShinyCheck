@@ -32,7 +32,7 @@ export default function ShinyDex() {
                 <div className="flex justify-between items-end mb-8 px-4">
                     <div className="flex flex-col">
                         <h1 className="text-3xl sm:text-5xl font-black tracking-tighter uppercase italic text-slate-900">
-                            Rotom <span className="text-[#ff4d29]">OS</span>
+                            Shiny<span className="text-[#ff4d29]">Check</span>
                         </h1>
                         <p className="text-[10px] font-bold tracking-[0.4em] text-slate-400 uppercase mt-2">National ShinyDex // V.9.0</p>
                     </div>

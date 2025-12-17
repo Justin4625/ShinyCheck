@@ -29,7 +29,8 @@ export default function ShinyDexCards({ displayedPokemon }) {
     };
 
     return (
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 pb-20">
+        /* De grid is nu geconfigureerd voor 5 kolommen vanaf de 'lg' breakpoint en hoger */
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 pb-20">
             {displayedPokemon.map((pokemon) => {
                 const amountOwned = getCollectionCount(pokemon.name);
                 const isOwned = amountOwned > 0;
