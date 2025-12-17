@@ -21,9 +21,7 @@ export default function Plza() {
 
     useEffect(() => {
         document.body.style.overflow = selectedPokemon ? "hidden" : "auto";
-        return () => {
-            document.body.style.overflow = "auto";
-        };
+        return () => { document.body.style.overflow = "auto"; };
     }, [selectedPokemon]);
 
     const formatTime = (seconds) => {
@@ -33,7 +31,6 @@ export default function Plza() {
         return `${hrs}h ${mins}m ${secs}s`;
     };
 
-    // Pokémon per tab
     const displayedPokemon =
         activeTab === "base"
             ? plzaPokemon
@@ -43,15 +40,13 @@ export default function Plza() {
                     ? plzaPokemon.concat(plzaMdPokemon)
                     : [];
 
-    // 🔍 Gecombineerd filter: Zoekopdracht + Missing Shiny Switch
     const filteredPokemon = displayedPokemon.filter((p) => {
-        // 1. Check shiny status indien de switch aan staat
         if (showMissingOnly) {
-            const count = Number(localStorage.getItem(`shiny_${p.id}`)) || 0;
+            // Gebruik plza_ prefix voor unieke data opslag
+            const count = Number(localStorage.getItem(`plza_shiny_${p.id}`)) || 0;
             if (count > 0) return false;
         }
 
-        // 2. Zoekfilter (naam + type)
         const query = searchQuery.toLowerCase();
         if (!query) return true;
 
@@ -67,7 +62,7 @@ export default function Plza() {
     const getShinyProgress = () => {
         let uniqueShinyCount = 0;
         plzaPokemon.concat(plzaMdPokemon).forEach(p => {
-            const count = Number(localStorage.getItem(`shiny_${p.id}`)) || 0;
+            const count = Number(localStorage.getItem(`plza_shiny_${p.id}`)) || 0;
             if (count > 0) uniqueShinyCount += 1;
         });
         return { count: uniqueShinyCount, total: 364 };
@@ -83,8 +78,6 @@ export default function Plza() {
     return (
         <div className="relative p-4 sm:p-6 lg:p-8 min-h-screen bg-gradient-to-b from-gray-50 via-gray-100 to-gray-200 overflow-hidden">
             <div className="absolute inset-0 bg-[repeating-linear-gradient(90deg,rgba(200,200,255,0.05) 0 1px,transparent 1px 20px),repeating-linear-gradient(rgba(200,200,255,0.05) 0 1px,transparent 1px 20px)] pointer-events-none"></div>
-            <div className="absolute -top-20 -left-10 w-48 sm:w-60 h-48 sm:h-60 bg-blue-400 rounded-full opacity-15 blur-3xl pointer-events-none"></div>
-            <div className="absolute -bottom-32 -right-20 w-64 sm:w-80 h-64 sm:h-80 bg-purple-400 rounded-full opacity-15 blur-3xl pointer-events-none"></div>
 
             <h1 className="relative text-2xl sm:text-3xl md:text-4xl font-extrabold text-center text-gray-900 mb-4 tracking-wide z-10">
                 Pokémon Legends: Z-A
@@ -108,7 +101,6 @@ export default function Plza() {
                 </div>
 
                 <div className="w-full lg:flex-shrink-0 lg:max-w-[280px] flex flex-col gap-2">
-                    {/* Toggle Switch */}
                     <div className="flex items-center justify-between lg:justify-end gap-3 px-1 mb-1">
                         <span className="text-xs sm:text-sm font-bold text-gray-600 uppercase tracking-tighter">Missing Shinies Only</span>
                         <button
@@ -118,9 +110,7 @@ export default function Plza() {
                             }`}
                         >
                             <span
-                                className={`${
-                                    showMissingOnly ? 'translate-x-6' : 'translate-x-1'
-                                } inline-block h-4 w-4 transform rounded-full bg-white shadow-md transition duration-300 ease-in-out`}
+                                className={`${showMissingOnly ? 'translate-x-6' : 'translate-x-1'} inline-block h-4 w-4 transform rounded-full bg-white shadow-md transition duration-300`}
                             />
                         </button>
                     </div>
@@ -136,32 +126,14 @@ export default function Plza() {
             </div>
 
             {activeTab === "collection" ? (
-                <PlzaCollection
-                    plzaPokemon={filteredPokemon}
-                    pokemonList={pokemonList}
-                    formatTime={formatTime}
-                />
+                <PlzaCollection plzaPokemon={filteredPokemon} pokemonList={pokemonList} formatTime={formatTime} />
             ) : activeTab === "active" ? (
-                <PlzaActiveHunts
-                    plzaPokemon={filteredPokemon}
-                    pokemonList={pokemonList}
-                    formatTime={formatTime}
-                    openModal={openModal}
-                />
+                <PlzaActiveHunts plzaPokemon={filteredPokemon} pokemonList={pokemonList} formatTime={formatTime} openModal={openModal} />
             ) : (
-                <PlzaCards
-                    displayedPokemon={filteredPokemon}
-                    pokemonList={pokemonList}
-                    openModal={openModal}
-                    activeTab={activeTab}
-                />
+                <PlzaCards displayedPokemon={filteredPokemon} pokemonList={pokemonList} openModal={openModal} activeTab={activeTab} />
             )}
 
-            <PlzaModal
-                selectedPokemon={selectedPokemon}
-                onClose={closeModal}
-                index={modalIndex}
-            />
+            <PlzaModal selectedPokemon={selectedPokemon} onClose={closeModal} index={modalIndex} />
         </div>
     );
 }

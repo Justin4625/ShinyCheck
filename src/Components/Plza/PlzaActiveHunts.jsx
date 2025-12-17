@@ -8,7 +8,7 @@ export default function PlzaActiveHunts({
                                         }) {
     const activePokemon = plzaPokemon
         .flatMap(p => {
-            const storedData = JSON.parse(localStorage.getItem(`hunt_${p.id}`)) || {
+            const storedData = JSON.parse(localStorage.getItem(`plza_hunt_${p.id}`)) || {
                 timer: 0,
                 counter: 0,
                 isPlaying: false,
@@ -40,7 +40,6 @@ export default function PlzaActiveHunts({
                             onClick={() => openModal(pokemon)}
                             className="relative rounded-2xl p-4 sm:p-5 lg:p-6 flex flex-col items-center justify-between cursor-pointer transition-transform duration-300 overflow-hidden hover:scale-105 bg-gradient-to-br from-gray-100 to-gray-200 text-gray-900 shadow-md"
                         >
-                            {/* Blobs */}
                             <div className={`absolute -top-4 -right-4 w-16 h-16 rounded-full blur-2xl pointer-events-none
                                 ${index % 3 === 0 ? "bg-green-400 opacity-60" : index % 3 === 1 ? "bg-pink-400 opacity-60" : "bg-blue-400 opacity-60"}`}
                             ></div>
@@ -49,13 +48,11 @@ export default function PlzaActiveHunts({
                                 ${index % 3 === 0 ? "bg-purple-400 opacity-60" : index % 3 === 1 ? "bg-blue-400 opacity-60" : "bg-green-400 opacity-60"}`}
                             ></div>
 
-                            {/* Naam en nummer */}
                             <div className="w-full flex justify-between items-center mb-3 relative z-10">
                                 <h2 className="text-base sm:text-lg md:text-xl font-extrabold capitalize tracking-wide text-gray-900 text-left">
                                     {entry.name}
                                 </h2>
-                                <span
-                                    className="px-2 py-1 text-xs sm:text-sm font-bold bg-gradient-to-r from-purple-400 to-blue-500 text-white rounded-full shadow-md relative z-10">
+                                <span className="px-2 py-1 text-xs sm:text-sm font-bold bg-gradient-to-r from-purple-400 to-blue-500 text-white rounded-full shadow-md relative z-10">
                                     #{number}
                                 </span>
                             </div>
@@ -63,16 +60,11 @@ export default function PlzaActiveHunts({
                             <img
                                 src={pokemon?.sprites?.other?.home?.front_shiny}
                                 alt={entry.name}
-                                className="w-20 h-20 sm:w-28 sm:h-28 md:w-32 md:h-32 drop-shadow-md"
+                                className="w-20 h-20 sm:w-28 sm:h-28 md:w-32 md:h-32 drop-shadow-md relative z-10"
                             />
 
-                            {pokemon?.types && (
-                                <p className="mt-2 sm:mt-3 text-xs sm:text-sm text-gray-600 uppercase tracking-wide">
-                                    {pokemon.types.map((t) => t.type.name).join(" / ")}
-                                </p>
-                            )}
-
-                            <div className="mt-4 w-full flex flex-col items-center gap-2">
+                            {/* Grotere tekst in de stroken */}
+                            <div className="mt-4 w-full flex flex-col items-center gap-2 relative z-10">
                                 <div className="w-full bg-gradient-to-r from-pink-500 to-red-500 text-white text-xs sm:text-base font-bold rounded-xl p-2 shadow-md flex justify-between">
                                     <span>Encounters:</span>
                                     <span>{entry.storedData.counter}</span>
@@ -84,7 +76,7 @@ export default function PlzaActiveHunts({
                                 </div>
 
                                 <div className="w-full bg-gradient-to-r from-gray-700 via-gray-600 to-gray-500 text-white text-xs sm:text-base font-bold rounded-xl p-2 shadow-md flex justify-center">
-                                    {entry.game}
+                                    {entry.game || "Pokémon Legends: Z-A"}
                                 </div>
                             </div>
                         </div>

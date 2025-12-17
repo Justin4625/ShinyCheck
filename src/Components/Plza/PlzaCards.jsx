@@ -19,7 +19,8 @@ export default function PlzaCards({ displayedPokemon, pokemonList, openModal, ac
         const index = plzaPokemon.findIndex(p => p.id === entry.id);
         // Als hij niet in base staat (bijv. in collection tab), check dan mega
         if (index === -1) {
-            return plzaMdPokemon.findIndex(p => p.id === entry.id) + 1;
+            const mdIndex = plzaMdPokemon.findIndex(p => p.id === entry.id);
+            return mdIndex !== -1 ? mdIndex + 1 : 1;
         }
         return index + 1;
     };
@@ -41,10 +42,11 @@ export default function PlzaCards({ displayedPokemon, pokemonList, openModal, ac
             ) : (
                 displayedPokemon.map((entry, index) => {
                     const pokemon = pokemonList.find((p) => p.id === entry.id);
-                    const shinyCount = Number(localStorage.getItem(`shiny_${entry.id}`)) || 0;
+                    // Gebruik de unieke PLZA prefix voor de data-scheiding
+                    const shinyCount = Number(localStorage.getItem(`plza_shiny_${entry.id}`)) || 0;
                     const isGolden = (activeTab === "base" || activeTab === "mega") && shinyCount >= 1;
 
-                    // Bepaal het nummer dat altijd hetzelfde blijft voor deze Pokémon in deze tab
+                    // Bepaal het nummer dat altijd hetzelfde blijft
                     const staticNumber = getStaticIndex(entry);
 
                     return (
@@ -58,6 +60,7 @@ export default function PlzaCards({ displayedPokemon, pokemonList, openModal, ac
                                 ${isGolden ? "before:absolute before:inset-0 before:bg-gradient-to-br before:from-yellow-200 before:via-yellow-100/100 before:to-transparent before:pointer-events-none before:rounded-2xl" : ""}
                             `}
                         >
+                            {/* De gekleurde achtergrond blobs (Hersteld) */}
                             <div className={`absolute -top-4 -right-4 w-16 h-16 rounded-full blur-2xl pointer-events-none
                                 ${index % 3 === 0 ? "bg-green-400 opacity-60" : index % 3 === 1 ? "bg-pink-400 opacity-60" : "bg-blue-400 opacity-60"}`}
                             ></div>
@@ -66,6 +69,7 @@ export default function PlzaCards({ displayedPokemon, pokemonList, openModal, ac
                                 ${index % 3 === 0 ? "bg-purple-400 opacity-60" : index % 3 === 1 ? "bg-blue-400 opacity-60" : "bg-green-400 opacity-60"}`}
                             ></div>
 
+                            {/* Header met naam en badge */}
                             <div className="w-full flex justify-between items-center mb-3 relative z-10">
                                 <h2 className="text-base sm:text-lg md:text-xl font-extrabold capitalize tracking-wide text-gray-900 text-left">
                                     {entry.name}
@@ -76,18 +80,21 @@ export default function PlzaCards({ displayedPokemon, pokemonList, openModal, ac
                                 </span>
                             </div>
 
+                            {/* Sprite */}
                             <img
                                 src={pokemon?.sprites?.other?.home?.front_shiny}
                                 alt={entry.name}
                                 className="w-20 h-20 sm:w-28 sm:h-28 md:w-32 md:h-32 drop-shadow-md relative z-10"
                             />
 
+                            {/* Types */}
                             {pokemon?.types && (
                                 <p className="mt-2 sm:mt-3 text-xs sm:text-sm text-gray-600 uppercase tracking-wide relative z-10">
                                     {pokemon.types.map((t) => t.type.name).join(" / ")}
                                 </p>
                             )}
 
+                            {/* Footer met Collected count */}
                             <div className="mt-4 w-full flex justify-center relative z-10">
                                 <div
                                     className="px-4 py-1 rounded-full bg-gradient-to-r from-purple-400 to-blue-500 text-white text-xs sm:text-sm font-bold shadow-md tracking-wide">
