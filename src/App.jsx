@@ -2,18 +2,23 @@ import {createBrowserRouter, RouterProvider} from "react-router-dom";
 import Plza from "./Plza.jsx";
 import Layout from "./Components/Layout.jsx";
 import ShinyDex from "./ShinyDex.jsx";
+import Sv from "./Components/Sv/Sv.jsx";
 
 const router = createBrowserRouter([{
         element: <Layout/>,
         children: [
-        {
-            path: "/",
-            element: <ShinyDex/>
-        },
-        {
-            path: "/plza",
-            element: <Plza/>
-        }
+            {
+                path: "/",
+                element: <ShinyDex/>
+            },
+            {
+                path: "/plza",
+                element: <Plza/>
+            },
+            {
+                path: "/sv", // Nieuwe route voor Scarlet & Violet
+                element: <Sv/>
+            }
         ]
     }],
     { basename: "/ShinyCheck" }
