@@ -1,20 +1,14 @@
 import React, { useState, useMemo } from "react";
+import DeleteShinyPopup from "../DeleteShinyPopup.jsx";
 
 export default function PlzaCollectionModal({ data, onClose, pokemon, shinyIndex, gameName }) {
     const [showConfirm, setShowConfirm] = useState(false);
 
-    // Gebruik useMemo om de kleuren alleen bij de eerste render te bepalen
     const { topRightColor, bottomLeftColor } = useMemo(() => {
-        const colors = [
-            "bg-green-400",
-            "bg-pink-400",
-            "bg-blue-400",
-            "bg-purple-400",
-            "bg-yellow-400",
-            "bg-orange-400",
-            "bg-teal-400"
-        ];
+        const colors = ["bg-green-400", "bg-pink-400", "bg-blue-400", "bg-purple-400", "bg-yellow-400", "bg-orange-400", "bg-teal-400"];
+        // eslint-disable-next-line react-hooks/purity
         const randomTop = colors[Math.floor(Math.random() * colors.length)];
+        // eslint-disable-next-line react-hooks/purity
         const randomBottom = colors[Math.floor(Math.random() * colors.length)];
         return { topRightColor: randomTop, bottomLeftColor: randomBottom };
     }, []);
@@ -30,11 +24,7 @@ export default function PlzaCollectionModal({ data, onClose, pokemon, shinyIndex
 
     const formatDate = (timestamp) => {
         return new Date(timestamp).toLocaleString("nl-NL", {
-            day: "2-digit",
-            month: "2-digit",
-            year: "numeric",
-            hour: "2-digit",
-            minute: "2-digit",
+            day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit",
         });
     };
 
@@ -72,62 +62,46 @@ export default function PlzaCollectionModal({ data, onClose, pokemon, shinyIndex
                 <div className={`absolute -top-6 -right-6 w-36 h-36 sm:w-40 sm:h-40 ${topRightColor} opacity-40 blur-3xl pointer-events-none`} />
                 <div className={`absolute -bottom-10 -left-10 w-48 h-48 sm:w-56 sm:h-56 ${bottomLeftColor} opacity-40 blur-3xl pointer-events-none`} />
 
-                {/* Close button */}
                 <button
                     onClick={onClose}
-                    className="absolute top-4 right-4 w-10 h-10 sm:w-11 sm:h-11 flex items-center justify-center rounded-full bg-gradient-to-br from-purple-400 to-pink-500 text-white text-xl font-bold shadow-md shadow-purple-500/40 transition-all duration-200 hover:scale-110 hover:shadow-purple-600/50 active:scale-95"
+                    className="absolute top-4 right-4 w-10 h-10 sm:w-11 sm:h-11 flex items-center justify-center rounded-full bg-gradient-to-br from-purple-400 to-pink-500 text-white text-xl font-bold shadow-md shadow-purple-500/40 transition-all duration-200 hover:scale-110 hover:shadow-purple-600/50 active:scale-95 z-20"
                 >
                     ✕
                 </button>
 
-                {/* Dex + naam */}
-                <h2 className="text-2xl sm:text-4xl font-extrabold mb-2 sm:mb-4 capitalize tracking-wider z-10 text-center text-gray-900">
+                <h2 className="text-2xl sm:text-4xl font-extrabold mb-2 sm:mb-4 capitalize tracking-wider z-10 text-center">
                     #{String(pokemon.id).padStart(3, "0")} - {pokemon.name}
                 </h2>
 
-                {/* Shiny index badge */}
                 {shinyIndex && (
-                    <div className="absolute top-4 left-4 px-4 py-1 rounded-full text-sm font-extrabold bg-gradient-to-r from-yellow-400 to-orange-500 text-black shadow-md">
+                    <div className="absolute top-4 left-4 px-4 py-1 rounded-full text-sm font-extrabold bg-gradient-to-r from-yellow-400 to-orange-500 text-black shadow-md z-10">
                         Shiny #{shinyIndex}
                     </div>
                 )}
 
-                {/* Shiny sprite */}
                 <img
                     src={pokemon?.sprites?.other?.home?.front_shiny}
                     alt={pokemon.name}
                     className="w-32 h-32 sm:w-40 sm:h-40 mb-6 drop-shadow-xl z-10"
                 />
 
-                {/* Info box */}
                 <div className="w-full max-w-xl backdrop-blur-md rounded-2xl shadow-lg border border-gray-200 p-6 flex flex-col gap-6 z-10">
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-center">
                         <div>
                             <p className="text-sm text-gray-600 font-bold mb-1">Encounters</p>
-                            <div className="font-extrabold text-xl bg-white rounded-xl py-2 shadow">
-                                {data.counter}
-                            </div>
+                            <div className="font-extrabold text-xl bg-white rounded-xl py-2 shadow">{data.counter}</div>
                         </div>
-
                         <div>
                             <p className="text-sm text-gray-600 font-bold mb-1">Timer</p>
-                            <div className="font-extrabold text-xl bg-white rounded-xl py-2 shadow">
-                                {formatTime(data.timer)}
-                            </div>
+                            <div className="font-extrabold text-xl bg-white rounded-xl py-2 shadow">{formatTime(data.timer)}</div>
                         </div>
-
                         <div>
                             <p className="text-sm text-gray-600 font-bold mb-1">Date</p>
-                            <div className="font-extrabold text-md bg-white rounded-xl py-2 shadow">
-                                {formatDate(data.timestamp)}
-                            </div>
+                            <div className="font-extrabold text-md bg-white rounded-xl py-2 shadow">{formatDate(data.timestamp)}</div>
                         </div>
-
                         <div>
                             <p className="text-sm text-gray-600 font-bold mb-1">Game</p>
-                            <div className="font-extrabold text-md bg-white rounded-xl py-2 shadow">
-                                {gameName || "Unknown Game"}
-                            </div>
+                            <div className="font-extrabold text-md bg-white rounded-xl py-2 shadow">{gameName || "Unknown Game"}</div>
                         </div>
                     </div>
 
@@ -141,27 +115,12 @@ export default function PlzaCollectionModal({ data, onClose, pokemon, shinyIndex
                     </div>
                 </div>
 
-                {/* Bevestigingspopup met verbeterde knoppen */}
+                {/* Hier wordt de nieuwe component aangeroepen */}
                 {showConfirm && (
-                    <div className="absolute inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50">
-                        <div className="bg-white rounded-2xl p-6 w-80 sm:w-96 text-center shadow-2xl flex flex-col gap-5 border border-gray-100">
-                            <p className="font-bold text-gray-800 text-lg">Are you sure you want to delete this shiny?</p>
-                            <div className="flex justify-center gap-4">
-                                <button
-                                    onClick={() => setShowConfirm(false)}
-                                    className="px-6 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold rounded-xl shadow-md transition-all duration-300 transform hover:scale-105 active:scale-95"
-                                >
-                                    Cancel
-                                </button>
-                                <button
-                                    onClick={deleteShiny}
-                                    className="px-6 py-2 bg-gradient-to-r from-red-500 to-red-700 text-white font-bold rounded-xl shadow-lg shadow-red-500/20 transition-all duration-300 transform hover:scale-105 active:scale-95 hover:brightness-110"
-                                >
-                                    Delete
-                                </button>
-                            </div>
-                        </div>
-                    </div>
+                    <DeleteShinyPopup
+                        onCancel={() => setShowConfirm(false)}
+                        onConfirm={deleteShiny}
+                    />
                 )}
             </div>
         </div>
