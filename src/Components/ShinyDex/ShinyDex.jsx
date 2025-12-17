@@ -34,7 +34,7 @@ export default function ShinyDex() {
                         <h1 className="text-3xl sm:text-5xl font-black tracking-tighter uppercase italic text-slate-900">
                             Rotom <span className="text-[#ff4d29]">OS</span>
                         </h1>
-                        <p className="text-[10px] font-bold tracking-[0.4em] text-slate-400 uppercase mt-2">National Shiny Archive // V.3.0</p>
+                        <p className="text-[10px] font-bold tracking-[0.4em] text-slate-400 uppercase mt-2">National ShinyDex // V.9.0</p>
                     </div>
 
                     <div className="hidden sm:flex items-center gap-4 bg-white/80 backdrop-blur-md border border-slate-200 p-2 px-4 rounded-2xl shadow-sm">
