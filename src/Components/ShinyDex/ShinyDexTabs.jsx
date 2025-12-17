@@ -15,9 +15,9 @@ export default function ShinyDexTabs({ activeTab, setActiveTab }) {
     ];
 
     return (
-        <div className="relative w-full overflow-hidden bg-slate-200/50 p-2 rounded-[2rem] border border-white/50 shadow-inner">
-            {/* Scrollbare container met verborgen scrollbar */}
-            <div className="flex flex-nowrap overflow-x-auto gap-2 pb-1 px-2 scrollbar-hide items-center h-14">
+        <div className="relative w-full">
+            {/* Nav Rail */}
+            <div className="flex flex-nowrap overflow-x-auto gap-2 pb-4 scrollbar-hide px-2 items-center">
                 {tabs.map((tab) => {
                     const isActive = activeTab === tab.id;
                     return (
@@ -25,46 +25,24 @@ export default function ShinyDexTabs({ activeTab, setActiveTab }) {
                             key={tab.id}
                             onClick={() => setActiveTab(tab.id)}
                             className={`
-                                relative flex-shrink-0 min-w-[95px] h-10 transition-all duration-300
-                                font-black italic text-[10px] uppercase tracking-tighter
-                                flex items-center justify-center
-                                ${isActive ? 'z-10 scale-110' : 'z-0 opacity-70 hover:opacity-100'}
-                            `}
-                            style={{
-                                // Rotom UI gebruikt vaak trapezium-vormen
-                                clipPath: "polygon(10% 0%, 100% 0%, 90% 100%, 0% 100%)",
-                            }}
-                        >
-                            {/* De knop achtergrond */}
-                            <div className={`
-                                absolute inset-0 transition-all duration-300
+                                relative flex-shrink-0 transition-all duration-500
+                                px-6 py-2 rounded-2xl font-black italic text-[11px] uppercase tracking-widest
                                 ${isActive
-                                ? "bg-gradient-to-br from-[#ff6b4a] to-[#ff4d29] shadow-[0_4px_10px_rgba(255,77,41,0.4)]"
-                                : "bg-white hover:bg-slate-50"}
-                            `}></div>
-
-                            {/* Glans effect voor actieve tab */}
+                                ? 'bg-[#ff4d29] text-white shadow-lg shadow-orange-200 scale-105 z-10'
+                                : 'bg-white border border-slate-200 text-slate-400 hover:border-[#ff4d29] hover:text-[#ff4d29]'
+                            }
+                            `}
+                        >
                             {isActive && (
-                                <div className="absolute top-0 left-0 w-full h-[50%] bg-white/20 pointer-events-none"></div>
+                                <span className="absolute -top-1 -right-1 flex h-3 w-3">
+                                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
+                                    <span className="relative inline-flex rounded-full h-3 w-3 bg-cyan-500 border border-white"></span>
+                                </span>
                             )}
-
-                            {/* Tekst */}
-                            <span className={`relative z-20 ${isActive ? "text-white" : "text-slate-500"}`}>
-                                {tab.label}
-                            </span>
-
-                            {/* Elektrische indicator onderaan bij actief */}
-                            {isActive && (
-                                <div className="absolute bottom-0 left-1/4 w-1/2 h-1 bg-cyan-300 shadow-[0_0_10px_cyan] rounded-full animate-pulse"></div>
-                            )}
+                            <span className="relative z-10">{tab.label}</span>
                         </button>
                     );
                 })}
-            </div>
-
-            {/* Subtiele indicatie dat je kunt scrollen */}
-            <div className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none">
-                <div className="w-1.5 h-6 bg-slate-300 rounded-full opacity-20"></div>
             </div>
         </div>
     );
