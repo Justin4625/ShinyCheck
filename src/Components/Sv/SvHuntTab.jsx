@@ -26,7 +26,7 @@ export default function SvHuntTab({ timer, counter, increment, isPlaying, setTim
                             {formatTime(timer)}
                         </span>
                     </div>
-                    <label className="absolute -top-3 left-2 text-[9px] font-black text-gray-400 uppercase tracking-widest">Time</label>
+                    <label className="absolute -top-3 left-2 text-[9px] font-black text-gray-400 uppercase tracking-widest">Duration</label>
                 </div>
 
                 {/* Counter Display */}
