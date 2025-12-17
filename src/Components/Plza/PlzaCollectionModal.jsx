@@ -1,7 +1,25 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 
 export default function PlzaCollectionModal({ data, onClose, pokemon, shinyIndex, gameName }) {
     const [showConfirm, setShowConfirm] = useState(false);
+
+    // Gebruik useMemo om de kleuren alleen bij de eerste render te bepalen
+    const { topRightColor, bottomLeftColor } = useMemo(() => {
+        const colors = [
+            "bg-green-400",
+            "bg-pink-400",
+            "bg-blue-400",
+            "bg-purple-400",
+            "bg-yellow-400",
+            "bg-orange-400",
+            "bg-teal-400"
+        ];
+        // eslint-disable-next-line react-hooks/purity
+        const randomTop = colors[Math.floor(Math.random() * colors.length)];
+        // eslint-disable-next-line react-hooks/purity
+        const randomBottom = colors[Math.floor(Math.random() * colors.length)];
+        return { topRightColor: randomTop, bottomLeftColor: randomBottom };
+    }, []); // De lege array [] zorgt ervoor dat dit nooit opnieuw wordt berekend
 
     if (!data || !pokemon) return null;
 
@@ -21,12 +39,6 @@ export default function PlzaCollectionModal({ data, onClose, pokemon, shinyIndex
             minute: "2-digit",
         });
     };
-
-    const colors = ["bg-green-400", "bg-pink-400", "bg-blue-400", "bg-purple-400", "bg-yellow-400", "bg-orange-400", "bg-teal-400"];
-    // eslint-disable-next-line react-hooks/purity
-    const topRightColor = colors[Math.floor(Math.random() * colors.length)];
-    // eslint-disable-next-line react-hooks/purity
-    const bottomLeftColor = colors[Math.floor(Math.random() * colors.length)];
 
     const deleteShiny = () => {
         const shinyCount = Number(localStorage.getItem(`shiny_${pokemon.id}`)) || 0;
@@ -58,7 +70,7 @@ export default function PlzaCollectionModal({ data, onClose, pokemon, shinyIndex
                 onClick={(e) => e.stopPropagation()}
                 className="relative bg-gradient-to-br from-gray-100 to-gray-200 text-gray-900 rounded-2xl shadow-xl p-6 sm:p-10 w-[95%] sm:w-[90%] max-w-3xl max-h-[90vh] flex flex-col items-center overflow-hidden"
             >
-                {/* Glow blobs */}
+                {/* Glow blobs - Deze kleuren blijven nu stabiel */}
                 <div className={`absolute -top-6 -right-6 w-36 h-36 sm:w-40 sm:h-40 ${topRightColor} opacity-40 blur-3xl pointer-events-none`} />
                 <div className={`absolute -bottom-10 -left-10 w-48 h-48 sm:w-56 sm:h-56 ${bottomLeftColor} opacity-40 blur-3xl pointer-events-none`} />
 
@@ -121,7 +133,6 @@ export default function PlzaCollectionModal({ data, onClose, pokemon, shinyIndex
                         </div>
                     </div>
 
-                    {/* Delete button in center (oude gradient-stijl) */}
                     <div className="flex justify-center mt-4">
                         <button
                             onClick={() => setShowConfirm(true)}
@@ -132,7 +143,6 @@ export default function PlzaCollectionModal({ data, onClose, pokemon, shinyIndex
                     </div>
                 </div>
 
-                {/* Bevestigingspopup (knoppen gecentreerd) */}
                 {showConfirm && (
                     <div className="absolute inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
                         <div className="bg-white rounded-2xl p-6 w-96 text-center shadow-xl flex flex-col gap-4">
