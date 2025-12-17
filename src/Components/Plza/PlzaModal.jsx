@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom"; // Nieuwe import
 import PlzaHuntTab from "./PlzaHuntTab.jsx";
 import PlzaSettingsTab from "./PlzaSettingsTab.jsx";
 import PokemonSpriteModal from "../PokemonSpriteModal.jsx";
 import PlzaGotchaReset from "./PlzaGotchaReset.jsx";
 
 export default function PlzaModal({ selectedPokemon, onClose}) {
+    const navigate = useNavigate(); // Hook initialiseren
     const [isPlaying, setIsPlaying] = useState(false);
     const [timer, setTimer] = useState(0);
     const [counter, setCounter] = useState(0);
@@ -20,7 +22,6 @@ export default function PlzaModal({ selectedPokemon, onClose}) {
         if (storedData) {
             try {
                 const parsed = JSON.parse(storedData);
-                // eslint-disable-next-line react-hooks/set-state-in-effect
                 setTimer(parsed.timer || 0);
                 setCounter(parsed.counter || 0);
                 setIsPlaying(parsed.isPlaying || false);
@@ -55,11 +56,12 @@ export default function PlzaModal({ selectedPokemon, onClose}) {
         const current = Number(localStorage.getItem(`plza_shiny_${selectedPokemon.id}`)) || 0;
         localStorage.setItem(`plza_shiny_${selectedPokemon.id}`, current + 1);
         const key = `plza_shinyData_${selectedPokemon.id}_${current + 1}`;
-        const dataToStore = { timer, counter, timestamp: Date.now() };
+        const dataToStore = { timer, counter, timestamp: Date.now(), game: "Legends: Z-A" };
         localStorage.setItem(key, JSON.stringify(dataToStore));
         resetHunt();
         setShowGotchaConfirm(false);
         onClose();
+        navigate("/collection"); // Doorsturen na vangst
     };
 
     const handleClose = () => {
@@ -70,15 +72,10 @@ export default function PlzaModal({ selectedPokemon, onClose}) {
     return (
         <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-md flex items-center justify-center z-50 p-4">
             <div onClick={(e) => e.stopPropagation()} className="relative bg-white border border-slate-100 rounded-[2.5rem] shadow-2xl p-6 sm:p-8 w-full max-w-2xl flex flex-col items-center overflow-hidden">
-                {/* Lumiose Grid Background Decoratie */}
                 <div className="absolute inset-0 pointer-events-none opacity-[0.03] bg-[linear-gradient(to_right,#000_1px,transparent_1px),linear-gradient(to_bottom,#000_1px,transparent_1px)] bg-[size:30px_30px]"></div>
-
-                {/* Sluitknop */}
                 <button onClick={handleClose} className="absolute top-5 right-5 w-10 h-10 flex items-center justify-center rounded-full bg-slate-50 text-slate-400 hover:text-cyan-500 transition-all z-20 group">
                     <span className="text-xl font-black group-hover:scale-110 transition-transform">✕</span>
                 </button>
-
-                {/* Header */}
                 <div className="flex flex-col items-center mb-6 relative z-10">
                     <div className="px-3 py-1 bg-cyan-500 rounded-full mb-2 shadow-lg shadow-cyan-200">
                         <span className="text-[10px] font-black italic text-white tracking-widest uppercase">
@@ -89,8 +86,6 @@ export default function PlzaModal({ selectedPokemon, onClose}) {
                         {selectedPokemon.name}
                     </h2>
                 </div>
-
-                {/* Tab Navigatie */}
                 <div className="flex justify-center mb-8 gap-2 z-10">
                     {[{ id: "hunt", label: "HUNT" }, { id: "settings", label: "SETTINGS" }].map((tab) => (
                         <button
@@ -106,19 +101,15 @@ export default function PlzaModal({ selectedPokemon, onClose}) {
                         </button>
                     ))}
                 </div>
-
-                {/* Sprite Container */}
                 <div className="transform scale-90 mb-4 transition-transform relative z-10">
                     <div className="absolute inset-0 bg-cyan-400/10 blur-3xl rounded-full"></div>
                     <PokemonSpriteModal selectedPokemon={selectedPokemon} isPlaying={isPlaying} increment={increment} setCounter={setCounter} />
                 </div>
-
                 {activeTab === "hunt" ? (
                     <PlzaHuntTab timer={timer} counter={counter} increment={increment} isPlaying={isPlaying} setTimer={setTimer} setIsPlaying={setIsPlaying} setCounter={setCounter} onShowConfirm={() => setShowConfirm(true)} onShowGotcha={() => setShowGotchaConfirm(true)} />
                 ) : (
                     <PlzaSettingsTab increment={increment} setIncrement={setIncrement} timer={timer} counter={counter} setTimer={setTimer} setCounter={setCounter} onShowConfirm={() => setShowConfirm(true)} onShowGotcha={() => setShowGotchaConfirm(true)} />
                 )}
-
                 {showConfirm && <PlzaGotchaReset message="RESET HUNT DATA?" onCancel={() => setShowConfirm(false)} onConfirm={resetHunt} confirmColor="from-pink-500 to-pink-600" />}
                 {showGotchaConfirm && <PlzaGotchaReset message="SHINY CAUGHT?" onCancel={() => setShowGotchaConfirm(false)} onConfirm={gotchaHunt} confirmColor="from-cyan-500 to-cyan-600" />}
             </div>

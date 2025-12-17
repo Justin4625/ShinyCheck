@@ -6,7 +6,8 @@ function Layout() {
     const navItems = [
         { to: "/", label: "Shinydex" },
         { to: "/plza", label: "Pokémon Legends: Z-A" },
-        { to: "/sv", label: "Pokémon Scarlet & Violet" }, // Nieuwe link toegevoegd
+        { to: "/sv", label: "Pokémon Scarlet & Violet" },
+        { to: "/collection", label: "Collection" }, // Nieuwe link toegevoegd
     ];
 
     return (
