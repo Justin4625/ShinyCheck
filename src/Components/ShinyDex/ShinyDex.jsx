@@ -1,18 +1,29 @@
 import React, { useState } from "react";
-import shinyDexPokemon from "../../data/ShinyDexData.js";
+import shinyDexPart1 from "../../data/ShinyDexData.js";
+import shinyDexPart2 from "../../data/ShinyDexData2.js";
+import shinyDexPart3 from "../../data/ShinyDexData3.js";
+
 import usePokemon from "../FetchPokemon.jsx";
 import ShinyDexCards from "./ShinyDexCards.jsx";
 import ShinyDexTabs from "./ShinyDexTabs.jsx";
 
+// Voeg de delen samen tot één National Dex lijst
+const fullShinyDex = [...shinyDexPart1, ...shinyDexPart2, ...shinyDexPart3];
+
 export default function ShinyDex() {
-    const { pokemonList } = usePokemon(shinyDexPokemon);
     const [activeTab, setActiveTab] = useState("kanto");
 
-    const displayedPokemon = pokemonList.filter((p) => p.region === activeTab);
+    // STAP 1: Filter EERST de lokale data op regio
+    // Dit zorgt ervoor dat de hook 'usePokemon' alleen de entries van de gekozen regio ziet
+    const regionEntries = fullShinyDex.filter((p) => p.region === activeTab);
+
+    // STAP 2: Geef alleen de entries van de actieve regio door aan de fetcher
+    // De hook zal nu automatisch her-fetchen als 'regionEntries' verandert
+    const { pokemonList } = usePokemon(regionEntries);
 
     return (
         <div className="relative min-h-screen bg-[#f8fafc] p-4 sm:p-8 font-sans overflow-hidden text-slate-900">
-            {/* Achtergrond Decoratie: Zachte Prismatische Gloed */}
+            {/* Achtergrond Decoratie */}
             <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-orange-200/40 rounded-full blur-[120px] pointer-events-none"></div>
             <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-cyan-200/40 rounded-full blur-[120px] pointer-events-none"></div>
 
@@ -40,11 +51,11 @@ export default function ShinyDex() {
 
                 {/* Main Viewport (Frosted Glass Panel) */}
                 <div className="mt-8 bg-white/40 backdrop-blur-2xl rounded-[3rem] border border-white shadow-xl p-6 sm:p-10 relative overflow-hidden">
-                    {/* Subtiel Blueprint Grid */}
                     <div className="absolute inset-0 opacity-[0.05] pointer-events-none bg-[linear-gradient(to_right,#64748b_1px,transparent_1px),linear-gradient(to_bottom,#64748b_1px,transparent_1px)] bg-[size:40px_40px]"></div>
 
+                    {/* We geven 'pokemonList' door, die nu alleen de gefetchte data van de huidige regio bevat */}
                     <ShinyDexCards
-                        displayedPokemon={displayedPokemon}
+                        displayedPokemon={pokemonList}
                         openModal={() => {}}
                     />
                 </div>
