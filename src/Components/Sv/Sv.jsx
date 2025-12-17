@@ -56,44 +56,86 @@ export default function Sv() {
     const shinyPercentage = ((shinyProgress.count / shinyProgress.total) * 100).toFixed(1);
 
     return (
-        <div className="relative p-4 sm:p-6 lg:p-8 min-h-screen bg-gradient-to-b from-gray-50 via-gray-100 to-gray-200 overflow-hidden">
-            <div className="absolute inset-0 bg-[repeating-linear-gradient(90deg,rgba(255,100,100,0.03) 0 1px,transparent 1px 20px),repeating-linear-gradient(rgba(255,100,100,0.03) 0 1px,transparent 1px 20px)] pointer-events-none"></div>
+        <div className="relative p-3 sm:p-6 min-h-screen bg-[#f8f9fa] overflow-hidden font-sans">
+            {/* Subtielere achtergrond decoratie */}
+            <div className="absolute top-0 left-0 w-full h-full pointer-events-none z-0">
+                <div className="absolute top-[-5%] left-[-5%] w-[30%] h-[100%] bg-[#ff4d00] opacity-[0.03] rotate-12"></div>
+                <div className="absolute bottom-[-5%] right-[-5%] w-[30%] h-[100%] bg-[#8c00ff] opacity-[0.03] rotate-12"></div>
+            </div>
 
-            <h1 className="relative text-2xl sm:text-3xl md:text-4xl font-extrabold text-center text-gray-900 mb-4 z-10">
-                Pokémon Scarlet & Violet
-            </h1>
+            {/* Compactere Header */}
+            <div className="relative z-10 flex flex-col items-center mb-6">
+                <div className="bg-white py-1.5 px-8 shadow-sm border-y-2 border-[#ff4d00] transform -rotate-1 mb-4">
+                    <h1 className="text-2xl sm:text-3xl font-black italic tracking-tighter text-[#333] uppercase">
+                        <span className="text-[#ff4d00]">Scarlet</span> <span className="text-gray-300 mx-1">&</span> <span className="text-[#8c00ff]">Violet</span>
+                    </h1>
+                </div>
 
-            <div className="relative w-full max-w-xl mx-auto mb-6">
-                <p className="text-center text-gray-700 font-bold mb-2">
-                    Shiny Progress: {shinyProgress.count}/400 ({shinyPercentage}%)
-                </p>
-                <div className="w-full h-6 rounded-full bg-gray-300/30 overflow-hidden">
-                    <div className="h-6 rounded-full bg-gradient-to-r from-orange-500 via-red-500 to-purple-600 transition-all duration-700 ease-out" style={{width: shinyPercentage + "%"}} />
+                {/* Progress Bar in verfijnde Rotom-stijl */}
+                <div className="w-full max-w-lg bg-white p-3 rounded-xl shadow-sm border border-gray-100">
+                    <div className="flex justify-between items-end mb-1.5 px-1">
+                        <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Scarlet & Violet Dex</span>
+                        <span className="text-xl font-black text-[#333] italic">{shinyProgress.count}<span className="text-gray-300 mx-0.5">/</span>400</span>
+                    </div>
+                    <div className="relative h-2.5 w-full bg-gray-100 rounded-full overflow-hidden border border-gray-50">
+                        <div
+                            className="absolute top-0 left-0 h-full bg-gradient-to-r from-[#ff4d00] via-[#ffcc00] to-[#8c00ff] transition-all duration-1000 ease-out"
+                            style={{ width: `${shinyPercentage}%` }}
+                        ></div>
+                    </div>
                 </div>
             </div>
 
-            <div className="relative z-10 flex flex-col lg:flex-row lg:items-end gap-4 mb-8">
-                <div className="flex-1"><SvTabs activeTab={activeTab} setActiveTab={setActiveTab} /></div>
-                <div className="w-full lg:max-w-[280px] flex flex-col gap-2">
-                    <div className="flex items-center justify-between lg:justify-end gap-3 px-1 mb-1">
-                        <span className="text-xs font-bold text-gray-600 uppercase tracking-tight">Missing Only</span>
-                        <button onClick={() => setShowMissingOnly(!showMissingOnly)} className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${showMissingOnly ? 'bg-orange-600' : 'bg-gray-300'}`}>
-                            <span className={`${showMissingOnly ? 'translate-x-6' : 'translate-x-1'} inline-block h-4 w-4 transform rounded-full bg-white transition duration-300`} />
+            {/* Compactere Controls Sectie */}
+            <div className="relative z-10 max-w-6xl mx-auto mb-8 flex flex-col lg:flex-row items-center gap-4">
+                {/* Tabs */}
+                <div className="flex-1 w-full overflow-x-auto">
+                    <SvTabs activeTab={activeTab} setActiveTab={setActiveTab} />
+                </div>
+
+                {/* Filter & Search Box - compacter gemaakt */}
+                <div className="w-full lg:w-[300px] bg-white p-3 rounded-lg shadow-sm border-b-2 border-gray-200 flex flex-col gap-2">
+                    <div className="flex items-center justify-between">
+                        <label className="text-[9px] font-black text-gray-400 uppercase tracking-widest">Missing Only</label>
+                        <button
+                            onClick={() => setShowMissingOnly(!showMissingOnly)}
+                            className={`relative h-5 w-10 rounded-full transition-all duration-300 border ${showMissingOnly ? 'bg-[#ff4d00] border-[#ff4d00]' : 'bg-gray-100 border-gray-200'}`}
+                        >
+                            <span className={`absolute top-1/2 -translate-y-1/2 w-3 h-3 bg-white rounded-full transition-all duration-300 ${showMissingOnly ? 'left-6' : 'left-1'}`} />
                         </button>
                     </div>
-                    <input type="text" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} placeholder="Search Pokémon..." className="w-full px-4 py-2 rounded-xl border border-gray-400 bg-white/50 focus:ring-2 focus:ring-orange-300 transition-all" />
+
+                    <div className="relative">
+                        <input
+                            type="text"
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            placeholder="SEARCH PALDEA..."
+                            className="w-full pl-3 pr-8 py-2 bg-gray-50 border border-gray-200 rounded text-xs font-bold focus:border-[#ff4d00] outline-none transition-colors placeholder:text-gray-300 tracking-tight"
+                        />
+                        <div className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-300">
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            {activeTab === "collection" ? (
-                <SvCollection svPokemon={filteredPokemon} pokemonList={pokemonList} formatTime={formatTime} />
-            ) : activeTab === "active" ? (
-                <SvActiveHunts svPokemon={filteredPokemon} pokemonList={pokemonList} formatTime={formatTime} openModal={openModal} />
-            ) : (
-                <SvCards displayedPokemon={filteredPokemon} pokemonList={pokemonList} openModal={openModal} activeTab={activeTab} />
-            )}
+            {/* Main Content Area */}
+            <div className="relative z-10 max-w-7xl mx-auto min-h-[400px]">
+                {activeTab === "collection" ? (
+                    <SvCollection svPokemon={filteredPokemon} pokemonList={pokemonList} formatTime={formatTime} />
+                ) : activeTab === "active" ? (
+                    <SvActiveHunts svPokemon={filteredPokemon} pokemonList={pokemonList} formatTime={formatTime} openModal={openModal} />
+                ) : (
+                    <SvCards displayedPokemon={filteredPokemon} pokemonList={pokemonList} openModal={openModal} activeTab={activeTab} />
+                )}
+            </div>
 
-            <SvModal selectedPokemon={selectedPokemon} onClose={closeModal} index={selectedPokemon ? svPokemon.findIndex(p => p.id === selectedPokemon.id) : -1} />
+            <SvModal
+                selectedPokemon={selectedPokemon}
+                onClose={closeModal}
+                index={selectedPokemon ? svPokemon.findIndex(p => p.id === selectedPokemon.id) : -1}
+            />
         </div>
     );
 }

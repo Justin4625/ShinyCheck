@@ -14,6 +14,7 @@ export default function SvModal({ selectedPokemon, onClose, index = 0 }) {
     const [showConfirm, setShowConfirm] = useState(false);
     const [showGotchaConfirm, setShowGotchaConfirm] = useState(false);
 
+    // Laad data in bij openen
     useEffect(() => {
         if (!selectedPokemon) return;
         const storedData = localStorage.getItem(`sv_hunt_${selectedPokemon.id}`);
@@ -33,6 +34,7 @@ export default function SvModal({ selectedPokemon, onClose, index = 0 }) {
         setActiveTab("hunt");
     }, [selectedPokemon]);
 
+    // Sla data op bij wijzigingen
     useEffect(() => {
         if (!selectedPokemon) return;
         localStorage.setItem(
@@ -65,38 +67,115 @@ export default function SvModal({ selectedPokemon, onClose, index = 0 }) {
     };
 
     const handleClose = () => {
-        setTimer(0); setCounter(0); setIsPlaying(false);
+        setIsPlaying(false);
         onClose();
     };
 
-    const topRightColor = index % 3 === 0 ? "bg-orange-400" : index % 3 === 1 ? "bg-red-400" : "bg-yellow-400";
-    const bottomLeftColor = index % 3 === 0 ? "bg-red-500" : index % 3 === 1 ? "bg-orange-500" : "bg-red-400";
+    // SV accentkleuren gebaseerd op index
+    const accentColor = index % 2 === 0 ? "#ff4d00" : "#8c00ff";
 
     return (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div onClick={(e) => e.stopPropagation()} className="relative bg-gradient-to-br from-gray-100 to-gray-200 rounded-2xl shadow-xl p-6 sm:p-10 w-[95%] max-w-3xl flex flex-col items-center overflow-hidden">
-                <div className={`absolute -top-6 -right-6 w-36 h-36 ${topRightColor} opacity-40 blur-3xl pointer-events-none`} />
-                <div className={`absolute -bottom-10 -left-10 w-48 h-48 ${bottomLeftColor} opacity-40 blur-3xl pointer-events-none`} />
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-md flex items-center justify-center z-50 p-4">
+            <div
+                onClick={(e) => e.stopPropagation()}
+                className="relative bg-white border-b-[6px] border-r-[6px] border-gray-300 rounded-tr-[40px] rounded-bl-[40px] rounded-tl-lg rounded-br-lg w-full max-w-2xl flex flex-col items-center overflow-hidden shadow-2xl"
+            >
+                {/* S&V Decoratie hoek */}
+                <div
+                    className="absolute top-0 right-0 w-32 h-32 -mr-12 -mt-12 rotate-45 opacity-10 pointer-events-none"
+                    style={{ backgroundColor: accentColor }}
+                />
 
-                <button onClick={handleClose} className="absolute top-4 right-4 w-10 h-10 flex items-center justify-center rounded-full bg-gradient-to-br from-orange-400 to-red-500 text-white font-bold transition-transform hover:scale-110">✕</button>
+                {/* Verbeterde Sluitknop (X) */}
+                <button
+                    onClick={handleClose}
+                    className="absolute top-4 right-6 w-10 h-10 flex items-center justify-center rounded-full bg-gray-100 text-gray-400 hover:bg-gray-200 hover:text-gray-800 transition-all z-20 group"
+                >
+                    <span className="text-2xl font-black group-hover:scale-125 transition-transform">✕</span>
+                </button>
 
-                <h2 className="text-2xl sm:text-4xl font-extrabold mb-4 capitalize">#{String(selectedPokemon.id).padStart(3, "0")} - {selectedPokemon.name}</h2>
+                {/* Header in Dex-stijl */}
+                <div className="w-full pt-10 px-8 flex flex-col items-center">
+                    <div
+                        className="px-4 py-1 transform -skew-x-12 mb-3 shadow-md"
+                        style={{ backgroundColor: accentColor }}
+                    >
+                        <span className="text-xs font-black italic text-white tracking-widest uppercase">
+                            No. {String(selectedPokemon.id).padStart(3, "0")}
+                        </span>
+                    </div>
+                    <h2 className="text-3xl sm:text-4xl font-black uppercase italic text-[#333] tracking-tighter text-center leading-none">
+                        {selectedPokemon.name}
+                    </h2>
+                </div>
 
-                <div className="flex justify-center mb-6 gap-[2px] z-10">
-                    {[{ id: "hunt", label: "Hunt" }, { id: "settings", label: "Settings" }].map((tab) => (
-                        <button key={tab.id} onClick={() => setActiveTab(tab.id)} style={{ clipPath: "polygon(15% 0%, 100% 0%, 85% 100%, 0% 100%)", width: "160px", height: "42px" }} className={`text-center font-bold text-base transition-all ${activeTab === tab.id ? "bg-gradient-to-r from-orange-400 to-red-600 text-white" : "bg-gray-300 text-gray-700"}`}>{tab.label}</button>
+                {/* Tab Navigatie met "SETTINGS" */}
+                <div className="flex justify-center my-8 gap-2 z-10">
+                    {[
+                        { id: "hunt", label: "HUNT" },
+                        { id: "settings", label: "SETTINGS" }
+                    ].map((tab) => (
+                        <button
+                            key={tab.id}
+                            onClick={() => setActiveTab(tab.id)}
+                            className={`px-10 py-2.5 text-xs font-black italic tracking-[0.15em] transition-all transform skew-x-[-15deg] border-b-4 ${
+                                activeTab === tab.id
+                                    ? 'text-white border-black/20 shadow-lg'
+                                    : 'text-gray-400 border-gray-100 hover:bg-gray-50'
+                            }`}
+                            style={{ backgroundColor: activeTab === tab.id ? accentColor : 'transparent' }}
+                        >
+                            <span className="inline-block skew-x-[15deg]">{tab.label}</span>
+                        </button>
                     ))}
                 </div>
 
-                <PokemonSpriteModal selectedPokemon={selectedPokemon} isPlaying={isPlaying} increment={increment} setCounter={setCounter} />
-                {activeTab === "hunt" ? (
-                    <HuntTab timer={timer} counter={counter} increment={increment} isPlaying={isPlaying} setTimer={setTimer} setIsPlaying={setIsPlaying} setCounter={setCounter} selectedPokemon={selectedPokemon} onShowConfirm={() => setShowConfirm(true)} onShowGotcha={() => setShowGotchaConfirm(true)} />
-                ) : (
-                    <SettingsTab increment={increment} setIncrement={setIncrement} timer={timer} counter={counter} setTimer={setTimer} setCounter={setCounter} selectedPokemon={selectedPokemon} onShowConfirm={() => setShowConfirm(true)} onShowGotcha={() => setShowGotchaConfirm(true)} />
-                )}
+                {/* Content Area */}
+                <div className="w-full px-6 pb-12 flex flex-col items-center">
+                    <div className="mb-6 transform transition-transform hover:scale-105">
+                        <PokemonSpriteModal
+                            selectedPokemon={selectedPokemon}
+                            isPlaying={isPlaying}
+                            increment={increment}
+                            setCounter={setCounter}
+                        />
+                    </div>
 
-                {showConfirm && <GotchaResetPopups message="Are you sure you want to reset?" onCancel={() => setShowConfirm(false)} onConfirm={resetHunt} confirmColor="from-red-400 to-red-600" />}
-                {showGotchaConfirm && <GotchaResetPopups message="End this hunt?" onCancel={() => setShowGotchaConfirm(false)} onConfirm={gotchaHunt} confirmColor="from-green-400 to-green-600" />}
+                    {activeTab === "hunt" ? (
+                        <HuntTab
+                            timer={timer} counter={counter} increment={increment} isPlaying={isPlaying}
+                            setTimer={setTimer} setIsPlaying={setIsPlaying} setCounter={setCounter}
+                            selectedPokemon={selectedPokemon}
+                            onShowConfirm={() => setShowConfirm(true)}
+                            onShowGotcha={() => setShowGotchaConfirm(true)}
+                        />
+                    ) : (
+                        <SettingsTab
+                            increment={increment} setIncrement={setIncrement} timer={timer} counter={counter}
+                            setTimer={setTimer} setCounter={setCounter} selectedPokemon={selectedPokemon}
+                            onShowConfirm={() => setShowConfirm(true)}
+                            onShowGotcha={() => setShowGotchaConfirm(true)}
+                        />
+                    )}
+                </div>
+
+                {/* Popups in SV Thema */}
+                {showConfirm && (
+                    <GotchaResetPopups
+                        message="RESET HUNT DATA?"
+                        onCancel={() => setShowConfirm(false)}
+                        onConfirm={resetHunt}
+                        confirmColor="from-red-500 to-red-600"
+                    />
+                )}
+                {showGotchaConfirm && (
+                    <GotchaResetPopups
+                        message="SHINY CAUGHT?"
+                        onCancel={() => setShowGotchaConfirm(false)}
+                        onConfirm={gotchaHunt}
+                        confirmColor="from-green-500 to-green-600"
+                    />
+                )}
             </div>
         </div>
     );
