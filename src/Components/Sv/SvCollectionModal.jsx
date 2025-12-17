@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import DeleteShinyPopup from "../DeleteShinyPopup.jsx";
+import SvDeleteShiny from "./SvDeleteShiny.jsx";
 
 export default function SvCollectionModal({ data, onClose, pokemon, shinyIndex, gameName }) {
     const [showConfirm, setShowConfirm] = useState(false);
@@ -130,7 +130,7 @@ export default function SvCollectionModal({ data, onClose, pokemon, shinyIndex, 
                 <div className="w-full h-1.5" style={{ backgroundColor: accentColor }} />
 
                 {showConfirm && (
-                    <DeleteShinyPopup
+                    <SvDeleteShiny
                         onCancel={() => setShowConfirm(false)}
                         onConfirm={deleteShiny}
                     />

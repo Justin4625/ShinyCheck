@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function DeleteShinyPopup({ onCancel, onConfirm }) {
+export default function PlzaDeleteShiny({ onCancel, onConfirm }) {
     return (
         <div className="absolute inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50">
             <div

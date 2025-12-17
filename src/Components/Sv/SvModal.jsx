@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import PokemonSpriteModal from "../PokemonSpriteModal.jsx";
-import PlzaGotchaReset from "../Plza/PlzaGotchaReset.jsx";
 import SvHuntTab from "./SvHuntTab.jsx";
 import SvSettingsTab from "./SvSettingsTab.jsx";
 import SvGotchaReset from "./SvGotchaReset.jsx";

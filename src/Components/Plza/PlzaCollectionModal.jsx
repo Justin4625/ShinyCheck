@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from "react";
-import DeleteShinyPopup from "../DeleteShinyPopup.jsx";
+import PlzaDeleteShiny from "./PlzaDeleteShiny.jsx";
 
 export default function PlzaCollectionModal({ data, onClose, pokemon, shinyIndex, gameName }) {
     const [showConfirm, setShowConfirm] = useState(false);
@@ -117,7 +117,7 @@ export default function PlzaCollectionModal({ data, onClose, pokemon, shinyIndex
 
                 {/* Hier wordt de nieuwe component aangeroepen */}
                 {showConfirm && (
-                    <DeleteShinyPopup
+                    <PlzaDeleteShiny
                         onCancel={() => setShowConfirm(false)}
                         onConfirm={deleteShiny}
                     />
