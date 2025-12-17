@@ -14,12 +14,10 @@ export default function PlzaCollectionModal({ data, onClose, pokemon, shinyIndex
             "bg-orange-400",
             "bg-teal-400"
         ];
-        // eslint-disable-next-line react-hooks/purity
         const randomTop = colors[Math.floor(Math.random() * colors.length)];
-        // eslint-disable-next-line react-hooks/purity
         const randomBottom = colors[Math.floor(Math.random() * colors.length)];
         return { topRightColor: randomTop, bottomLeftColor: randomBottom };
-    }, []); // De lege array [] zorgt ervoor dat dit nooit opnieuw wordt berekend
+    }, []);
 
     if (!data || !pokemon) return null;
 
@@ -70,7 +68,7 @@ export default function PlzaCollectionModal({ data, onClose, pokemon, shinyIndex
                 onClick={(e) => e.stopPropagation()}
                 className="relative bg-gradient-to-br from-gray-100 to-gray-200 text-gray-900 rounded-2xl shadow-xl p-6 sm:p-10 w-[95%] sm:w-[90%] max-w-3xl max-h-[90vh] flex flex-col items-center overflow-hidden"
             >
-                {/* Glow blobs - Deze kleuren blijven nu stabiel */}
+                {/* Glow blobs */}
                 <div className={`absolute -top-6 -right-6 w-36 h-36 sm:w-40 sm:h-40 ${topRightColor} opacity-40 blur-3xl pointer-events-none`} />
                 <div className={`absolute -bottom-10 -left-10 w-48 h-48 sm:w-56 sm:h-56 ${bottomLeftColor} opacity-40 blur-3xl pointer-events-none`} />
 
@@ -83,7 +81,7 @@ export default function PlzaCollectionModal({ data, onClose, pokemon, shinyIndex
                 </button>
 
                 {/* Dex + naam */}
-                <h2 className="text-2xl sm:text-4xl font-extrabold mb-2 sm:mb-4 capitalize tracking-wider z-10 text-center">
+                <h2 className="text-2xl sm:text-4xl font-extrabold mb-2 sm:mb-4 capitalize tracking-wider z-10 text-center text-gray-900">
                     #{String(pokemon.id).padStart(3, "0")} - {pokemon.name}
                 </h2>
 
@@ -143,22 +141,23 @@ export default function PlzaCollectionModal({ data, onClose, pokemon, shinyIndex
                     </div>
                 </div>
 
+                {/* Bevestigingspopup met verbeterde knoppen */}
                 {showConfirm && (
-                    <div className="absolute inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
-                        <div className="bg-white rounded-2xl p-6 w-96 text-center shadow-xl flex flex-col gap-4">
-                            <p className="font-bold text-gray-800">Are you sure you want to delete this shiny?</p>
-                            <div className="flex justify-center gap-4 mt-2">
+                    <div className="absolute inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50">
+                        <div className="bg-white rounded-2xl p-6 w-80 sm:w-96 text-center shadow-2xl flex flex-col gap-5 border border-gray-100">
+                            <p className="font-bold text-gray-800 text-lg">Are you sure you want to delete this shiny?</p>
+                            <div className="flex justify-center gap-4">
                                 <button
                                     onClick={() => setShowConfirm(false)}
-                                    className="px-4 py-2 bg-gray-300 text-gray-800 font-bold rounded-xl hover:bg-gray-400 transition-colors"
+                                    className="px-6 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold rounded-xl shadow-md transition-all duration-300 transform hover:scale-105 active:scale-95"
                                 >
                                     Cancel
                                 </button>
                                 <button
                                     onClick={deleteShiny}
-                                    className="px-4 py-2 bg-red-500 text-white font-bold rounded-xl hover:bg-red-600 transition-colors"
+                                    className="px-6 py-2 bg-gradient-to-r from-red-500 to-red-700 text-white font-bold rounded-xl shadow-lg shadow-red-500/20 transition-all duration-300 transform hover:scale-105 active:scale-95 hover:brightness-110"
                                 >
-                                    Yes
+                                    Delete
                                 </button>
                             </div>
                         </div>
