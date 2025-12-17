@@ -13,6 +13,15 @@ export default function Collection({ plzaPokemon = [], svPokemon = [], pokemonLi
         return `${hrs}h ${mins}m ${secs}s`;
     };
 
+    // Helper voor datumnotatie (DD/MM/YYYY)
+    const formatDate = (timestamp) => {
+        return new Date(timestamp).toLocaleDateString("nl-NL", {
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric"
+        });
+    };
+
     // 1. Haal alle PLZA Shiny's op
     const plzaHunts = plzaPokemon.flatMap((p) => {
         const count = Number(localStorage.getItem(`plza_shiny_${p.id}`)) || 0;
@@ -42,6 +51,7 @@ export default function Collection({ plzaPokemon = [], svPokemon = [], pokemonLi
 
     return (
         <div className="max-w-[1600px] mx-auto p-6 relative">
+            {/* Achtergrond decoratie */}
             <div className="fixed inset-0 bg-[radial-gradient(#1e1e30_1px,transparent_1px)] bg-[size:40px_40px] opacity-20 pointer-events-none"></div>
 
             <h1 className="relative text-4xl font-black text-white mb-10 uppercase italic tracking-[0.2em] text-center drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]">
@@ -88,7 +98,7 @@ export default function Collection({ plzaPokemon = [], svPokemon = [], pokemonLi
                                     {entry.name}
                                 </h3>
 
-                                {/* Sprite Container (Kleiner formaat) */}
+                                {/* Sprite Container */}
                                 <div className="relative flex items-center justify-center w-full aspect-square max-w-[120px] mb-5">
                                     {isPlza && <div className="absolute w-20 h-20 bg-cyan-400 blur-[40px] opacity-10 group-hover:opacity-30 transition-opacity"></div>}
                                     <img
@@ -100,24 +110,34 @@ export default function Collection({ plzaPokemon = [], svPokemon = [], pokemonLi
 
                                 {/* Statistieken */}
                                 <div className="w-full space-y-2 z-10 mt-auto">
-                                    <div className={`flex justify-between items-center px-4 py-2 rounded-xl border ${isPlza ? "bg-white/80 border-cyan-100 shadow-sm" : "bg-gray-50 border-gray-100 transform -skew-x-3"}`}>
+                                    {/* Encounters */}
+                                    <div className={`flex justify-between items-center px-4 py-2 rounded-xl border ${isPlza ? "bg-white/80 border-cyan-50 shadow-sm" : "bg-gray-50 border-gray-100 transform -skew-x-3"}`}>
                                         <span className={`text-[8px] font-black uppercase tracking-widest ${isPlza ? "text-cyan-600/50" : "text-slate-400"}`}>Encounters</span>
                                         <span className={`text-base font-black italic text-slate-900`} style={{ color: !isPlza ? svAccent : undefined }}>
                                             {entry.storedData.counter}
                                         </span>
                                     </div>
 
-                                    <div className={`flex justify-between items-center px-4 py-2 rounded-xl border ${isPlza ? "bg-white/80 border-cyan-100 shadow-sm" : "bg-gray-50 border-gray-100 transform -skew-x-3"}`}>
+                                    {/* Duration */}
+                                    <div className={`flex justify-between items-center px-4 py-2 rounded-xl border ${isPlza ? "bg-white/80 border-cyan-50 shadow-sm" : "bg-gray-50 border-gray-100 transform -skew-x-3"}`}>
                                         <span className={`text-[8px] font-black uppercase tracking-widest ${isPlza ? "text-cyan-600/50" : "text-slate-400"}`}>Duration</span>
                                         <span className={`text-xs font-black italic text-slate-700`}>
                                             {formatTime(entry.storedData.timer)}
                                         </span>
                                     </div>
 
+                                    {/* Date */}
+                                    <div className={`flex justify-between items-center px-4 py-1.5 rounded-lg border-b ${isPlza ? "border-cyan-100" : "bg-gray-50/50 border-gray-100 transform -skew-x-3"}`}>
+                                        <span className={`text-[7px] font-black uppercase tracking-widest ${isPlza ? "text-cyan-600/40" : "text-slate-400"}`}>Captured on</span>
+                                        <span className={`text-[10px] font-black italic text-slate-500`}>
+                                            {formatDate(entry.storedData.timestamp)}
+                                        </span>
+                                    </div>
+
                                     {/* Game Label */}
                                     <div className={`w-full py-2 rounded-xl shadow border flex justify-center items-center ${isPlza ? "bg-slate-800 border-slate-700" : "bg-gray-800 border-gray-700 transform skew-x-[-6deg]"}`}>
                                         <p className={`text-[9px] font-black text-center uppercase tracking-[0.15em] italic text-white`}>
-                                            {isPlza ? "Legends: Z-A" : "Scarlet & Violet"}
+                                            {isPlza ? "Pokémon Legends: Z-A" : "Pokémon Scarlet & Violet"}
                                         </p>
                                     </div>
                                 </div>
@@ -137,6 +157,7 @@ export default function Collection({ plzaPokemon = [], svPokemon = [], pokemonLi
                     shinyIndex={selectedEntry.shinyIndex}
                     formatTime={formatTime}
                     onClose={() => setSelectedEntry(null)}
+                    gameName="Pokémon Legends: Z-A"
                 />
             )}
             {selectedEntry?.type === 'SV' && (
@@ -146,6 +167,7 @@ export default function Collection({ plzaPokemon = [], svPokemon = [], pokemonLi
                     shinyIndex={selectedEntry.shinyIndex}
                     formatTime={formatTime}
                     onClose={() => setSelectedEntry(null)}
+                    gameName="Pokémon Scarlet & Violet"
                 />
             )}
         </div>

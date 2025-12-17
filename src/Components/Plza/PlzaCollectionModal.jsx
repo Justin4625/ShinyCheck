@@ -47,9 +47,9 @@ export default function PlzaCollectionModal({ data, onClose, pokemon, shinyIndex
         <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-md flex items-center justify-center z-50 p-2 sm:p-4">
             <div
                 onClick={(e) => e.stopPropagation()}
-                className="relative bg-white border border-slate-100 rounded-[2.5rem] shadow-2xl p-6 sm:p-8 w-full max-w-xl flex flex-col items-center overflow-hidden"
+                className="relative bg-white border-2 border-cyan-100 rounded-[2.5rem] shadow-2xl p-6 sm:p-8 w-full max-w-xl flex flex-col items-center overflow-hidden"
             >
-                {/* Lumiose Grid Background */}
+                {/* Lumiose Grid Background Decoratie */}
                 <div className="absolute inset-0 pointer-events-none opacity-[0.03] bg-[linear-gradient(to_right,#000_1px,transparent_1px),linear-gradient(to_bottom,#000_1px,transparent_1px)] bg-[size:30px_30px]"></div>
 
                 {/* Sluitknop */}
@@ -62,8 +62,8 @@ export default function PlzaCollectionModal({ data, onClose, pokemon, shinyIndex
 
                 {/* Header */}
                 <div className="flex flex-col items-center mb-4 relative z-10 text-center">
-                    <div className="px-3 py-1 bg-amber-400 rounded-full mb-2 shadow-lg shadow-amber-100">
-                        <span className="text-[10px] font-black italic text-black tracking-widest uppercase">
+                    <div className="px-3 py-1 bg-cyan-500 rounded-full mb-2 shadow-lg shadow-cyan-100">
+                        <span className="text-[10px] font-black italic text-white tracking-widest uppercase">
                             Registered Entry #{shinyIndex}
                         </span>
                     </div>
@@ -72,17 +72,17 @@ export default function PlzaCollectionModal({ data, onClose, pokemon, shinyIndex
                     </h2>
                 </div>
 
-                {/* Sprite Container */}
+                {/* Sprite Container met directe PokeAPI URL */}
                 <div className="relative mb-6 transform transition-transform hover:scale-105">
-                    <div className="absolute inset-0 bg-amber-300 blur-3xl opacity-20 rounded-full"></div>
+                    <div className="absolute inset-0 bg-cyan-300 blur-3xl opacity-20 rounded-full"></div>
                     <img
-                        src={pokemon?.sprites?.other?.home?.front_shiny}
+                        src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/shiny/${pokemon.id}.png`}
                         alt={pokemon.name}
                         className="w-32 h-32 sm:w-40 sm:h-40 drop-shadow-2xl relative z-10"
                     />
                 </div>
 
-                {/* Data Grid met grotere tekst */}
+                {/* Data Grid */}
                 <div className="w-full bg-slate-50/50 rounded-3xl border border-slate-100 p-5 flex flex-col gap-4 z-10 shadow-inner">
                     <div className="grid grid-cols-2 gap-4">
                         <div className="flex flex-col items-center bg-white p-4 rounded-2xl border border-slate-100 shadow-sm">
@@ -93,13 +93,13 @@ export default function PlzaCollectionModal({ data, onClose, pokemon, shinyIndex
                             <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5">Duration</p>
                             <p className="text-lg font-black italic text-slate-900 tracking-tight">{formatTime(data.timer)}</p>
                         </div>
-                        <div className="flex flex-col items-center bg-white p-4 rounded-2xl border border-slate-100 shadow-sm">
+                        <div className="flex flex-col items-center bg-white p-4 rounded-2xl border border-slate-100 shadow-sm col-span-2 sm:col-span-1">
                             <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5">Sync Date</p>
                             <p className="text-sm font-black italic text-slate-700">{formatDate(data.timestamp)}</p>
                         </div>
-                        <div className="flex flex-col items-center bg-white p-4 rounded-2xl border border-slate-100 shadow-sm">
+                        <div className="flex flex-col items-center bg-white p-4 rounded-2xl border border-slate-100 shadow-sm col-span-2 sm:col-span-1">
                             <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5">Database</p>
-                            <p className="text-sm font-black italic text-cyan-600">{gameName || "Legends: Z-A"}</p>
+                            <p className="text-sm font-black italic text-cyan-600 uppercase tracking-tighter">{gameName || "Legends: Z-A"}</p>
                         </div>
                     </div>
 

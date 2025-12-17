@@ -86,11 +86,11 @@ export default function SvCollectionModal({ data, onClose, pokemon, shinyIndex, 
                 {/* Sprite */}
                 <div className="relative py-4 z-10">
                     <img
-                        src={pokemon?.sprites?.other?.home?.front_shiny}
+                        /* Gebruik de directe PokeAPI sprite URL op basis van het pokemon.id */
+                        src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/shiny/${pokemon.id}.png`}
                         alt={pokemon.name}
                         className="w-32 h-32 sm:w-40 sm:h-40 object-contain drop-shadow-xl transition-transform hover:scale-105 duration-300"
                     />
-                    <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 text-2xl animate-pulse">✨</div>
                 </div>
 
                 {/* Data Grid in S&V Strips */}
@@ -113,7 +113,7 @@ export default function SvCollectionModal({ data, onClose, pokemon, shinyIndex, 
 
                     <div className="w-full py-2 px-4 bg-gray-800 rounded transform skew-x-[-4deg] flex justify-center items-center">
                         <span className="text-[9px] font-black text-white uppercase tracking-widest skew-x-[4deg] italic">
-                            Origin: {gameName || "Pokémon Scarlet & Violet"}
+                            Game: {gameName || "Pokémon Scarlet & Violet"}
                         </span>
                     </div>
 
