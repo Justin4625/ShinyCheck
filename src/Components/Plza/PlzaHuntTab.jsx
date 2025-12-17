@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from "react";
 
-export default function HuntTab({ timer, counter, increment, isPlaying, setTimer, setIsPlaying, setCounter }) {
+export default function PlzaHuntTab({ timer, counter, increment, isPlaying, setTimer, setIsPlaying, setCounter }) {
     const timerRef = useRef(timer);
     const counterRef = useRef(counter);
 

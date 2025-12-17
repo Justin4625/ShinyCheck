@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-export default function SettingsTab({ increment, setIncrement, timer, setTimer, counter, setCounter, onShowConfirm, onShowGotcha }) {
+export default function PlzaSettingsTab({ increment, setIncrement, timer, setTimer, counter, setCounter, onShowConfirm, onShowGotcha }) {
     const [hours, setHours] = useState(Math.floor(timer / 3600));
     const [minutes, setMinutes] = useState(Math.floor((timer % 3600) / 60));
     const [seconds, setSeconds] = useState(timer % 60);

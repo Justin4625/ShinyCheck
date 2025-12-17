@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import HuntTab from "../HuntTab.jsx";
-import SettingsTab from "../SettingsTab.jsx";
+import PlzaHuntTab from "./PlzaHuntTab.jsx";
+import PlzaSettingsTab from "./PlzaSettingsTab.jsx";
 import PokemonSpriteModal from "../PokemonSpriteModal.jsx";
 import GotchaResetPopups from "../GotchaResetPopups.jsx";
 
@@ -90,9 +90,9 @@ export default function PlzaModal({ selectedPokemon, onClose, index = 0 }) {
 
                 <PokemonSpriteModal selectedPokemon={selectedPokemon} isPlaying={isPlaying} increment={increment} setCounter={setCounter} />
                 {activeTab === "hunt" ? (
-                    <HuntTab timer={timer} counter={counter} increment={increment} isPlaying={isPlaying} setTimer={setTimer} setIsPlaying={setIsPlaying} setCounter={setCounter} selectedPokemon={selectedPokemon} onShowConfirm={() => setShowConfirm(true)} onShowGotcha={() => setShowGotchaConfirm(true)} />
+                    <PlzaHuntTab timer={timer} counter={counter} increment={increment} isPlaying={isPlaying} setTimer={setTimer} setIsPlaying={setIsPlaying} setCounter={setCounter} selectedPokemon={selectedPokemon} onShowConfirm={() => setShowConfirm(true)} onShowGotcha={() => setShowGotchaConfirm(true)} />
                 ) : (
-                    <SettingsTab increment={increment} setIncrement={setIncrement} timer={timer} counter={counter} setTimer={setTimer} setCounter={setCounter} selectedPokemon={selectedPokemon} onShowConfirm={() => setShowConfirm(true)} onShowGotcha={() => setShowGotchaConfirm(true)} />
+                    <PlzaSettingsTab increment={increment} setIncrement={setIncrement} timer={timer} counter={counter} setTimer={setTimer} setCounter={setCounter} selectedPokemon={selectedPokemon} onShowConfirm={() => setShowConfirm(true)} onShowGotcha={() => setShowGotchaConfirm(true)} />
                 )}
 
                 {showConfirm && <GotchaResetPopups message="Are you sure you want to reset?" onCancel={() => setShowConfirm(false)} onConfirm={resetHunt} confirmColor="from-red-400 to-red-600" />}
