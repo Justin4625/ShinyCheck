@@ -154,6 +154,7 @@ export default function Collection({ plzaPokemon = [], svPokemon = [], pokemonLi
                 <PlzaCollectionModal
                     data={selectedEntry.storedData}
                     pokemon={pokemonList.find(p => p.name.toLowerCase() === selectedEntry.name.toLowerCase())}
+                    originalId={selectedEntry.id} // Voeg dit toe
                     shinyIndex={selectedEntry.shinyIndex}
                     formatTime={formatTime}
                     onClose={() => setSelectedEntry(null)}
@@ -164,6 +165,7 @@ export default function Collection({ plzaPokemon = [], svPokemon = [], pokemonLi
                 <SvCollectionModal
                     data={selectedEntry.storedData}
                     pokemon={pokemonList.find(p => p.name.toLowerCase() === selectedEntry.name.toLowerCase())}
+                    originalId={selectedEntry.id} // Voeg dit toe
                     shinyIndex={selectedEntry.shinyIndex}
                     formatTime={formatTime}
                     onClose={() => setSelectedEntry(null)}
