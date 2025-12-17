@@ -50,8 +50,22 @@ export default function SvModal({ selectedPokemon, onClose, index = 0 }) {
 
     const gotchaHunt = () => {
         if (!selectedPokemon) return;
-        const current = Number(localStorage.getItem(`sv_shiny_${selectedPokemon.id}`)) || 0;
-        localStorage.setItem(`sv_shiny_${selectedPokemon.id}`, current + 1);
+
+        // 1. Haal de huidige teller op en verhoog deze
+        const currentCount = Number(localStorage.getItem(`sv_shiny_${selectedPokemon.id}`)) || 0;
+        const newCount = currentCount + 1;
+        localStorage.setItem(`sv_shiny_${selectedPokemon.id}`, newCount);
+
+        // 2. Sla de specifieke hunt-gegevens op voor de collectie
+        const shinyData = {
+            counter: counter,
+            timer: timer,
+            timestamp: Date.now(),
+            game: "Pokémon Scarlet & Violet"
+        };
+        localStorage.setItem(`sv_shinyData_${selectedPokemon.id}_${newCount}`, JSON.stringify(shinyData));
+
+        // 3. Reset de hunt en sluit de modal
         resetHunt();
         setShowGotchaConfirm(false);
         onClose();
