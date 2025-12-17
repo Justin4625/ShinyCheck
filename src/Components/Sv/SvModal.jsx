@@ -22,6 +22,7 @@ export default function SvModal({ selectedPokemon, onClose, index = 0 }) {
         if (storedData) {
             try {
                 const parsed = JSON.parse(storedData);
+                // eslint-disable-next-line react-hooks/set-state-in-effect
                 setTimer(parsed.timer || 0);
                 setCounter(parsed.counter || 0);
                 setIsPlaying(parsed.isPlaying || false);
