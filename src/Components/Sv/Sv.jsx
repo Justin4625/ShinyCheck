@@ -74,7 +74,7 @@ export default function Sv() {
                 {/* Progress Bar met Percentage */}
                 <div className="w-full max-w-lg bg-white p-3 rounded-xl shadow-sm border border-gray-100">
                     <div className="flex justify-between items-end mb-1.5 px-1">
-                        <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Paldea Shiny Dex</span>
+                        <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Shiny Progress</span>
                         <div className="flex items-baseline gap-2">
                             {/* Visueel percentage toegevoegd */}
                             <span className="text-xs font-bold text-[#ff4d00] tabular-nums">
@@ -106,7 +106,7 @@ export default function Sv() {
                 {/* Filter & Search Box */}
                 <div className="w-full lg:w-[300px] bg-white p-3 rounded-lg shadow-sm border-b-2 border-gray-200 flex flex-col gap-2">
                     <div className="flex items-center justify-between">
-                        <label className="text-[9px] font-black text-gray-400 uppercase tracking-widest">Missing Only</label>
+                        <label className="text-[9px] font-black text-gray-400 uppercase tracking-widest">Unregistered</label>
                         <button
                             onClick={() => setShowMissingOnly(!showMissingOnly)}
                             className={`relative h-5 w-10 rounded-full transition-all duration-300 border ${showMissingOnly ? 'bg-[#ff4d00] border-[#ff4d00]' : 'bg-gray-100 border-gray-200'}`}

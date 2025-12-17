@@ -122,7 +122,7 @@ export default function SvCollectionModal({ data, onClose, pokemon, shinyIndex, 
                         onClick={() => setShowConfirm(true)}
                         className="mt-4 w-full py-2 text-[10px] font-black uppercase italic tracking-widest text-red-500 hover:text-red-700 hover:bg-red-50 transition-colors rounded-lg border border-red-100"
                     >
-                        Release Shiny
+                        Delete Shiny
                     </button>
                 </div>
 
