@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom"; // Nieuwe import
 import PlzaHuntTab from "./PlzaHuntTab.jsx";
 import PlzaSettingsTab from "./PlzaSettingsTab.jsx";
 import PokemonSpriteModal from "../PokemonSpriteModal.jsx";
 import PlzaGotchaReset from "./PlzaGotchaReset.jsx";
 
 export default function PlzaModal({ selectedPokemon, onClose}) {
-    const navigate = useNavigate(); // Hook initialiseren
     const [isPlaying, setIsPlaying] = useState(false);
     const [timer, setTimer] = useState(0);
     const [counter, setCounter] = useState(0);
@@ -54,15 +52,22 @@ export default function PlzaModal({ selectedPokemon, onClose}) {
 
     const gotchaHunt = () => {
         if (!selectedPokemon) return;
-        const current = Number(localStorage.getItem(`plza_shiny_${selectedPokemon.id}`)) || 0;
-        localStorage.setItem(`plza_shiny_${selectedPokemon.id}`, current + 1);
-        const key = `plza_shinyData_${selectedPokemon.id}_${current + 1}`;
-        const dataToStore = { timer, counter, timestamp: Date.now(), game: "Legends: Z-A" };
-        localStorage.setItem(key, JSON.stringify(dataToStore));
+        const currentCount = Number(localStorage.getItem(`plza_shiny_${selectedPokemon.id}`)) || 0;
+        const newCount = currentCount + 1;
+        localStorage.setItem(`plza_shiny_${selectedPokemon.id}`, newCount);
+
+        const shinyData = {
+            pokemonName: selectedPokemon.name,
+            counter: counter,
+            timer: timer,
+            timestamp: Date.now(),
+            game: "Pokémon Legends: Z-A"
+        };
+        localStorage.setItem(`plza_shinyData_${selectedPokemon.id}_${newCount}`, JSON.stringify(shinyData));
+
         resetHunt();
         setShowGotchaConfirm(false);
         onClose();
-        navigate("/collection"); // Doorsturen na vangst
     };
 
     const handleClose = () => {

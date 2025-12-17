@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom"; // Nieuwe import
 import PokemonSpriteModal from "../PokemonSpriteModal.jsx";
 import SvHuntTab from "./SvHuntTab.jsx";
 import SvSettingsTab from "./SvSettingsTab.jsx";
 import SvGotchaReset from "./SvGotchaReset.jsx";
 
 export default function SvModal({ selectedPokemon, onClose, index = 0 }) {
-    const navigate = useNavigate(); // Hook initialiseren
     const [isPlaying, setIsPlaying] = useState(false);
     const [timer, setTimer] = useState(0);
     const [counter, setCounter] = useState(0);
@@ -57,6 +55,7 @@ export default function SvModal({ selectedPokemon, onClose, index = 0 }) {
         localStorage.setItem(`sv_shiny_${selectedPokemon.id}`, newCount);
 
         const shinyData = {
+            pokemonName: selectedPokemon.name,
             counter: counter,
             timer: timer,
             timestamp: Date.now(),
@@ -67,7 +66,6 @@ export default function SvModal({ selectedPokemon, onClose, index = 0 }) {
         resetHunt();
         setShowGotchaConfirm(false);
         onClose();
-        navigate("/collection"); // Doorsturen na vangst
     };
 
     const accentColor = index % 2 === 0 ? "#ff4d00" : "#8c00ff";

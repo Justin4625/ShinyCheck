@@ -1,79 +1,84 @@
 import React from "react";
 
-export default function ShinyDexCards({ displayedPokemon, openModal }) {
+export default function ShinyDexCards({ displayedPokemon }) {
+
+    // Functie om te bepalen hoeveel van een specifieke Pokémon in de collectie zitten
+    const getCollectionCount = (name) => {
+        let count = 0;
+        const lowerName = name.toLowerCase();
+
+        // Loop door localStorage om matches op naam te vinden
+        for (let i = 0; i < localStorage.length; i++) {
+            const key = localStorage.key(i);
+
+            // Check alle shiny data keys uit beide games
+            if (key.startsWith("plza_shinyData_") || key.startsWith("sv_shinyData_")) {
+                try {
+                    const data = JSON.parse(localStorage.getItem(key));
+                    // We checken pokemonName (indien opgeslagen) OF we proberen de naam af te leiden
+                    if (data && data.pokemonName && data.pokemonName.toLowerCase() === lowerName) {
+                        count++;
+                    }
+                    // eslint-disable-next-line no-unused-vars
+                } catch (e) {
+                    // Soms is data corrupt, we negeren dit voor de teller
+                }
+            }
+        }
+        return count;
+    };
+
     return (
-        <div className="relative grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 sm:gap-6 z-10 px-2">
-            {displayedPokemon.length === 0 ? (
-                <div className="col-span-full flex flex-col justify-center items-center text-center min-h-[400px]">
-                    <div className="w-12 h-12 border-4 border-slate-200 border-t-[#ff4d29] rounded-full animate-spin mb-4"></div>
-                    <span className="text-xs font-black text-slate-400 uppercase tracking-[0.3em] italic">Accessing Dex...</span>
-                </div>
-            ) : (
-                displayedPokemon.map((entry) => {
-                    const number = String(entry.id).padStart(4, "0");
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 pb-20">
+            {displayedPokemon.map((pokemon) => {
+                const amountOwned = getCollectionCount(pokemon.name);
+                const isOwned = amountOwned > 0;
 
-                    return (
-                        <div
-                            key={entry.id}
-                            onClick={() => openModal(entry)}
-                            className="group relative flex flex-col transition-all duration-500 cursor-pointer"
-                        >
-                            {/* De Card Container - Permanente oranje/rode border */}
-                            <div className="relative w-full bg-white border-2 border-[#ff4d29] rounded-[2rem] p-3 flex flex-col items-center shadow-[0_4px_12px_rgba(255,77,41,0.08)] transition-all duration-500 group-hover:shadow-[0_20px_40px_rgba(255,77,41,0.18)] group-hover:-translate-y-2 overflow-visible">
-
-                                {/* Top ID & Status LED */}
-                                <div className="w-full flex justify-between items-center mb-2 px-1">
-                                    <span className="text-[9px] font-black text-[#ff4d29] italic tracking-tighter">
-                                        #{number}
-                                    </span>
-                                    <div className="flex gap-1.5 items-center">
-                                        <div className="w-1.5 h-1.5 rounded-full bg-cyan-400 shadow-[0_0_8px_cyan] animate-pulse"></div>
-                                        <div className="w-1 h-1 rounded-full bg-slate-200"></div>
-                                    </div>
-                                </div>
-
-                                {/* Het Vierkantje (Display Module) */}
-                                <div className="relative aspect-square w-full bg-slate-50 border border-orange-100 rounded-[1.8rem] flex items-center justify-center overflow-visible transition-all duration-500 group-hover:bg-white group-hover:border-orange-200">
-
-                                    {/* Technische Corner Brackets */}
-                                    <div className="absolute top-3 left-3 w-3 h-3 border-t-2 border-l-2 border-cyan-400/60 group-hover:border-cyan-400 transition-colors"></div>
-                                    <div className="absolute bottom-3 right-3 w-3 h-3 border-b-2 border-r-2 border-[#ff4d29]/60 group-hover:border-[#ff4d29] transition-colors"></div>
-
-                                    {/* De Sprite - Geen clipping */}
-                                    <img
-                                        src={entry?.sprites?.other?.home?.front_shiny}
-                                        alt={entry.name}
-                                        className="w-[80%] h-[80%] object-contain drop-shadow-[0_12px_20px_rgba(0,0,0,0.12)] z-10 transition-all duration-700 group-hover:scale-110 group-hover:-rotate-2"
-                                    />
-
-                                    {/* Achtergrondgloed */}
-                                    <div className="absolute w-2/3 h-2/3 bg-orange-100 rounded-full blur-[30px] opacity-30 group-hover:opacity-60 transition-opacity"></div>
-                                </div>
-
-                                {/* Info Sectie */}
-                                <div className="w-full text-center mt-3 pb-2 px-1">
-                                    <h2 className="text-[12px] sm:text-sm font-black text-slate-800 uppercase italic tracking-tighter truncate leading-tight group-hover:text-black transition-colors">
-                                        {entry.name}
-                                    </h2>
-
-                                    <div className="flex gap-1.5 justify-center mt-2.5">
-                                        {entry?.types?.map((t) => (
-                                            <span
-                                                key={t.type.name}
-                                                className="text-[7px] font-black px-2 py-0.5 rounded-md border border-slate-100 bg-slate-50 text-slate-400 uppercase tracking-widest group-hover:border-orange-100 group-hover:text-slate-500 transition-all"
-                                            >
-                                                {t.type.name}
-                                            </span>
-                                        ))}
-                                    </div>
-                                </div>
-
-                                {/* Geen kleurenlijn onderaan zoals gevraagd */}
+                return (
+                    <div
+                        key={pokemon.id}
+                        className={`relative group p-4 rounded-2xl border-2 transition-all duration-300 flex flex-col items-center justify-center
+                            ${isOwned
+                            ? "bg-gradient-to-b from-amber-50 to-yellow-100 border-amber-400 shadow-[0_0_15px_rgba(251,191,36,0.4)] scale-[1.02]"
+                            : "bg-white border-slate-100 hover:border-slate-200"}`}
+                    >
+                        {/* Aantal badge */}
+                        {isOwned && (
+                            <div className="absolute -top-2 -right-2 bg-amber-500 text-white text-[10px] font-black px-2 py-0.5 rounded-full shadow-md z-10 border-2 border-white">
+                                x{amountOwned}
                             </div>
+                        )}
+
+                        <div className="text-center mb-2">
+                            <p className={`text-[10px] font-black tracking-tighter uppercase ${isOwned ? "text-amber-600" : "text-slate-400"}`}>
+                                No. {String(pokemon.id).padStart(3, "0")}
+                            </p>
+                            <h3 className={`text-xs font-black uppercase italic truncate w-24 ${isOwned ? "text-amber-900" : "text-slate-700"}`}>
+                                {pokemon.name}
+                            </h3>
                         </div>
-                    );
-                })
-            )}
+
+                        <div className="relative">
+                            {isOwned && (
+                                <div className="absolute inset-0 bg-yellow-400 blur-2xl opacity-20 rounded-full animate-pulse"></div>
+                            )}
+                            <img
+                                src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/shiny/${pokemon.id}.png`}
+                                alt={pokemon.name}
+                                className={`w-20 h-20 object-contain drop-shadow-md transition-transform duration-500 group-hover:scale-110 z-10 
+                                    ${!isOwned ? "grayscale opacity-30" : ""}`}
+                                loading="lazy"
+                            />
+                        </div>
+
+                        {isOwned && (
+                            <div className="absolute bottom-2 right-2 text-amber-500 text-xs animate-bounce">
+                                ✨
+                            </div>
+                        )}
+                    </div>
+                );
+            })}
         </div>
     );
 }
