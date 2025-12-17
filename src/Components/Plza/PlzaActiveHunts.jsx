@@ -21,7 +21,7 @@ export default function PlzaActiveHunts({plzaPokemon, pokemonList, formatTime, o
             {activePokemon.length === 0 ? (
                 <div className="col-span-full flex flex-col justify-center items-center text-center min-h-[240px]">
                     <span className="text-xl font-black text-slate-300 uppercase tracking-[0.2em]">
-                        No Active Syncs
+                        No Active Hunts
                     </span>
                 </div>
             ) : (
