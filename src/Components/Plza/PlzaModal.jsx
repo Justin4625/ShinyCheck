@@ -4,7 +4,7 @@ import PlzaSettingsTab from "./PlzaSettingsTab.jsx";
 import PokemonSpriteModal from "../PokemonSpriteModal.jsx";
 import PlzaGotchaReset from "./PlzaGotchaReset.jsx";
 
-export default function PlzaModal({ selectedPokemon, onClose, index = 0 }) {
+export default function PlzaModal({ selectedPokemon, onClose}) {
     const [isPlaying, setIsPlaying] = useState(false);
     const [timer, setTimer] = useState(0);
     const [counter, setCounter] = useState(0);
@@ -54,49 +54,73 @@ export default function PlzaModal({ selectedPokemon, onClose, index = 0 }) {
         if (!selectedPokemon) return;
         const current = Number(localStorage.getItem(`plza_shiny_${selectedPokemon.id}`)) || 0;
         localStorage.setItem(`plza_shiny_${selectedPokemon.id}`, current + 1);
-
         const key = `plza_shinyData_${selectedPokemon.id}_${current + 1}`;
         const dataToStore = { timer, counter, timestamp: Date.now() };
         localStorage.setItem(key, JSON.stringify(dataToStore));
-
         resetHunt();
         setShowGotchaConfirm(false);
         onClose();
     };
 
     const handleClose = () => {
-        setTimer(0); setCounter(0); setIsPlaying(false);
+        setIsPlaying(false);
         onClose();
     };
 
-    const topRightColor = index % 3 === 0 ? "bg-green-400" : index % 3 === 1 ? "bg-pink-400" : "bg-blue-400";
-    const bottomLeftColor = index % 3 === 0 ? "bg-purple-400" : index % 3 === 1 ? "bg-blue-400" : "bg-green-400";
-
     return (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div onClick={(e) => e.stopPropagation()} className="relative bg-gradient-to-br from-gray-100 to-gray-200 rounded-2xl shadow-xl p-6 sm:p-10 w-[95%] max-w-3xl flex flex-col items-center">
-                <div className={`absolute -top-6 -right-6 w-36 h-36 ${topRightColor} opacity-40 blur-3xl pointer-events-none`} />
-                <div className={`absolute -bottom-10 -left-10 w-48 h-48 ${bottomLeftColor} opacity-40 blur-3xl pointer-events-none`} />
+        <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-md flex items-center justify-center z-50 p-4">
+            <div onClick={(e) => e.stopPropagation()} className="relative bg-white border border-slate-100 rounded-[2.5rem] shadow-2xl p-6 sm:p-8 w-full max-w-2xl flex flex-col items-center overflow-hidden">
+                {/* Lumiose Grid Background Decoratie */}
+                <div className="absolute inset-0 pointer-events-none opacity-[0.03] bg-[linear-gradient(to_right,#000_1px,transparent_1px),linear-gradient(to_bottom,#000_1px,transparent_1px)] bg-[size:30px_30px]"></div>
 
-                <button onClick={handleClose} className="absolute top-4 right-4 w-10 h-10 flex items-center justify-center rounded-full bg-gradient-to-br from-purple-400 to-pink-500 text-white font-bold transition-transform hover:scale-110">✕</button>
+                {/* Sluitknop */}
+                <button onClick={handleClose} className="absolute top-5 right-5 w-10 h-10 flex items-center justify-center rounded-full bg-slate-50 text-slate-400 hover:text-cyan-500 transition-all z-20 group">
+                    <span className="text-xl font-black group-hover:scale-110 transition-transform">✕</span>
+                </button>
 
-                <h2 className="text-2xl sm:text-4xl font-extrabold mb-4 capitalize">#{String(selectedPokemon.id).padStart(3, "0")} - {selectedPokemon.name}</h2>
+                {/* Header */}
+                <div className="flex flex-col items-center mb-6 relative z-10">
+                    <div className="px-3 py-1 bg-cyan-500 rounded-full mb-2 shadow-lg shadow-cyan-200">
+                        <span className="text-[10px] font-black italic text-white tracking-widest uppercase">
+                            No. {String(selectedPokemon.id).padStart(3, "0")}
+                        </span>
+                    </div>
+                    <h2 className="text-3xl font-black uppercase italic text-slate-800 tracking-tighter">
+                        {selectedPokemon.name}
+                    </h2>
+                </div>
 
-                <div className="flex justify-center mb-6 gap-[2px] z-10">
-                    {[{ id: "hunt", label: "Hunt" }, { id: "settings", label: "Settings" }].map((tab) => (
-                        <button key={tab.id} onClick={() => setActiveTab(tab.id)} style={{ clipPath: "polygon(15% 0%, 100% 0%, 85% 100%, 0% 100%)", width: "160px", height: "42px" }} className={`text-center font-bold text-base transition-all ${activeTab === tab.id ? "bg-gradient-to-r from-purple-400 to-blue-500 text-white" : "bg-gray-300 text-gray-700"}`}>{tab.label}</button>
+                {/* Tab Navigatie */}
+                <div className="flex justify-center mb-8 gap-2 z-10">
+                    {[{ id: "hunt", label: "HUNT" }, { id: "settings", label: "SETTINGS" }].map((tab) => (
+                        <button
+                            key={tab.id}
+                            onClick={() => setActiveTab(tab.id)}
+                            className={`px-10 py-2 text-[11px] font-black italic tracking-widest transition-all rounded-xl border-2 ${
+                                activeTab === tab.id
+                                    ? 'bg-white border-cyan-500 text-cyan-600 shadow-lg shadow-cyan-100'
+                                    : 'bg-slate-50 border-transparent text-slate-400 hover:bg-white hover:border-slate-200'
+                            }`}
+                        >
+                            {tab.label}
+                        </button>
                     ))}
                 </div>
 
-                <PokemonSpriteModal selectedPokemon={selectedPokemon} isPlaying={isPlaying} increment={increment} setCounter={setCounter} />
+                {/* Sprite Container */}
+                <div className="transform scale-90 mb-4 transition-transform relative z-10">
+                    <div className="absolute inset-0 bg-cyan-400/10 blur-3xl rounded-full"></div>
+                    <PokemonSpriteModal selectedPokemon={selectedPokemon} isPlaying={isPlaying} increment={increment} setCounter={setCounter} />
+                </div>
+
                 {activeTab === "hunt" ? (
-                    <PlzaHuntTab timer={timer} counter={counter} increment={increment} isPlaying={isPlaying} setTimer={setTimer} setIsPlaying={setIsPlaying} setCounter={setCounter} selectedPokemon={selectedPokemon} onShowConfirm={() => setShowConfirm(true)} onShowGotcha={() => setShowGotchaConfirm(true)} />
+                    <PlzaHuntTab timer={timer} counter={counter} increment={increment} isPlaying={isPlaying} setTimer={setTimer} setIsPlaying={setIsPlaying} setCounter={setCounter} onShowConfirm={() => setShowConfirm(true)} onShowGotcha={() => setShowGotchaConfirm(true)} />
                 ) : (
-                    <PlzaSettingsTab increment={increment} setIncrement={setIncrement} timer={timer} counter={counter} setTimer={setTimer} setCounter={setCounter} selectedPokemon={selectedPokemon} onShowConfirm={() => setShowConfirm(true)} onShowGotcha={() => setShowGotchaConfirm(true)} />
+                    <PlzaSettingsTab increment={increment} setIncrement={setIncrement} timer={timer} counter={counter} setTimer={setTimer} setCounter={setCounter} onShowConfirm={() => setShowConfirm(true)} onShowGotcha={() => setShowGotchaConfirm(true)} />
                 )}
 
-                {showConfirm && <PlzaGotchaReset message="Are you sure you want to reset?" onCancel={() => setShowConfirm(false)} onConfirm={resetHunt} confirmColor="from-red-400 to-red-600" />}
-                {showGotchaConfirm && <PlzaGotchaReset message="End this hunt?" onCancel={() => setShowGotchaConfirm(false)} onConfirm={gotchaHunt} confirmColor="from-green-400 to-green-600" />}
+                {showConfirm && <PlzaGotchaReset message="RESET HUNT DATA?" onCancel={() => setShowConfirm(false)} onConfirm={resetHunt} confirmColor="from-pink-500 to-pink-600" />}
+                {showGotchaConfirm && <PlzaGotchaReset message="SHINY CAUGHT?" onCancel={() => setShowGotchaConfirm(false)} onConfirm={gotchaHunt} confirmColor="from-cyan-500 to-cyan-600" />}
             </div>
         </div>
     );

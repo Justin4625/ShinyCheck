@@ -42,7 +42,6 @@ export default function Plza() {
 
     const filteredPokemon = displayedPokemon.filter((p) => {
         if (showMissingOnly) {
-            // Gebruik plza_ prefix voor unieke data opslag
             const count = Number(localStorage.getItem(`plza_shiny_${p.id}`)) || 0;
             if (count > 0) return false;
         }
@@ -76,62 +75,96 @@ export default function Plza() {
         : -1;
 
     return (
-        <div className="relative p-4 sm:p-6 lg:p-8 min-h-screen bg-gradient-to-b from-gray-50 via-gray-100 to-gray-200 overflow-hidden">
-            <div className="absolute inset-0 bg-[repeating-linear-gradient(90deg,rgba(200,200,255,0.05) 0 1px,transparent 1px 20px),repeating-linear-gradient(rgba(200,200,255,0.05) 0 1px,transparent 1px 20px)] pointer-events-none"></div>
+        <div className="relative p-2 sm:p-4 min-h-screen bg-white text-slate-900 overflow-hidden font-sans">
+            {/* Achtergrond: Kleiner Grid */}
+            <div className="absolute inset-0 pointer-events-none opacity-20">
+                <div className="absolute inset-0 bg-[linear-gradient(to_right,#e2e8f0_1px,transparent_1px),linear-gradient(to_bottom,#e2e8f0_1px,transparent_1px)] bg-[size:30px_30px]"></div>
+            </div>
 
-            <h1 className="relative text-2xl sm:text-3xl md:text-4xl font-extrabold text-center text-gray-900 mb-4 tracking-wide z-10">
-                Pokémon Legends: Z-A
-            </h1>
-
-            <div className="relative w-full max-w-xl mx-auto mb-6">
-                <p className="text-center text-gray-700 font-bold mb-2">
-                    Shiny Progress: {shinyProgress.count}/364 ({shinyPercentage}%)
+            {/* Header: Compacter */}
+            <div className="relative z-10 flex flex-col items-center mb-6">
+                <h1 className="text-3xl sm:text-5xl font-black tracking-tighter uppercase italic flex items-center">
+                    <span className="text-slate-800">Legends:</span>
+                    <div className="flex ml-2 border-l-2 border-slate-200 pl-2">
+                        <span className="text-cyan-500">Z</span>
+                        <span className="text-slate-300 mx-0.5">-</span>
+                        <span className="text-pink-500">A</span>
+                    </div>
+                </h1>
+                <p className="text-[9px] font-black tracking-[0.3em] text-slate-400 uppercase mt-1">
+                    Lumiose City urban redevelopment plan
                 </p>
-                <div className="w-full h-6 rounded-full bg-gray-300/30 overflow-hidden">
-                    <div
-                        className="h-6 rounded-full bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-600 transition-all duration-700 ease-out"
-                        style={{width: shinyPercentage + "%"}}
-                    />
+            </div>
+
+            {/* Progress Section: Kleiner en minder breed */}
+            <div className="relative z-10 max-w-lg mx-auto mb-8">
+                <div className="bg-white border border-slate-100 p-3 rounded-2xl shadow-lg shadow-slate-200/30">
+                    <div className="flex justify-between items-end mb-2 px-1">
+                        <span className="text-[9px] font-black text-cyan-600 tracking-widest uppercase flex items-center gap-1.5">
+                            <span className="w-1.5 h-1.5 bg-cyan-500 rounded-full animate-pulse"></span>
+                            Shiny Progress
+                        </span>
+                        <div className="flex items-baseline gap-1.5">
+                            <span className="text-lg font-black text-slate-900 italic">{shinyProgress.count}</span>
+                            <span className="text-slate-300 font-bold text-xs">/</span>
+                            <span className="text-slate-400 font-bold text-[10px]">364</span>
+                            <span className="ml-1 text-pink-500 font-black italic text-sm">{shinyPercentage}%</span>
+                        </div>
+                    </div>
+                    <div className="h-2.5 w-full bg-slate-50 rounded-full overflow-hidden border border-slate-100">
+                        <div
+                            className="h-full rounded-full bg-gradient-to-r from-cyan-500 via-cyan-400 to-pink-500 transition-all duration-1000 ease-out"
+                            style={{ width: `${shinyPercentage}%` }}
+                        />
+                    </div>
                 </div>
             </div>
 
-            <div className="relative z-10 flex flex-col lg:flex-row lg:items-end gap-4 mb-8">
-                <div className="flex flex-wrap lg:flex-nowrap flex-1 gap-1 sm:gap-2">
+            {/* Controls Sectie: Compacter op mobiel en desktop */}
+            <div className="relative z-10 max-w-6xl mx-auto mb-6 flex flex-col lg:flex-row items-center gap-4">
+                <div className="flex-1 w-full overflow-x-auto">
                     <PlzaTabs activeTab={activeTab} setActiveTab={setActiveTab} />
                 </div>
 
-                <div className="w-full lg:flex-shrink-0 lg:max-w-[280px] flex flex-col gap-2">
-                    <div className="flex items-center justify-between lg:justify-end gap-3 px-1 mb-1">
-                        <span className="text-xs sm:text-sm font-bold text-gray-600 uppercase tracking-tighter">Missing Shinies Only</span>
+                {/* Zoeken & Filteren: Kleiner formaat */}
+                <div className="w-full lg:w-[320px] bg-slate-50/50 backdrop-blur-sm p-3 rounded-2xl border border-white shadow-sm flex flex-col gap-2">
+                    <div className="flex items-center justify-between px-1">
+                        <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Unregistered</label>
                         <button
                             onClick={() => setShowMissingOnly(!showMissingOnly)}
-                            className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-300 focus:outline-none shadow-inner ${
-                                showMissingOnly ? 'bg-gradient-to-r from-purple-500 to-pink-500' : 'bg-gray-300'
-                            }`}
+                            className={`relative h-5 w-9 rounded-full transition-all duration-300 ${showMissingOnly ? 'bg-cyan-500' : 'bg-slate-300'}`}
                         >
-                            <span
-                                className={`${showMissingOnly ? 'translate-x-6' : 'translate-x-1'} inline-block h-4 w-4 transform rounded-full bg-white shadow-md transition duration-300`}
-                            />
+                            <span className={`absolute top-0.5 w-4 h-4 bg-white rounded-full transition-all duration-300 shadow-sm ${showMissingOnly ? 'left-4.5' : 'left-0.5'}`} />
                         </button>
                     </div>
 
-                    <input
-                        type="text"
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        placeholder="Search by name or type"
-                        className="w-full px-4 py-2 rounded-xl bg-gradient-to-r from-purple-200/40 via-pink-200/30 to-blue-200/30 text-gray-900 placeholder-gray-500 font-medium shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-300/40 border border-gray-400 transition-all duration-300"
-                    />
+                    <div className="relative">
+                        <input
+                            type="text"
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            placeholder="SEARCH POKÉMON OR TYPE..."
+                            className="w-full pl-8 pr-3 py-2 bg-white border border-slate-100 rounded-xl text-[11px] font-bold text-slate-700 focus:border-cyan-400 outline-none transition-all placeholder:text-slate-300"
+                        />
+                        <div className="absolute left-2.5 top-1/2 -translate-y-1/2 text-cyan-500">
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                            </svg>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            {activeTab === "collection" ? (
-                <PlzaCollection plzaPokemon={filteredPokemon} pokemonList={pokemonList} formatTime={formatTime} />
-            ) : activeTab === "active" ? (
-                <PlzaActiveHunts plzaPokemon={filteredPokemon} pokemonList={pokemonList} formatTime={formatTime} openModal={openModal} />
-            ) : (
-                <PlzaCards displayedPokemon={filteredPokemon} pokemonList={pokemonList} openModal={openModal} activeTab={activeTab} />
-            )}
+            {/* Main Content Area */}
+            <div className="relative z-10 max-w-7xl mx-auto min-h-[300px]">
+                {activeTab === "collection" ? (
+                    <PlzaCollection plzaPokemon={filteredPokemon} pokemonList={pokemonList} formatTime={formatTime} />
+                ) : activeTab === "active" ? (
+                    <PlzaActiveHunts plzaPokemon={filteredPokemon} pokemonList={pokemonList} formatTime={formatTime} openModal={openModal} />
+                ) : (
+                    <PlzaCards displayedPokemon={filteredPokemon} pokemonList={pokemonList} openModal={openModal} activeTab={activeTab} />
+                )}
+            </div>
 
             <PlzaModal selectedPokemon={selectedPokemon} onClose={closeModal} index={modalIndex} />
         </div>

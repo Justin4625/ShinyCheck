@@ -1,14 +1,6 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect } from "react";
 
 export default function PlzaHuntTab({ timer, counter, increment, isPlaying, setTimer, setIsPlaying, setCounter }) {
-    const timerRef = useRef(timer);
-    const counterRef = useRef(counter);
-
-    // Keep refs updated
-    useEffect(() => { timerRef.current = timer; }, [timer]);
-    useEffect(() => { counterRef.current = counter; }, [counter]);
-
-    // Timer interval
     useEffect(() => {
         let interval;
         if (isPlaying) interval = setInterval(() => setTimer((prev) => prev + 1), 1000);
@@ -23,39 +15,46 @@ export default function PlzaHuntTab({ timer, counter, increment, isPlaying, setT
     };
 
     return (
-        <div className="flex flex-col items-center gap-4 w-full">
-
-            {/* Timer links, counter rechts */}
-            <div className="flex items-center gap-4 justify-center flex-wrap sm:flex-nowrap w-full">
-                <div
-                    className="px-4 py-2 sm:px-6 sm:py-3 bg-white rounded-xl shadow-md text-gray-600 font-bold text-base sm:text-xl text-center min-w-[90px]">
-                    {formatTime(timer)}
+        <div className="flex flex-col items-center gap-6 w-full relative z-10">
+            <div className="flex flex-wrap items-center gap-4 justify-center w-full">
+                {/* Timer Display */}
+                <div className="relative group">
+                    <div className="bg-slate-50 px-6 py-3 border-b-2 border-pink-500 rounded-2xl min-w-[140px] text-center shadow-sm group-hover:bg-white transition-colors">
+                        <span className="block text-slate-700 font-black italic text-lg tracking-tight">
+                            {formatTime(timer)}
+                        </span>
+                    </div>
+                    <label className="absolute -top-2.5 left-3 text-[8px] font-black text-slate-400 uppercase tracking-[0.2em]">Duration</label>
                 </div>
 
-                <div className="flex items-center gap-2">
-                    <div
-                        className="px-6 py-2 sm:py-3 bg-white rounded-xl shadow-md text-xl sm:text-2xl font-bold text-gray-900 min-w-[70px] sm:min-w-[80px] text-center">
-                        {counter}
+                {/* Counter Area */}
+                <div className="flex items-center gap-3">
+                    <div className="relative group">
+                        <div className="bg-slate-50 px-8 py-3 border-b-2 border-cyan-500 rounded-2xl min-w-[100px] text-center shadow-sm group-hover:bg-white transition-colors">
+                            <span className="block text-2xl font-black italic text-slate-900 tracking-tighter">
+                                {counter}
+                            </span>
+                        </div>
+                        <label className="absolute -top-2.5 left-3 text-[8px] font-black text-slate-400 uppercase tracking-[0.2em]">Encounters</label>
                     </div>
+
                     <button
                         onClick={() => setCounter((prev) => Math.max(0, prev - Number(increment)))}
-                        className="px-4 py-2 bg-gradient-to-r from-red-400 to-red-600 hover:from-red-500 hover:to-red-700 text-white font-semibold rounded-xl shadow-md transition-all duration-200 transform hover:scale-105 active:scale-95"
+                        className="h-12 w-12 bg-slate-50 text-slate-400 font-black rounded-2xl hover:bg-pink-50 hover:text-pink-500 transition-all border border-slate-100 shadow-sm"
                     >
                         -{increment}
                     </button>
                 </div>
             </div>
 
-            {/* Start / Continue / Pause button */}
             <button
                 onClick={() => setIsPlaying((p) => !p)}
-                className={`px-6 mt-2 py-3 sm:px-8 sm:py-4 font-bold rounded-xl text-white shadow-lg transform hover:scale-105 transition-all duration-300
-                ${isPlaying ? "bg-gradient-to-r from-blue-600 via-purple-600 to-blue-700"
-                    : timer > 0
-                        ? "bg-gradient-to-r from-purple-400 via-pink-500 to-purple-500"
-                        : "bg-gradient-to-r from-green-500 via-lime-600 to-green-600"} bg-[length:200%_200%] bg-[position:0%_50%] hover:bg-[position:100%_50%]`}
+                className={`
+                    px-12 py-3.5 font-black italic tracking-[0.3em] uppercase text-white shadow-xl rounded-2xl transition-all duration-300 hover:scale-105 active:scale-95 text-xs
+                    ${isPlaying ? "bg-slate-800" : "bg-gradient-to-r from-cyan-500 via-cyan-400 to-indigo-500 shadow-cyan-200"}
+                `}
             >
-                {isPlaying ? "Pause" : timer > 0 ? "Continue" : "Start"}
+                {isPlaying ? "PAUSE" : timer > 0 ? "CONTINUE" : "START HUNT"}
             </button>
         </div>
     );

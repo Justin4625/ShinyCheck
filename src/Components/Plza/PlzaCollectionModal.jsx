@@ -1,17 +1,8 @@
-import React, { useState, useMemo } from "react";
+import React, { useState } from "react";
 import PlzaDeleteShiny from "./PlzaDeleteShiny.jsx";
 
 export default function PlzaCollectionModal({ data, onClose, pokemon, shinyIndex, gameName }) {
     const [showConfirm, setShowConfirm] = useState(false);
-
-    const { topRightColor, bottomLeftColor } = useMemo(() => {
-        const colors = ["bg-green-400", "bg-pink-400", "bg-blue-400", "bg-purple-400", "bg-yellow-400", "bg-orange-400", "bg-teal-400"];
-        // eslint-disable-next-line react-hooks/purity
-        const randomTop = colors[Math.floor(Math.random() * colors.length)];
-        // eslint-disable-next-line react-hooks/purity
-        const randomBottom = colors[Math.floor(Math.random() * colors.length)];
-        return { topRightColor: randomTop, bottomLeftColor: randomBottom };
-    }, []);
 
     if (!data || !pokemon) return null;
 
@@ -29,93 +20,100 @@ export default function PlzaCollectionModal({ data, onClose, pokemon, shinyIndex
     };
 
     const deleteShiny = () => {
-        const shinyCount = Number(localStorage.getItem(`shiny_${pokemon.id}`)) || 0;
+        const shinyCount = Number(localStorage.getItem(`plza_shiny_${pokemon.id}`)) || 0;
         if (shinyCount === 0) return;
 
-        localStorage.removeItem(`shinyData_${pokemon.id}_${shinyIndex}`);
+        localStorage.removeItem(`plza_shinyData_${pokemon.id}_${shinyIndex}`);
 
         for (let i = shinyIndex + 1; i <= shinyCount; i++) {
-            const entry = localStorage.getItem(`shinyData_${pokemon.id}_${i}`);
+            const entry = localStorage.getItem(`plza_shinyData_${pokemon.id}_${i}`);
             if (entry) {
-                localStorage.setItem(`shinyData_${pokemon.id}_${i - 1}`, entry);
-                localStorage.removeItem(`shinyData_${pokemon.id}_${i}`);
+                localStorage.setItem(`plza_shinyData_${pokemon.id}_${i - 1}`, entry);
+                localStorage.removeItem(`plza_shinyData_${pokemon.id}_${i}`);
             }
         }
 
         const newCount = shinyCount - 1;
         if (newCount > 0) {
-            localStorage.setItem(`shiny_${pokemon.id}`, newCount);
+            localStorage.setItem(`plza_shiny_${pokemon.id}`, newCount);
         } else {
-            localStorage.removeItem(`shiny_${pokemon.id}`);
+            localStorage.removeItem(`plza_shiny_${pokemon.id}`);
         }
 
         onClose();
     };
 
     return (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-md flex items-center justify-center z-50 p-2 sm:p-4">
             <div
                 onClick={(e) => e.stopPropagation()}
-                className="relative bg-gradient-to-br from-gray-100 to-gray-200 text-gray-900 rounded-2xl shadow-xl p-6 sm:p-10 w-[95%] sm:w-[90%] max-w-3xl max-h-[90vh] flex flex-col items-center overflow-hidden"
+                className="relative bg-white border border-slate-100 rounded-[2.5rem] shadow-2xl p-6 sm:p-8 w-full max-w-xl flex flex-col items-center overflow-hidden"
             >
-                {/* Glow blobs */}
-                <div className={`absolute -top-6 -right-6 w-36 h-36 sm:w-40 sm:h-40 ${topRightColor} opacity-40 blur-3xl pointer-events-none`} />
-                <div className={`absolute -bottom-10 -left-10 w-48 h-48 sm:w-56 sm:h-56 ${bottomLeftColor} opacity-40 blur-3xl pointer-events-none`} />
+                {/* Lumiose Grid Background */}
+                <div className="absolute inset-0 pointer-events-none opacity-[0.03] bg-[linear-gradient(to_right,#000_1px,transparent_1px),linear-gradient(to_bottom,#000_1px,transparent_1px)] bg-[size:30px_30px]"></div>
 
+                {/* Sluitknop */}
                 <button
                     onClick={onClose}
-                    className="absolute top-4 right-4 w-10 h-10 sm:w-11 sm:h-11 flex items-center justify-center rounded-full bg-gradient-to-br from-purple-400 to-pink-500 text-white text-xl font-bold shadow-md shadow-purple-500/40 transition-all duration-200 hover:scale-110 hover:shadow-purple-600/50 active:scale-95 z-20"
+                    className="absolute top-5 right-5 w-10 h-10 flex items-center justify-center rounded-full bg-slate-50 text-slate-400 hover:text-cyan-500 transition-all z-20 group"
                 >
-                    ✕
+                    <span className="text-xl font-black group-hover:scale-110 transition-transform">✕</span>
                 </button>
 
-                <h2 className="text-2xl sm:text-4xl font-extrabold mb-2 sm:mb-4 capitalize tracking-wider z-10 text-center">
-                    #{String(pokemon.id).padStart(3, "0")} - {pokemon.name}
-                </h2>
-
-                {shinyIndex && (
-                    <div className="absolute top-4 left-4 px-4 py-1 rounded-full text-sm font-extrabold bg-gradient-to-r from-yellow-400 to-orange-500 text-black shadow-md z-10">
-                        Shiny #{shinyIndex}
+                {/* Header */}
+                <div className="flex flex-col items-center mb-4 relative z-10 text-center">
+                    <div className="px-3 py-1 bg-amber-400 rounded-full mb-2 shadow-lg shadow-amber-100">
+                        <span className="text-[10px] font-black italic text-black tracking-widest uppercase">
+                            Registered Entry #{shinyIndex}
+                        </span>
                     </div>
-                )}
+                    <h2 className="text-2xl sm:text-3xl font-black uppercase italic text-slate-800 tracking-tighter">
+                        #{String(pokemon.id).padStart(3, "0")} - {pokemon.name}
+                    </h2>
+                </div>
 
-                <img
-                    src={pokemon?.sprites?.other?.home?.front_shiny}
-                    alt={pokemon.name}
-                    className="w-32 h-32 sm:w-40 sm:h-40 mb-6 drop-shadow-xl z-10"
-                />
+                {/* Sprite Container */}
+                <div className="relative mb-6 transform transition-transform hover:scale-105">
+                    <div className="absolute inset-0 bg-amber-300 blur-3xl opacity-20 rounded-full"></div>
+                    <img
+                        src={pokemon?.sprites?.other?.home?.front_shiny}
+                        alt={pokemon.name}
+                        className="w-32 h-32 sm:w-40 sm:h-40 drop-shadow-2xl relative z-10"
+                    />
+                </div>
 
-                <div className="w-full max-w-xl backdrop-blur-md rounded-2xl shadow-lg border border-gray-200 p-6 flex flex-col gap-6 z-10">
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-center">
-                        <div>
-                            <p className="text-sm text-gray-600 font-bold mb-1">Encounters</p>
-                            <div className="font-extrabold text-xl bg-white rounded-xl py-2 shadow">{data.counter}</div>
+                {/* Data Grid met grotere tekst */}
+                <div className="w-full bg-slate-50/50 rounded-3xl border border-slate-100 p-5 flex flex-col gap-4 z-10 shadow-inner">
+                    <div className="grid grid-cols-2 gap-4">
+                        <div className="flex flex-col items-center bg-white p-4 rounded-2xl border border-slate-100 shadow-sm">
+                            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5">Encounters</p>
+                            <p className="text-2xl font-black italic text-slate-900 tracking-tighter">{data.counter}</p>
                         </div>
-                        <div>
-                            <p className="text-sm text-gray-600 font-bold mb-1">Timer</p>
-                            <div className="font-extrabold text-xl bg-white rounded-xl py-2 shadow">{formatTime(data.timer)}</div>
+                        <div className="flex flex-col items-center bg-white p-4 rounded-2xl border border-slate-100 shadow-sm">
+                            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5">Duration</p>
+                            <p className="text-lg font-black italic text-slate-900 tracking-tight">{formatTime(data.timer)}</p>
                         </div>
-                        <div>
-                            <p className="text-sm text-gray-600 font-bold mb-1">Date</p>
-                            <div className="font-extrabold text-md bg-white rounded-xl py-2 shadow">{formatDate(data.timestamp)}</div>
+                        <div className="flex flex-col items-center bg-white p-4 rounded-2xl border border-slate-100 shadow-sm">
+                            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5">Sync Date</p>
+                            <p className="text-sm font-black italic text-slate-700">{formatDate(data.timestamp)}</p>
                         </div>
-                        <div>
-                            <p className="text-sm text-gray-600 font-bold mb-1">Game</p>
-                            <div className="font-extrabold text-md bg-white rounded-xl py-2 shadow">{gameName || "Unknown Game"}</div>
+                        <div className="flex flex-col items-center bg-white p-4 rounded-2xl border border-slate-100 shadow-sm">
+                            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5">Database</p>
+                            <p className="text-sm font-black italic text-cyan-600">{gameName || "Legends: Z-A"}</p>
                         </div>
                     </div>
 
-                    <div className="flex justify-center mt-4">
+                    <div className="flex justify-center mt-2">
                         <button
                             onClick={() => setShowConfirm(true)}
-                            className="px-6 py-2 rounded-xl font-bold shadow-lg text-white transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-1 bg-gradient-to-r from-red-400 to-red-600 hover:from-red-500 hover:to-red-700"
+                            className="px-10 py-3 bg-white border-2 border-slate-200 text-slate-400 font-black italic rounded-2xl text-[11px] uppercase tracking-[0.2em] hover:text-red-500 hover:border-red-200 transition-all shadow-sm active:scale-95"
                         >
                             Delete Shiny
                         </button>
                     </div>
                 </div>
 
-                {/* Hier wordt de nieuwe component aangeroepen */}
+                {/* Delete Popup */}
                 {showConfirm && (
                     <PlzaDeleteShiny
                         onCancel={() => setShowConfirm(false)}

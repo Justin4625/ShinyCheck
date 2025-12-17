@@ -9,15 +9,12 @@ export default function PlzaCards({ displayedPokemon, pokemonList, openModal, ac
         return !pokemon?.sprites?.other?.home?.front_shiny;
     });
 
-    // Hulpfunctie om het vaste nummer te bepalen op basis van de tab
     const getStaticIndex = (entry) => {
         if (activeTab === "mega") {
             const index = plzaMdPokemon.findIndex(p => p.id === entry.id);
             return index + 1;
         }
-        // Voor base, collection of active gebruiken we de base lijst indexering
         const index = plzaPokemon.findIndex(p => p.id === entry.id);
-        // Als hij niet in base staat (bijv. in collection tab), check dan mega
         if (index === -1) {
             const mdIndex = plzaMdPokemon.findIndex(p => p.id === entry.id);
             return mdIndex !== -1 ? mdIndex + 1 : 1;
@@ -26,27 +23,24 @@ export default function PlzaCards({ displayedPokemon, pokemonList, openModal, ac
     };
 
     return (
-        <div className="relative grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 sm:gap-6 lg:gap-8 z-10">
+        <div className="relative grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 sm:gap-6 lg:gap-8 z-10 px-1">
             {displayedPokemon.length === 0 ? (
-                <div className="col-span-full flex flex-col justify-center items-center text-center min-h-[240px] sm:min-h-[300px]">
-                    <span className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-700">
-                        No Pokémon found
+                <div className="col-span-full flex flex-col justify-center items-center text-center min-h-[240px]">
+                    <span className="text-xl font-black text-slate-300 uppercase tracking-[0.2em]">
+                        No Records Found
                     </span>
                 </div>
             ) : isLoading ? (
-                <div className="col-span-full flex flex-col justify-center items-center text-center min-h-[240px] sm:min-h-[300px]">
-                    <span className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-700 animate-pulse">
+                <div className="col-span-full flex flex-col justify-center items-center text-center min-h-[240px]">
+                    <span className="text-xl font-black text-cyan-500 animate-pulse uppercase tracking-[0.2em]">
                         Loading...
                     </span>
                 </div>
             ) : (
-                displayedPokemon.map((entry, index) => {
+                displayedPokemon.map((entry) => {
                     const pokemon = pokemonList.find((p) => p.id === entry.id);
-                    // Gebruik de unieke PLZA prefix voor de data-scheiding
                     const shinyCount = Number(localStorage.getItem(`plza_shiny_${entry.id}`)) || 0;
-                    const isGolden = (activeTab === "base" || activeTab === "mega") && shinyCount >= 1;
-
-                    // Bepaal het nummer dat altijd hetzelfde blijft
+                    const isCollected = shinyCount >= 1;
                     const staticNumber = getStaticIndex(entry);
 
                     return (
@@ -54,51 +48,62 @@ export default function PlzaCards({ displayedPokemon, pokemonList, openModal, ac
                             key={entry.id}
                             onClick={() => openModal(pokemon)}
                             className={`
-                                relative rounded-2xl p-4 sm:p-5 lg:p-6 flex flex-col items-center justify-between cursor-pointer transition-transform duration-300 overflow-hidden
-                                hover:scale-105
-                                bg-gradient-to-br from-gray-100 to-gray-200 text-gray-900 shadow-md
-                                ${isGolden ? "before:absolute before:inset-0 before:bg-gradient-to-br before:from-yellow-200 before:via-yellow-100/100 before:to-transparent before:pointer-events-none before:rounded-2xl" : ""}
+                                relative rounded-[2rem] p-5 sm:p-6 flex flex-col items-center border-2 transition-all duration-300 group
+                                ${isCollected
+                                ? "bg-gradient-to-br from-yellow-50 to-amber-100 border-amber-300 shadow-xl shadow-amber-200/50 scale-[1.03]"
+                                : "bg-white border-cyan-100 shadow-lg shadow-cyan-100/30 hover:border-cyan-300"
+                            }
                             `}
                         >
-                            {/* De gekleurde achtergrond blobs (Hersteld) */}
-                            <div className={`absolute -top-4 -right-4 w-16 h-16 rounded-full blur-2xl pointer-events-none
-                                ${index % 3 === 0 ? "bg-green-400 opacity-60" : index % 3 === 1 ? "bg-pink-400 opacity-60" : "bg-blue-400 opacity-60"}`}
-                            ></div>
-
-                            <div className={`absolute -bottom-4 -left-4 w-24 h-24 rounded-full blur-3xl pointer-events-none
-                                ${index % 3 === 0 ? "bg-purple-400 opacity-60" : index % 3 === 1 ? "bg-blue-400 opacity-60" : "bg-green-400 opacity-60"}`}
-                            ></div>
-
-                            {/* Header met naam en badge */}
-                            <div className="w-full flex justify-between items-center mb-3 relative z-10">
-                                <h2 className="text-base sm:text-lg md:text-xl font-extrabold capitalize tracking-wide text-gray-900 text-left">
-                                    {entry.name}
-                                </h2>
-                                <span
-                                    className="px-2 py-1 text-xs sm:text-sm font-bold bg-gradient-to-r from-purple-400 to-blue-500 text-white rounded-full shadow-md relative z-10">
-                                    #{String(staticNumber).padStart(3, "0")}
-                                </span>
+                            {/* Subtiel Technisch Patroon op achtergrond */}
+                            <div className="absolute inset-0 opacity-[0.04] pointer-events-none overflow-hidden rounded-[2rem]">
+                                <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(#000_1px,transparent_1px)] bg-[size:12px_12px]"></div>
                             </div>
 
-                            {/* Sprite */}
-                            <img
-                                src={pokemon?.sprites?.other?.home?.front_shiny}
-                                alt={entry.name}
-                                className="w-20 h-20 sm:w-28 sm:h-28 md:w-32 md:h-32 drop-shadow-md relative z-10"
-                            />
+                            {/* Nummer Badge */}
+                            <div className="w-full flex justify-between items-start mb-2 relative z-10">
+                                <span className={`text-[10px] font-black tracking-tighter transition-colors ${isCollected ? "text-amber-600" : "text-cyan-600"}`}>
+                                    ID: {String(staticNumber).padStart(3, "0")}
+                                </span>
+                                {isCollected && (
+                                    <div className="w-2 h-2 bg-amber-500 rounded-full animate-pulse shadow-[0_0_8px_#f59e0b]"></div>
+                                )}
+                            </div>
+
+                            {/* Naam */}
+                            <h2 className="text-sm sm:text-base md:text-lg font-black uppercase italic tracking-tight text-slate-800 mb-3 relative z-10">
+                                {entry.name}
+                            </h2>
+
+                            {/* Sprite met gloed-effect */}
+                            <div className="relative mb-4">
+                                <div className={`absolute inset-0 rounded-full blur-3xl opacity-25 transition-all ${isCollected ? 'bg-amber-400' : 'bg-cyan-300'}`}></div>
+                                <img
+                                    src={pokemon?.sprites?.other?.home?.front_shiny}
+                                    alt={entry.name}
+                                    className="w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 drop-shadow-2xl relative z-10 group-hover:scale-110 transition-transform duration-500"
+                                />
+                            </div>
 
                             {/* Types */}
-                            {pokemon?.types && (
-                                <p className="mt-2 sm:mt-3 text-xs sm:text-sm text-gray-600 uppercase tracking-wide relative z-10">
-                                    {pokemon.types.map((t) => t.type.name).join(" / ")}
-                                </p>
-                            )}
+                            <div className="flex gap-1.5 mb-4 relative z-10">
+                                {pokemon?.types?.map((t) => (
+                                    <span key={t.type.name} className={`text-[8px] sm:text-[9px] font-black px-2 py-1 rounded-lg uppercase tracking-wider ${isCollected ? "bg-amber-200/50 text-amber-700" : "bg-slate-100 text-slate-500"}`}>
+                                        {t.type.name}
+                                    </span>
+                                ))}
+                            </div>
 
-                            {/* Footer met Collected count */}
-                            <div className="mt-4 w-full flex justify-center relative z-10">
-                                <div
-                                    className="px-4 py-1 rounded-full bg-gradient-to-r from-purple-400 to-blue-500 text-white text-xs sm:text-sm font-bold shadow-md tracking-wide">
-                                    Collected: {shinyCount}
+                            {/* Footer: Status indicator */}
+                            <div className="w-full relative z-10 mt-auto">
+                                <div className={`
+                                    w-full py-2 rounded-2xl text-[10px] font-black tracking-[0.15em] text-center transition-all border
+                                    ${isCollected
+                                    ? "bg-gradient-to-r from-amber-400 to-yellow-500 border-amber-500 text-white shadow-lg shadow-amber-200"
+                                    : "bg-white border-cyan-200 text-cyan-600"
+                                }
+                                `}>
+                                    {isCollected ? `REGISTERED: ${shinyCount}` : "UNREGISTERED"}
                                 </div>
                             </div>
                         </div>

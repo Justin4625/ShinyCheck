@@ -9,91 +9,53 @@ export default function PlzaSettingsTab({ increment, setIncrement, timer, setTim
         setTimer(hours * 3600 + minutes * 60 + seconds);
     }, [hours, minutes, seconds, setTimer]);
 
+    const inputContainerClass = "relative flex flex-col items-center group";
+    const labelClass = "text-[8px] font-black text-slate-400 uppercase tracking-[0.2em] mb-1.5";
     const inputClass = `
-        w-24 px-3 py-2 rounded-xl border-2 border-transparent 
-        bg-white/90 backdrop-blur-sm text-center font-bold text-gray-900 
-        shadow-md focus:outline-none focus:ring-2 focus:ring-blue-400 
-        focus:ring-offset-1 transition-all duration-300 h-10
-    `;
-
-    const buttonClass = `
-        px-6 py-2 rounded-xl font-bold shadow-lg text-white
-        transition-all duration-300 transform hover:scale-105
-        focus:outline-none focus:ring-2 focus:ring-offset-1
+        w-20 sm:w-24 px-3 py-2 bg-slate-50 border-b-2 border-slate-200 
+        text-center font-black italic text-slate-800 rounded-xl
+        focus:outline-none focus:border-cyan-500 focus:bg-white transition-all duration-300
+        shadow-sm text-sm
     `;
 
     return (
-        <div className="relative w-full max-w-3xl mx-auto">
+        <div className="w-full max-w-2xl mx-auto relative z-10 px-4">
+            <div className="bg-slate-50/50 p-6 rounded-3xl border border-slate-100 flex flex-col gap-8 shadow-inner">
 
-            {/* Modal content */}
-            <div className="relative z-10 px-6 py-3 backdrop-blur-md rounded-2xl flex flex-col gap-6 border border-gray-200 shadow-lg">
-
-                {/* Increment + Counter | Timer */}
-                <div className="flex flex-col sm:flex-row items-center justify-center gap-12 overflow-x-auto py-2">
-
-                    {/* Left: Increment + Counter */}
-                    <div className="flex gap-6 flex-shrink-0 items-center">
-                        <div className="flex flex-col items-center">
-                            <label className="text-gray-700 font-bold text-sm mb-1 text-center">Increment</label>
-                            <input
-                                type="number"
-                                min="1"
-                                value={increment}
-                                onChange={(e) => setIncrement(Math.max(1, Number(e.target.value)))}
-                                className={inputClass}
-                            />
+                <div className="flex flex-col sm:flex-row items-center justify-around gap-8">
+                    {/* Data Inputs */}
+                    <div className="flex gap-4">
+                        <div className={inputContainerClass}>
+                            <label className={labelClass}>Increment</label>
+                            <input type="number" min="1" value={increment} onChange={(e) => setIncrement(Math.max(1, Number(e.target.value)))} className={inputClass} />
                         </div>
-
-                        <div className="flex flex-col items-center">
-                            <label className="text-gray-700 font-bold text-sm mb-1 text-center">Encounters</label>
-                            <input
-                                type="number"
-                                min="0"
-                                value={counter}
-                                onChange={(e) => setCounter(Math.max(0, Number(e.target.value)))}
-                                className={inputClass}
-                            />
+                        <div className={inputContainerClass}>
+                            <label className={labelClass}>Encounters</label>
+                            <input type="number" min="0" value={counter} onChange={(e) => setCounter(Math.max(0, Number(e.target.value)))} className={`${inputClass} border-cyan-500 text-lg`} />
                         </div>
                     </div>
 
-                    {/* Right: Timer */}
-                    <div className="flex flex-col items-center flex-shrink-0">
-                        <div className="flex gap-3 justify-center flex-wrap sm:flex-nowrap">
-                            {["Hour", "Min", "Sec"].map((label, i) => {
-                                const value = i === 0 ? hours : i === 1 ? minutes : seconds;
-                                const setter = i === 0 ? setHours : i === 1 ? setMinutes : setSeconds;
-                                const min = 0;
-                                const max = i === 0 ? undefined : 59;
-                                return (
-                                    <div key={label} className="flex flex-col items-center">
-                                        <span className="text-sm font-bold text-gray-700 mb-1">{label}</span>
-                                        <input
-                                            type="number"
-                                            min={min}
-                                            max={max}
-                                            value={value}
-                                            onChange={(e) => setter(Math.min(max ?? Infinity, Math.max(min, Number(e.target.value))))}
-                                            className={inputClass}
-                                        />
-                                    </div>
-                                );
-                            })}
-                        </div>
+                    {/* Time Inputs */}
+                    <div className="flex gap-2">
+                        {["Hrs", "Min", "Sec"].map((label, i) => {
+                            const value = i === 0 ? hours : i === 1 ? minutes : seconds;
+                            const setter = i === 0 ? setHours : i === 1 ? setMinutes : setSeconds;
+                            return (
+                                <div key={label} className={inputContainerClass}>
+                                    <label className={labelClass}>{label}</label>
+                                    <input type="number" min="0" max={i === 0 ? undefined : 59} value={value} onChange={(e) => setter(Math.max(0, Number(e.target.value)))} className={`${inputClass} border-pink-500 w-16 sm:w-20`} />
+                                </div>
+                            );
+                        })}
                     </div>
                 </div>
 
-                {/* Buttons */}
-                <div className="flex flex-col sm:flex-row justify-center gap-4">
-                    <button
-                        onClick={onShowConfirm}
-                        className={`${buttonClass} bg-gradient-to-r from-red-400 to-red-600 hover:from-red-500 hover:to-red-700`}
-                    >
+                {/* Actions */}
+                <div className="flex justify-center gap-4">
+                    <button onClick={onShowConfirm} className="px-10 py-3 bg-white border border-slate-200 text-slate-400 font-black italic rounded-2xl hover:text-pink-500 hover:border-pink-200 transition-all text-[10px] uppercase tracking-widest shadow-sm">
                         Reset
                     </button>
-                    <button
-                        onClick={onShowGotcha}
-                        className={`${buttonClass} bg-gradient-to-r from-green-400 to-green-600 hover:from-green-500 hover:to-green-700`}
-                    >
+                    <button onClick={onShowGotcha} className="px-10 py-3 bg-gradient-to-r from-cyan-500 to-indigo-500 text-white font-black italic rounded-2xl hover:scale-105 transition-all shadow-lg shadow-cyan-200 text-[10px] uppercase tracking-widest">
                         Gotcha
                     </button>
                 </div>
