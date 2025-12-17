@@ -169,7 +169,7 @@ export default function PlzaModal({ selectedPokemon, onClose, index = 0 }) {
                         message="Are you sure you want to reset the timer and counter?"
                         onCancel={() => setShowConfirm(false)}
                         onConfirm={resetHunt}
-                        confirmColor="bg-red-500"
+                        confirmColor="from-red-400 to-red-600"
                     />
                 )}
 
@@ -178,7 +178,7 @@ export default function PlzaModal({ selectedPokemon, onClose, index = 0 }) {
                         message="Are you sure you want to end this hunt?"
                         onCancel={() => setShowGotchaConfirm(false)}
                         onConfirm={gotchaHunt}
-                        confirmColor="bg-green-500"
+                        confirmColor="from-green-400 to-green-600"
                     />
                 )}
             </div>
