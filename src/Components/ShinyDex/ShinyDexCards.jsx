@@ -14,7 +14,8 @@ export default function ShinyDexCards({ displayedPokemon, onCardClick }) {
                     if (data && data.pokemonName && data.pokemonName.toLowerCase() === lowerName) {
                         count++;
                     }
-                } catch (e) {}
+                    // eslint-disable-next-line no-unused-vars
+                } catch (e) { /* empty */ }
             }
         }
         return count;
