@@ -39,7 +39,7 @@ export default function ShinyDexModal({ pokemon, onClose, onSelectEntry }) {
             }
         }
         return items.sort((a, b) => (b.storedData.timestamp || 0) - (a.storedData.timestamp || 0));
-    }, [pokemon, localStorage.length]);
+    }, [pokemon]);
 
     return (
         <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-md flex items-center justify-center z-50 p-4" onClick={onClose}>
