@@ -89,7 +89,7 @@ export default function SvCollectionModal({ data, onClose, pokemon, shinyIndex, 
                     </div>
 
                     <div className="bg-gray-50 border border-gray-100 p-3 rounded-xl transform -skew-x-3 shadow-sm flex justify-between items-center px-6">
-                        <span className="text-[8px] font-black text-slate-400 uppercase tracking-widest">Database</span>
+                        <span className="text-[8px] font-black text-slate-400 uppercase tracking-widest">Game</span>
                         <span className="text-xs font-black italic text-orange-600 uppercase tracking-tighter">
                             {gameName || "Pokémon Scarlet & Violet"}
                         </span>

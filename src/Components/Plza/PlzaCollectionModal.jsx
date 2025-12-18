@@ -89,11 +89,11 @@ export default function PlzaCollectionModal({ data, onClose, pokemon, shinyIndex
                             <p className="text-lg font-black italic text-slate-900 tracking-tight">{formatTime(data.timer)}</p>
                         </div>
                         <div className="flex flex-col items-center bg-white p-4 rounded-2xl border border-slate-100 shadow-sm col-span-2 sm:col-span-1">
-                            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5">Sync Date</p>
+                            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5">Captured On</p>
                             <p className="text-sm font-black italic text-slate-700">{formatDate(data.timestamp)}</p>
                         </div>
                         <div className="flex flex-col items-center bg-white p-4 rounded-2xl border border-slate-100 shadow-sm col-span-2 sm:col-span-1">
-                            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5">Database</p>
+                            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5">Game</p>
                             <p className="text-sm font-black italic text-cyan-600 uppercase tracking-tighter">{gameName || "Pokémon Legends: Z-A"}</p>
                         </div>
                     </div>
