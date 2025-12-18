@@ -112,7 +112,7 @@ export default function Sv() {
                             type="text"
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
-                            placeholder="SEARCH POKÉMON OR TYPE.."
+                            placeholder="SEARCH POKÉMON OR TYPE..."
                             className="w-full pl-3 pr-8 py-2 bg-gray-50 border border-gray-200 rounded text-xs font-bold focus:border-[#ff4d00] outline-none transition-colors placeholder:text-gray-300 tracking-tight"
                         />
                         <div className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-300">
