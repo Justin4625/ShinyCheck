@@ -20,7 +20,6 @@ export default function PlzaCollectionModal({ data, onClose, pokemon, shinyIndex
     };
 
     const deleteShiny = () => {
-        // Gebruik originalId voor de localStorage sleutels om correct te kunnen verwijderen
         const shinyCount = Number(localStorage.getItem(`plza_shiny_${originalId}`)) || 0;
         if (shinyCount === 0) return;
 
@@ -45,7 +44,7 @@ export default function PlzaCollectionModal({ data, onClose, pokemon, shinyIndex
     };
 
     return (
-        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-md flex items-center justify-center z-50 p-2 sm:p-4">
+        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-md flex items-center justify-center z-[60] p-2 sm:p-4">
             <div
                 onClick={(e) => e.stopPropagation()}
                 className="relative bg-white border-2 border-cyan-100 rounded-[2.5rem] shadow-2xl p-6 sm:p-8 w-full max-w-xl flex flex-col items-center overflow-hidden"
@@ -66,7 +65,7 @@ export default function PlzaCollectionModal({ data, onClose, pokemon, shinyIndex
                         </span>
                     </div>
                     <h2 className="text-2xl sm:text-3xl font-black uppercase italic text-slate-800 tracking-tighter">
-                        #{String(pokemon.id).padStart(3, "0")} - {pokemon.name}
+                        #{String(pokemon.id).padStart(4, "0")} - {pokemon.name}
                     </h2>
                 </div>
 

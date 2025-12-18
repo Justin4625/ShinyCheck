@@ -23,7 +23,7 @@ export default function ShinyDex() {
     const [selectedPokemon, setSelectedPokemon] = useState(null);
     const [selectedEntry, setSelectedEntry] = useState(null);
 
-    // Blokkeer scrollen als er een modal open is
+    // Blokkeer scrollen op de achtergrond als er een modal open is
     useEffect(() => {
         if (selectedPokemon || selectedEntry) {
             document.body.style.overflow = 'hidden';
@@ -81,6 +81,7 @@ export default function ShinyDex() {
 
     return (
         <div className="relative min-h-screen bg-[#f8fafc] p-4 sm:p-8 font-sans overflow-hidden text-slate-900">
+            {/* Decoratie */}
             <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-orange-200/40 rounded-full blur-[120px] pointer-events-none"></div>
             <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-cyan-200/40 rounded-full blur-[120px] pointer-events-none"></div>
 
@@ -184,7 +185,13 @@ export default function ShinyDex() {
                     pokemon={selectedPokemon}
                     originalId={selectedEntry.id}
                     shinyIndex={selectedEntry.shinyIndex}
-                    onClose={() => setSelectedEntry(null)} // Gaat alleen terug naar ShinyDexModal
+                    onClose={() => {
+                        setSelectedEntry(null);
+                        // Forceer refresh van overzicht door even op null te zetten indien nodig
+                        const temp = selectedPokemon;
+                        setSelectedPokemon(null);
+                        setTimeout(() => setSelectedPokemon(temp), 10);
+                    }}
                     gameName="Pokémon Legends: Z-A"
                 />
             )}
@@ -194,7 +201,12 @@ export default function ShinyDex() {
                     pokemon={selectedPokemon}
                     originalId={selectedEntry.id}
                     shinyIndex={selectedEntry.shinyIndex}
-                    onClose={() => setSelectedEntry(null)} // Gaat alleen terug naar ShinyDexModal
+                    onClose={() => {
+                        setSelectedEntry(null);
+                        const temp = selectedPokemon;
+                        setSelectedPokemon(null);
+                        setTimeout(() => setSelectedPokemon(temp), 10);
+                    }}
                     gameName="Pokémon Scarlet & Violet"
                 />
             )}

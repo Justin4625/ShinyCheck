@@ -9,7 +9,6 @@ export default function Collection({ plzaPokemon = [], svPokemon = [], pokemonLi
     const [searchQuery, setSearchQuery] = useState("");
     const [filter, setFilter] = useState("all");
 
-    // Helpers
     const formatTime = (seconds) => {
         const hrs = Math.floor(seconds / 3600);
         const mins = Math.floor((seconds % 3600) / 60);
@@ -25,7 +24,6 @@ export default function Collection({ plzaPokemon = [], svPokemon = [], pokemonLi
         });
     };
 
-    // 1. Data ophalen uit localStorage
     const plzaHunts = plzaPokemon.flatMap((p) => {
         const count = Number(localStorage.getItem(`plza_shiny_${p.id}`)) || 0;
         const items = [];
@@ -48,7 +46,6 @@ export default function Collection({ plzaPokemon = [], svPokemon = [], pokemonLi
 
     const totalCount = plzaHunts.length + svHunts.length;
 
-    // 2. Filter en Sorteer Logica
     const allShinies = [...plzaHunts, ...svHunts]
         .filter((entry) => {
             const matchesSearch = entry.name.toLowerCase().includes(searchQuery.toLowerCase());
@@ -82,7 +79,6 @@ export default function Collection({ plzaPokemon = [], svPokemon = [], pokemonLi
                 svCount={svHunts.length}
             />
 
-            {/* Grid Area - Kaarten via component */}
             {allShinies.length === 0 ? (
                 <div className="relative text-center text-slate-500 py-32 border-4 border-dashed border-slate-800 rounded-[3rem] bg-slate-900/20 backdrop-blur-sm">
                     <p className="text-xl font-black uppercase tracking-widest italic opacity-50">
@@ -99,7 +95,6 @@ export default function Collection({ plzaPokemon = [], svPokemon = [], pokemonLi
                 />
             )}
 
-            {/* Modals */}
             {selectedEntry?.type === 'PLZA' && (
                 <PlzaCollectionModal
                     data={selectedEntry.storedData}

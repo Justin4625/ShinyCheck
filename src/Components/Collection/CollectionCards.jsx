@@ -25,7 +25,7 @@ export default function CollectionCards({ allShinies, pokemonList, onSelectEntry
                             <div className={`px-2.5 py-1 ${isPlza ? "bg-cyan-500 rounded-full shadow-md shadow-cyan-200" : "transform -skew-x-12 shadow-sm"}`}
                                  style={{ backgroundColor: !isPlza ? svAccent : undefined }}>
                                 <span className="text-[9px] font-black italic text-white tracking-widest uppercase">
-                                    No. {String(spriteId).padStart(3, "0")}
+                                    No. {String(spriteId).padStart(4, "0")}
                                 </span>
                             </div>
                             <div className={`text-base drop-shadow-md group-hover:animate-bounce ${isPlza ? "text-cyan-500" : "text-gray-400"}`}>✨</div>

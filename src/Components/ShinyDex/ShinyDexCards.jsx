@@ -44,7 +44,7 @@ export default function ShinyDexCards({ displayedPokemon, onCardClick }) {
 
                         <div className="text-center mb-2">
                             <p className={`text-[10px] font-black tracking-tighter uppercase ${isOwned ? "text-amber-600" : "text-slate-400"}`}>
-                                No. {String(pokemon.id).padStart(3, "0")}
+                                No. {String(pokemon.id).padStart(4, "0")}
                             </p>
                             <h3 className={`text-xs font-black uppercase italic truncate w-24 ${isOwned ? "text-amber-900" : "text-slate-700"}`}>
                                 {pokemon.name}
@@ -63,12 +63,6 @@ export default function ShinyDexCards({ displayedPokemon, onCardClick }) {
                                 loading="lazy"
                             />
                         </div>
-
-                        {isOwned && (
-                            <div className="absolute bottom-2 right-2 text-amber-500 text-xs animate-bounce">
-                                ✨
-                            </div>
-                        )}
                     </div>
                 );
             })}

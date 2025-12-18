@@ -14,19 +14,17 @@ export default function SvCollectionModal({ data, onClose, pokemon, shinyIndex, 
     };
 
     const formatDate = (timestamp) => {
-        return new Date(timestamp).toLocaleDateString("en-GB", {
+        return new Date(timestamp).toLocaleString("nl-NL", {
             day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit",
         });
     };
 
     const deleteShiny = () => {
-        // Gebruik originalId voor de localStorage sleutels om correct te kunnen verwijderen
         const shinyCount = Number(localStorage.getItem(`sv_shiny_${originalId}`)) || 0;
         if (shinyCount === 0) return;
 
         localStorage.removeItem(`sv_shinyData_${originalId}_${shinyIndex}`);
 
-        // Re-index de overgebleven shinies
         for (let i = shinyIndex + 1; i <= shinyCount; i++) {
             const entry = localStorage.getItem(`sv_shinyData_${originalId}_${i}`);
             if (entry) {
@@ -45,81 +43,70 @@ export default function SvCollectionModal({ data, onClose, pokemon, shinyIndex, 
         onClose();
     };
 
-    // Scarlet vs Violet accentkleur op basis van landelijke ID
-    const accentColor = pokemon.id % 2 === 0 ? "#ff4d00" : "#8c00ff";
-
     return (
-        <div className="fixed inset-0 bg-black/70 backdrop-blur-md flex items-center justify-center z-50 p-4">
+        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-md flex items-center justify-center z-[60] p-4">
             <div
                 onClick={(e) => e.stopPropagation()}
-                className="relative bg-white border-b-[6px] border-r-[6px] border-gray-300 rounded-tr-[40px] rounded-bl-[40px] rounded-tl-lg rounded-br-lg w-full max-w-md flex flex-col items-center overflow-hidden shadow-2xl"
+                className="relative bg-white border-2 border-orange-100 rounded-[2.5rem] shadow-2xl p-8 w-full max-w-xl flex flex-col items-center overflow-hidden"
             >
-                <div
-                    className="absolute top-0 right-0 w-32 h-32 -mr-12 -mt-12 rotate-45 opacity-10 pointer-events-none"
-                    style={{ backgroundColor: accentColor }}
-                />
+                <div className="absolute inset-0 pointer-events-none opacity-[0.03] bg-[linear-gradient(to_right,#000_1px,transparent_1px),linear-gradient(to_bottom,#000_1px,transparent_1px)] bg-[size:30px_30px]"></div>
 
                 <button
                     onClick={onClose}
-                    className="absolute top-3 right-5 w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 text-gray-400 hover:text-gray-800 transition-all z-20 group"
+                    className="absolute top-5 right-5 w-10 h-10 flex items-center justify-center rounded-full bg-slate-50 text-slate-400 hover:text-orange-500 transition-all z-20 group"
                 >
                     <span className="text-xl font-black group-hover:scale-110 transition-transform">✕</span>
                 </button>
 
-                <div className="w-full pt-8 px-6 flex flex-col items-center relative z-10">
-                    <div
-                        className="px-3 py-0.5 transform -skew-x-12 mb-2 shadow-sm"
-                        style={{ backgroundColor: accentColor }}
-                    >
+                <div className="flex flex-col items-center mb-4 relative z-10 text-center">
+                    <div className="px-3 py-1 bg-orange-500 rounded-full mb-2 shadow-lg shadow-orange-100">
                         <span className="text-[10px] font-black italic text-white tracking-widest uppercase">
-                            No. {String(pokemon.id).padStart(3, "0")} • Entry #{shinyIndex}
+                            Registered Entry #{shinyIndex}
                         </span>
                     </div>
-                    <h2 className="text-2xl sm:text-3xl font-black uppercase italic text-[#333] tracking-tighter text-center leading-none">
-                        {pokemon.name}
+                    <h2 className="text-2xl sm:text-3xl font-black uppercase italic text-slate-800 tracking-tighter">
+                        #{String(pokemon.id).padStart(4, "0")} - {pokemon.name}
                     </h2>
                 </div>
 
-                <div className="relative py-4 z-10">
+                <div className="relative mb-6 transform transition-transform hover:scale-105">
+                    <div className="absolute inset-0 bg-orange-300 blur-3xl opacity-20 rounded-full"></div>
                     <img
                         src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/shiny/${pokemon.id}.png`}
                         alt={pokemon.name}
-                        className="w-32 h-32 sm:w-40 sm:h-40 object-contain drop-shadow-xl transition-transform hover:scale-105 duration-300"
+                        className="w-32 h-32 sm:w-40 sm:h-40 drop-shadow-2xl relative z-10"
                     />
                 </div>
 
-                <div className="w-full px-6 pb-8 flex flex-col gap-2 z-10">
-                    <div className="grid grid-cols-2 gap-2">
-                        <div className="px-3 py-2 rounded-lg transform skew-x-[-6deg] bg-gray-50 border-l-4" style={{ borderColor: accentColor }}>
-                            <p className="text-[8px] font-black text-gray-400 uppercase tracking-widest skew-x-[6deg]">Encounters</p>
-                            <p className="text-xl font-black italic skew-x-[6deg]" style={{ color: accentColor }}>{data.counter}</p>
+                <div className="w-full bg-slate-50/50 rounded-3xl border border-slate-100 p-5 flex flex-col gap-4 z-10 shadow-inner">
+                    <div className="grid grid-cols-2 gap-4">
+                        <div className="flex flex-col items-center bg-white p-4 rounded-2xl border border-slate-100 shadow-sm">
+                            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5">Encounters</p>
+                            <p className="text-2xl font-black italic text-slate-900 tracking-tighter">{data.counter}</p>
                         </div>
-                        <div className="px-3 py-2 rounded-lg transform skew-x-[-6deg] bg-gray-50 border-l-4" style={{ borderColor: accentColor }}>
-                            <p className="text-[8px] font-black text-gray-400 uppercase tracking-widest skew-x-[6deg]">Duration</p>
-                            <p className="text-xl font-black italic skew-x-[6deg]" style={{ color: accentColor }}>{formatTime(data.timer)}</p>
+                        <div className="flex flex-col items-center bg-white p-4 rounded-2xl border border-slate-100 shadow-sm">
+                            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5">Duration</p>
+                            <p className="text-lg font-black italic text-slate-900 tracking-tight">{formatTime(data.timer)}</p>
+                        </div>
+                        <div className="flex flex-col items-center bg-white p-4 rounded-2xl border border-slate-100 shadow-sm col-span-2 sm:col-span-1">
+                            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5">Sync Date</p>
+                            <p className="text-sm font-black italic text-slate-700">{formatDate(data.timestamp)}</p>
+                        </div>
+                        <div className="flex flex-col items-center bg-white p-4 rounded-2xl border border-slate-100 shadow-sm col-span-2 sm:col-span-1">
+                            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5">Database</p>
+                            <p className="text-sm font-black italic text-orange-600 uppercase tracking-tighter">{gameName || "Pokémon Scarlet & Violet"}</p>
                         </div>
                     </div>
 
-                    <div className="w-full py-2 px-4 bg-gray-50 border-l-4 rounded transform skew-x-[-4deg] flex justify-between items-center" style={{ borderLeftColor: accentColor }}>
-                        <span className="text-[9px] font-black text-gray-400 uppercase skew-x-[4deg]">Caught On</span>
-                        <span className="text-xs font-black text-gray-700 italic skew-x-[4deg]">{formatDate(data.timestamp)}</span>
+                    <div className="flex justify-center mt-2">
+                        <button
+                            onClick={() => setShowConfirm(true)}
+                            className="px-10 py-3 bg-white border-2 border-slate-200 text-slate-400 font-black italic rounded-2xl text-[11px] uppercase tracking-[0.2em] hover:text-red-500 hover:border-red-200 transition-all shadow-sm active:scale-95"
+                        >
+                            Delete Shiny
+                        </button>
                     </div>
-
-                    <div className="w-full py-2 px-4 bg-gray-800 rounded transform skew-x-[-4deg] flex justify-center items-center">
-                        <span className="text-[9px] font-black text-white uppercase tracking-widest skew-x-[4deg] italic">
-                            {gameName || "Pokémon Scarlet & Violet"}
-                        </span>
-                    </div>
-
-                    <button
-                        onClick={() => setShowConfirm(true)}
-                        className="mt-4 w-full py-2 text-[10px] font-black uppercase italic tracking-widest text-red-500 hover:text-red-700 hover:bg-red-50 transition-colors rounded-lg border border-red-100"
-                    >
-                        Delete Shiny
-                    </button>
                 </div>
-
-                <div className="w-full h-1.5" style={{ backgroundColor: accentColor }} />
 
                 {showConfirm && (
                     <SvDeleteShiny
