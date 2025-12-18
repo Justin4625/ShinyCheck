@@ -4,7 +4,7 @@ export default function SvTabs({ activeTab, setActiveTab }) {
     const tabs = [
         { id: "active", label: "ACTIVE HUNTS", disabled: false },
         { id: "base", label: "BASE GAME", disabled: false },
-        { id: "teal", label: "TEAL MASK", disabled: false },
+        { id: "teal", label: "TEAL MASK", disabled: true },
         { id: "indigo", label: "INDIGO DISK", disabled: true },
     ];
 

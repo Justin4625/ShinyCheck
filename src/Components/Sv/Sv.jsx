@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import svPokemon from "../../data/SvData.js";
-import svTmPokemon from "../../data/SvTmData.js";
 import usePokemon from "../FetchPokemon.jsx";
 import SvModal from "./SvModal.jsx";
 import SvTabs from "./SvTabs.jsx";
@@ -8,13 +7,12 @@ import SvCards from "./SvCards.jsx";
 import SvActiveHunts from "./SvActiveHunts.jsx";
 
 export default function Sv() {
-    const [activeTab, setActiveTab] = useState("base");
+    const { pokemonList } = usePokemon(svPokemon);
+
     const [selectedPokemon, setSelectedPokemon] = useState(null);
+    const [activeTab, setActiveTab] = useState("base");
     const [searchQuery, setSearchQuery] = useState("");
     const [showMissingOnly, setShowMissingOnly] = useState(false);
-
-    const currentDataSet = activeTab === "teal" ? svTmPokemon : svPokemon;
-    const { pokemonList } = usePokemon(currentDataSet);
 
     const openModal = (pokemon) => setSelectedPokemon(pokemon);
     const closeModal = () => setSelectedPokemon(null);
@@ -31,10 +29,7 @@ export default function Sv() {
         return `${hrs}h ${mins}m ${secs}s`;
     };
 
-    const filteredPokemon = currentDataSet.map((p, index) => ({
-        ...p,
-        displayId: (index + 1).toString()
-    })).filter((p) => {
+    const filteredPokemon = svPokemon.filter((p) => {
         if (showMissingOnly) {
             const count = Number(localStorage.getItem(`sv_shiny_${p.id}`)) || 0;
             if (count > 0) return false;
@@ -48,14 +43,12 @@ export default function Sv() {
     });
 
     const getShinyProgress = () => {
-        const caughtUniqueNames = new Set();
+        let uniqueShinyCount = 0;
         svPokemon.forEach(p => {
-            if (Number(localStorage.getItem(`sv_shiny_${p.id}`)) > 0) caughtUniqueNames.add(p.name);
+            const count = Number(localStorage.getItem(`sv_shiny_${p.id}`)) || 0;
+            if (count > 0) uniqueShinyCount += 1;
         });
-        svTmPokemon.forEach(p => {
-            if (Number(localStorage.getItem(`sv_shiny_${p.id}`)) > 0) caughtUniqueNames.add(p.name);
-        });
-        return { count: caughtUniqueNames.size, total: 400 };
+        return { count: uniqueShinyCount, total: 400 };
     };
 
     const shinyProgress = getShinyProgress();
@@ -79,7 +72,9 @@ export default function Sv() {
                     <div className="flex justify-between items-end mb-1.5 px-1">
                         <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Shiny Progress</span>
                         <div className="flex items-baseline gap-2">
-                            <span className="text-xs font-bold text-[#ff4d00] tabular-nums">{shinyPercentage}%</span>
+                            <span className="text-xs font-bold text-[#ff4d00] tabular-nums">
+                                {shinyPercentage}%
+                            </span>
                             <span className="text-xl font-black text-[#333] italic">
                                 {shinyProgress.count}
                                 <span className="text-gray-300 mx-0.5 text-lg">/</span>
@@ -90,7 +85,7 @@ export default function Sv() {
                     <div className="relative h-2.5 w-full bg-gray-100 rounded-full overflow-hidden border border-gray-50">
                         <div
                             className="absolute top-0 left-0 h-full bg-gradient-to-r from-[#ff4d00] via-[#ffcc00] to-[#8c00ff] transition-all duration-1000 ease-out"
-                            style={{ width: `${Math.min(shinyPercentage, 100)}%` }}
+                            style={{ width: `${shinyPercentage}%` }}
                         ></div>
                     </div>
                 </div>
@@ -140,8 +135,7 @@ export default function Sv() {
             <SvModal
                 selectedPokemon={selectedPokemon}
                 onClose={closeModal}
-                index={selectedPokemon ? currentDataSet.findIndex(p => p.id === selectedPokemon.id) : -1}
-                activeTab={activeTab}
+                index={selectedPokemon ? svPokemon.findIndex(p => p.id === selectedPokemon.id) : -1}
             />
         </div>
     );
