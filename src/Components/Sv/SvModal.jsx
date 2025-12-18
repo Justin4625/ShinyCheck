@@ -79,7 +79,7 @@ export default function SvModal({ selectedPokemon, onClose, index = 0 }) {
                 <div className="w-full pt-8 px-8 flex flex-col items-center">
                     <div className="px-4 py-1 transform -skew-x-12 mb-2 shadow-sm" style={{ backgroundColor: accentColor }}>
                         <span className="text-xs font-black italic text-white tracking-widest uppercase">
-                            No. {String(selectedPokemon.id).padStart(3, "0")}
+                            No. {String(selectedPokemon.displayId || selectedPokemon.id).padStart(3, "0")}
                         </span>
                     </div>
                     <h2 className="text-3xl font-black uppercase italic text-[#333] tracking-tighter text-center">
