@@ -24,6 +24,7 @@ export default function SvCards({ displayedPokemon, pokemonList, openModal }) {
                 displayedPokemon.map((entry, index) => {
                     const pokemon = pokemonList.find((p) => p.id === entry.id);
                     const shinyCount = Number(localStorage.getItem(`sv_shiny_${entry.id}`)) || 0;
+                    // Gebruik de berekende displayId van de Sv component
                     const staticNumber = entry.displayId || (index + 1);
                     const isCaught = shinyCount > 0;
 

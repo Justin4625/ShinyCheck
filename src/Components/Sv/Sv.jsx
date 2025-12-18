@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import svPokemon from "../../data/SvData.js";
 import svTmPokemon from "../../data/SvTmData.js";
+import svIdPokemon from "../../data/SvIdData.js"; // Nieuwe import
 import usePokemon from "../FetchPokemon.jsx";
 import SvModal from "./SvModal.jsx";
 import SvTabs from "./SvTabs.jsx";
@@ -13,7 +14,12 @@ export default function Sv() {
     const [searchQuery, setSearchQuery] = useState("");
     const [showMissingOnly, setShowMissingOnly] = useState(false);
 
-    const currentDataSet = activeTab === "teal" ? svTmPokemon : svPokemon;
+    // Wissel tussen datasets
+    const currentDataSet =
+        activeTab === "indigo" ? svIdPokemon :
+            activeTab === "teal" ? svTmPokemon :
+                svPokemon;
+
     const { pokemonList } = usePokemon(currentDataSet);
 
     const openModal = (pokemon) => setSelectedPokemon(pokemon);
@@ -31,6 +37,7 @@ export default function Sv() {
         return `${hrs}h ${mins}m ${secs}s`;
     };
 
+    // Filter logica met displayId voor badges per tab (1, 2, 3...)
     const filteredPokemon = currentDataSet.map((p, index) => ({
         ...p,
         displayId: (index + 1).toString()
@@ -47,13 +54,15 @@ export default function Sv() {
         return nameMatch || typeMatch;
     });
 
+    // Voortgangsbalk telt unieke namen over alle regio's (max 400)
     const getShinyProgress = () => {
         const caughtUniqueNames = new Set();
-        svPokemon.forEach(p => {
-            if (Number(localStorage.getItem(`sv_shiny_${p.id}`)) > 0) caughtUniqueNames.add(p.name);
-        });
-        svTmPokemon.forEach(p => {
-            if (Number(localStorage.getItem(`sv_shiny_${p.id}`)) > 0) caughtUniqueNames.add(p.name);
+        [svPokemon, svTmPokemon, svIdPokemon].forEach(dataSet => {
+            dataSet.forEach(p => {
+                if (Number(localStorage.getItem(`sv_shiny_${p.id}`)) > 0) {
+                    caughtUniqueNames.add(p.name);
+                }
+            });
         });
         return { count: caughtUniqueNames.size, total: 400 };
     };
@@ -77,7 +86,10 @@ export default function Sv() {
 
                 <div className="w-full max-w-lg bg-white p-3 rounded-xl shadow-sm border border-gray-100">
                     <div className="flex justify-between items-end mb-1.5 px-1">
-                        <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Shiny Progress</span>
+                        <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">
+                            {activeTab === "indigo" ? "Blueberry Progress" :
+                                activeTab === "teal" ? "Kitakami Progress" : "Paldea Progress"}
+                        </span>
                         <div className="flex items-baseline gap-2">
                             <span className="text-xs font-bold text-[#ff4d00] tabular-nums">{shinyPercentage}%</span>
                             <span className="text-xl font-black text-[#333] italic">
@@ -133,7 +145,7 @@ export default function Sv() {
                 {activeTab === "active" ? (
                     <SvActiveHunts svPokemon={filteredPokemon} pokemonList={pokemonList} formatTime={formatTime} openModal={openModal} />
                 ) : (
-                    <SvCards displayedPokemon={filteredPokemon} pokemonList={pokemonList} openModal={openModal} activeTab={activeTab} />
+                    <SvCards displayedPokemon={filteredPokemon} pokemonList={pokemonList} openModal={openModal} />
                 )}
             </div>
 
@@ -141,7 +153,6 @@ export default function Sv() {
                 selectedPokemon={selectedPokemon}
                 onClose={closeModal}
                 index={selectedPokemon ? currentDataSet.findIndex(p => p.id === selectedPokemon.id) : -1}
-                activeTab={activeTab}
             />
         </div>
     );
