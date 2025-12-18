@@ -81,7 +81,6 @@ export default function ShinyDex() {
 
     return (
         <div className="relative min-h-screen bg-[#f8fafc] p-4 sm:p-8 font-sans overflow-hidden text-slate-900">
-            {/* Decoratie */}
             <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-orange-200/40 rounded-full blur-[120px] pointer-events-none"></div>
             <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-cyan-200/40 rounded-full blur-[120px] pointer-events-none"></div>
 
@@ -92,6 +91,7 @@ export default function ShinyDex() {
                             Shiny<span className="text-[#ff4d29]">Check</span>
                         </h1>
 
+                        {/* Grotere progressiebalk */}
                         <div className="mt-4 w-full md:w-96">
                             <div className="flex justify-between items-end mb-1">
                                 <div className="flex flex-col">
@@ -185,13 +185,7 @@ export default function ShinyDex() {
                     pokemon={selectedPokemon}
                     originalId={selectedEntry.id}
                     shinyIndex={selectedEntry.shinyIndex}
-                    onClose={() => {
-                        setSelectedEntry(null);
-                        // Forceer refresh van overzicht door even op null te zetten indien nodig
-                        const temp = selectedPokemon;
-                        setSelectedPokemon(null);
-                        setTimeout(() => setSelectedPokemon(temp), 10);
-                    }}
+                    onClose={() => setSelectedEntry(null)}
                     gameName="Pokémon Legends: Z-A"
                 />
             )}
@@ -201,12 +195,7 @@ export default function ShinyDex() {
                     pokemon={selectedPokemon}
                     originalId={selectedEntry.id}
                     shinyIndex={selectedEntry.shinyIndex}
-                    onClose={() => {
-                        setSelectedEntry(null);
-                        const temp = selectedPokemon;
-                        setSelectedPokemon(null);
-                        setTimeout(() => setSelectedPokemon(temp), 10);
-                    }}
+                    onClose={() => setSelectedEntry(null)}
                     gameName="Pokémon Scarlet & Violet"
                 />
             )}
