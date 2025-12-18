@@ -143,7 +143,7 @@ const svPokemon = [
     { id: "142", name: "Persian", game: "Pokémon Scarlet & Violet" },
     { id: "143", name: "Drifloon", game: "Pokémon Scarlet & Violet" },
     { id: "144", name: "Drifblim", game: "Pokémon Scarlet & Violet" },
-    { id: "145", name: "Flabébé", game: "Pokémon Scarlet & Violet" },
+    { id: "145", name: "Flabebe", game: "Pokémon Scarlet & Violet" },
     { id: "146", name: "Floette", game: "Pokémon Scarlet & Violet" },
     { id: "147", name: "Florges", game: "Pokémon Scarlet & Violet" },
     { id: "148", name: "Diglett", game: "Pokémon Scarlet & Violet" },

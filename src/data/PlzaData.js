@@ -36,7 +36,7 @@ const plzaPokemon = [
     { id: "035", name: "Barbaracle", game: "Pokémon Legends: Z-A" },
     { id: "036", name: "Staryu", game: "Pokémon Legends: Z-A" },
     { id: "037", name: "Starmie", game: "Pokémon Legends: Z-A" },
-    { id: "038", name: "Flabébé", game: "Pokémon Legends: Z-A" },
+    { id: "038", name: "Flabebe", game: "Pokémon Legends: Z-A" },
     { id: "039", name: "Floette", game: "Pokémon Legends: Z-A" },
     { id: "040", name: "Florges", game: "Pokémon Legends: Z-A" },
     { id: "041", name: "Skiddo", game: "Pokémon Legends: Z-A" },
