@@ -72,17 +72,18 @@ export default function ShinyDex() {
                             Shiny<span className="text-[#ff4d29]">Check</span>
                         </h1>
 
-                        <div className="mt-4 w-full md:w-72">
+                        {/* De progressiebalk is hier breder (md:w-96) en dikker (h-3) gemaakt */}
+                        <div className="mt-4 w-full md:w-96">
                             <div className="flex justify-between items-end mb-1">
                                 <div className="flex flex-col">
                                     <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest leading-none">Global National Dex</span>
-                                    <span className="text-[10px] font-black text-slate-600 mt-1 italic">
+                                    <span className="text-[12px] font-black text-slate-600 mt-1 italic">
                                         {globalStats.count} <span className="text-slate-400">/</span> {globalStats.total}
                                     </span>
                                 </div>
-                                <span className="text-[11px] font-black text-[#ff4d29]">{globalStats.percentage}%</span>
+                                <span className="text-[13px] font-black text-[#ff4d29]">{globalStats.percentage}%</span>
                             </div>
-                            <div className="h-1.5 w-full bg-slate-200 rounded-full overflow-hidden shadow-inner">
+                            <div className="h-3 w-full bg-slate-200 rounded-full overflow-hidden shadow-inner">
                                 <div
                                     className="h-full bg-[#ff4d29] transition-all duration-1000 shadow-[0_0_8px_rgba(255,77,41,0.4)]"
                                     style={{ width: `${globalStats.percentage}%` }}
@@ -110,16 +111,13 @@ export default function ShinyDex() {
                 <div className="mt-8 bg-white/40 backdrop-blur-2xl rounded-[3rem] border border-white shadow-xl p-6 sm:p-10 relative overflow-hidden">
                     <div className="absolute inset-0 opacity-[0.05] pointer-events-none bg-[linear-gradient(to_right,#64748b_1px,transparent_1px),linear-gradient(to_bottom,#64748b_1px,transparent_1px)] bg-[size:40px_40px]"></div>
 
-                    {/* Region Progress Header - Toggle en Progress gewisseld */}
                     <div className="relative z-10 mb-8 flex flex-col lg:flex-row justify-between items-center gap-6 bg-white/50 p-5 rounded-3xl border border-white shadow-sm">
 
-                        {/* 1. Region Name (Links) */}
                         <div className="flex flex-col items-center lg:items-start shrink-0">
                             <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Region Completion</span>
                             <h2 className="text-xl font-black uppercase italic text-slate-800">{activeTab} Dex</h2>
                         </div>
 
-                        {/* 2. Progressie (Midden) */}
                         <div className="flex flex-col items-center w-full max-w-md">
                             <div className="flex items-baseline gap-2 mb-1">
                                 <span className="text-2xl font-black text-slate-900">{regionStats.count}</span>
@@ -135,7 +133,6 @@ export default function ShinyDex() {
                             </div>
                         </div>
 
-                        {/* 3. Toggle Unregistered (Rechts) */}
                         <div className="flex items-center gap-3 bg-slate-100/50 p-2 px-4 rounded-2xl border border-slate-200 shrink-0">
                             <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest">Unregistered</span>
                             <button
