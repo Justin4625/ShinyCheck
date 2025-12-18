@@ -7,10 +7,14 @@ import Collection from "./Components/Collection/Collection.jsx";
 
 // Data imports
 import plzaPokemon from "./data/PlzaData.js";
+import plzaMdPokemon from "./data/PlzaMdData.js"; // Importeer de MD data
 import svPokemon from "./data/SvData.js";
 import shinyDexPart1 from "./data/ShinyDexData.js";
 import shinyDexPart2 from "./data/ShinyDexData2.js";
 import shinyDexPart3 from "./data/ShinyDexData3.js";
+
+// Combineer alle PLZA pokemon lijsten voor de collectie
+const allPlzaPokemon = [...plzaPokemon, ...plzaMdPokemon];
 
 const pokemonList = [...shinyDexPart1, ...shinyDexPart2, ...shinyDexPart3];
 
@@ -23,7 +27,8 @@ const router = createBrowserRouter([{
             {
                 path: "/collection",
                 element: <Collection
-                    plzaPokemon={plzaPokemon}
+                    // Gebruik de gecombineerde lijst hier
+                    plzaPokemon={allPlzaPokemon}
                     svPokemon={svPokemon}
                     pokemonList={pokemonList}
                 />
