@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import PlzaCollectionModal from "./Components/Plza/PlzaCollectionModal.jsx";
-import SvCollectionModal from "./Components/Sv/SvCollectionModal.jsx";
+import PlzaCollectionModal from "../Plza/PlzaCollectionModal.jsx";
+import SvCollectionModal from "../Sv/SvCollectionModal.jsx";
+import CollectionFilter from "./CollectionFilter.jsx";
 
 export default function Collection({ plzaPokemon = [], svPokemon = [], pokemonList = [] }) {
     const [selectedEntry, setSelectedEntry] = useState(null);
@@ -44,7 +45,6 @@ export default function Collection({ plzaPokemon = [], svPokemon = [], pokemonLi
         return items;
     });
 
-    // Totaal aantal voor de teller
     const totalCount = plzaHunts.length + svHunts.length;
 
     // 2. Filter en Sorteer Logica
@@ -58,15 +58,12 @@ export default function Collection({ plzaPokemon = [], svPokemon = [], pokemonLi
 
     return (
         <div className="max-w-[1600px] mx-auto p-6 relative">
-            {/* Achtergrond decoratie */}
             <div className="fixed inset-0 bg-[radial-gradient(#1e1e30_1px,transparent_1px)] bg-[size:40px_40px] opacity-20 pointer-events-none"></div>
 
-            {/* Header Sectie */}
             <div className="relative z-10 mb-8 flex flex-col items-center">
                 <h1 className="text-3xl md:text-4xl font-black text-slate-800 uppercase italic tracking-[0.2em] text-center drop-shadow-[0_2px_10px_rgba(255,255,255,0.5)]">
                     Collection
                 </h1>
-                {/* Totaal teller - Iets groter gemaakt */}
                 <div className="mt-3 px-6 py-2 bg-slate-900/10 rounded-full border border-slate-900/10 shadow-sm backdrop-blur-sm">
                     <span className="text-xs sm:text-sm font-black text-slate-700 uppercase tracking-[0.15em] italic">
                         Total Shinies: <span className="text-cyan-600 ml-1 text-base sm:text-lg">{totalCount}</span>
@@ -74,50 +71,16 @@ export default function Collection({ plzaPokemon = [], svPokemon = [], pokemonLi
                 </div>
             </div>
 
-            {/* Controls Area: Filters en Search */}
-            <div className="relative z-10 max-w-5xl mx-auto mb-12 flex flex-col md:flex-row items-center justify-center gap-4">
-
-                {/* Filters - Pill stijl */}
-                <div className="flex flex-wrap justify-center gap-2">
-                    {[
-                        { id: "all", label: "All Games", count: totalCount },
-                        { id: "PLZA", label: "Legends: Z-A", count: plzaHunts.length },
-                        { id: "SV", label: "Scarlet & Violet", count: svHunts.length }
-                    ].map((tab) => {
-                        const isActive = filter === tab.id;
-                        return (
-                            <button
-                                key={tab.id}
-                                onClick={() => setFilter(tab.id)}
-                                className={`px-5 py-2 rounded-full font-black italic text-[10px] tracking-widest uppercase transition-all duration-300 border-2
-                                    ${isActive
-                                    ? "bg-white border-cyan-500 text-cyan-600 shadow-xl scale-105 z-10"
-                                    : "bg-slate-900/60 border-white/10 text-slate-400 hover:border-white/30 hover:text-white"}`}
-                            >
-                                {tab.label} ({tab.count})
-                            </button>
-                        );
-                    })}
-                </div>
-
-                {/* Search Bar */}
-                <div className="w-full md:w-72 bg-white/5 backdrop-blur-md p-2 rounded-3xl border border-white/10 shadow-2xl">
-                    <div className="relative">
-                        <input
-                            type="text"
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                            placeholder="SEARCH COLLECTION..."
-                            className="w-full pl-9 pr-4 py-2 bg-white border border-slate-100 rounded-2xl text-[10px] font-bold text-slate-700 focus:border-cyan-400 outline-none transition-all placeholder:text-slate-300 shadow-inner"
-                        />
-                        <div className="absolute left-3 top-1/2 -translate-y-1/2 text-cyan-500">
-                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                            </svg>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            {/* De nieuwe Filter Component */}
+            <CollectionFilter
+                filter={filter}
+                setFilter={setFilter}
+                searchQuery={searchQuery}
+                setSearchQuery={setSearchQuery}
+                totalCount={totalCount}
+                plzaCount={plzaHunts.length}
+                svCount={svHunts.length}
+            />
 
             {/* Grid Area - Kaarten */}
             {allShinies.length === 0 ? (

@@ -3,7 +3,7 @@ import Plza from "./Components/Plza/Plza.jsx";
 import Layout from "./Components/Layout.jsx";
 import ShinyDex from "./Components/ShinyDex/ShinyDex.jsx";
 import Sv from "./Components/Sv/Sv.jsx";
-import Collection from "./Collection.jsx";
+import Collection from "./Components/Collection/Collection.jsx";
 
 // Data imports
 import plzaPokemon from "./data/PlzaData.js";
