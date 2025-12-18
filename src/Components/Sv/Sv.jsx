@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import svPokemon from "../../data/SvData.js";
 import svTmPokemon from "../../data/SvTmData.js";
-import svIdPokemon from "../../data/SvIdData.js";
+import svIdPokemon from "../../data/SvIdData.js"; // Nieuwe import
 import usePokemon from "../FetchPokemon.jsx";
 import SvModal from "./SvModal.jsx";
 import SvTabs from "./SvTabs.jsx";
@@ -14,7 +14,7 @@ export default function Sv() {
     const [searchQuery, setSearchQuery] = useState("");
     const [showMissingOnly, setShowMissingOnly] = useState(false);
 
-    // Dataset selectie op basis van tab
+    // Wissel tussen datasets
     const currentDataSet =
         activeTab === "indigo" ? svIdPokemon :
             activeTab === "teal" ? svTmPokemon :
@@ -37,7 +37,7 @@ export default function Sv() {
         return `${hrs}h ${mins}m ${secs}s`;
     };
 
-    // Filter logica met displayId voor badge-weergave per tab (altijd beginnend bij 1)
+    // Filter logica met displayId voor badges per tab (1, 2, 3...)
     const filteredPokemon = currentDataSet.map((p, index) => ({
         ...p,
         displayId: (index + 1).toString()
@@ -54,24 +54,17 @@ export default function Sv() {
         return nameMatch || typeMatch;
     });
 
-    // GECOMBINEERDE PROGRESS LOGICA (Totaal 662 unieke Pokémon)
+    // Voortgangsbalk telt unieke namen over alle regio's (max 400)
     const getShinyProgress = () => {
         const caughtUniqueNames = new Set();
-        const allDataSets = [svPokemon, svTmPokemon, svIdPokemon];
-
-        allDataSets.forEach(dataSet => {
+        [svPokemon, svTmPokemon, svIdPokemon].forEach(dataSet => {
             dataSet.forEach(p => {
-                const count = Number(localStorage.getItem(`sv_shiny_${p.id}`)) || 0;
-                if (count > 0) {
+                if (Number(localStorage.getItem(`sv_shiny_${p.id}`)) > 0) {
                     caughtUniqueNames.add(p.name);
                 }
             });
         });
-
-        return {
-            count: caughtUniqueNames.size,
-            total: 662
-        };
+        return { count: caughtUniqueNames.size, total: 400 };
     };
 
     const shinyProgress = getShinyProgress();
@@ -79,7 +72,6 @@ export default function Sv() {
 
     return (
         <div className="relative p-3 sm:p-6 min-h-screen bg-[#f8f9fa] overflow-hidden font-sans">
-            {/* Achtergrond Decoratie */}
             <div className="absolute top-0 left-0 w-full h-full pointer-events-none z-0">
                 <div className="absolute top-[-5%] left-[-5%] w-[30%] h-[100%] bg-[#ff4d00] opacity-[0.03] rotate-12"></div>
                 <div className="absolute bottom-[-5%] right-[-5%] w-[30%] h-[100%] bg-[#8c00ff] opacity-[0.03] rotate-12"></div>
@@ -92,18 +84,18 @@ export default function Sv() {
                     </h1>
                 </div>
 
-                {/* Gedeelde Progressie Balk */}
                 <div className="w-full max-w-lg bg-white p-3 rounded-xl shadow-sm border border-gray-100">
                     <div className="flex justify-between items-end mb-1.5 px-1">
                         <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">
-                            Shiny Progress
+                            {activeTab === "indigo" ? "Blueberry Progress" :
+                                activeTab === "teal" ? "Kitakami Progress" : "Paldea Progress"}
                         </span>
                         <div className="flex items-baseline gap-2">
                             <span className="text-xs font-bold text-[#ff4d00] tabular-nums">{shinyPercentage}%</span>
                             <span className="text-xl font-black text-[#333] italic">
                                 {shinyProgress.count}
                                 <span className="text-gray-300 mx-0.5 text-lg">/</span>
-                                662
+                                400
                             </span>
                         </div>
                     </div>
@@ -116,7 +108,6 @@ export default function Sv() {
                 </div>
             </div>
 
-            {/* Navigatie en Zoeken */}
             <div className="relative z-10 max-w-6xl mx-auto mb-8 flex flex-col lg:flex-row items-center gap-4">
                 <div className="flex-1 w-full overflow-x-auto">
                     <SvTabs activeTab={activeTab} setActiveTab={setActiveTab} />
@@ -150,7 +141,6 @@ export default function Sv() {
                 </div>
             </div>
 
-            {/* Overzicht Kaarten */}
             <div className="relative z-10 max-w-7xl mx-auto min-h-[400px]">
                 {activeTab === "active" ? (
                     <SvActiveHunts svPokemon={filteredPokemon} pokemonList={pokemonList} formatTime={formatTime} openModal={openModal} />
@@ -159,7 +149,6 @@ export default function Sv() {
                 )}
             </div>
 
-            {/* Modal */}
             <SvModal
                 selectedPokemon={selectedPokemon}
                 onClose={closeModal}
