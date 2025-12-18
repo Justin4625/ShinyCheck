@@ -1,35 +1,26 @@
 import React from "react";
 
-export default function ShinyDexCards({ displayedPokemon }) {
+export default function ShinyDexCards({ displayedPokemon, onCardClick }) {
 
-    // Functie om te bepalen hoeveel van een specifieke Pokémon in de collectie zitten
     const getCollectionCount = (name) => {
         let count = 0;
         const lowerName = name.toLowerCase();
 
-        // Loop door localStorage om matches op naam te vinden
         for (let i = 0; i < localStorage.length; i++) {
             const key = localStorage.key(i);
-
-            // Check alle shiny data keys uit beide games
             if (key.startsWith("plza_shinyData_") || key.startsWith("sv_shinyData_")) {
                 try {
                     const data = JSON.parse(localStorage.getItem(key));
-                    // We checken pokemonName (indien opgeslagen) OF we proberen de naam af te leiden
                     if (data && data.pokemonName && data.pokemonName.toLowerCase() === lowerName) {
                         count++;
                     }
-                    // eslint-disable-next-line no-unused-vars
-                } catch (e) {
-                    // Soms is data corrupt, we negeren dit voor de teller
-                }
+                } catch (e) {}
             }
         }
         return count;
     };
 
     return (
-        /* De grid is nu geconfigureerd voor 5 kolommen vanaf de 'lg' breakpoint en hoger */
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 pb-20">
             {displayedPokemon.map((pokemon) => {
                 const amountOwned = getCollectionCount(pokemon.name);
@@ -38,12 +29,12 @@ export default function ShinyDexCards({ displayedPokemon }) {
                 return (
                     <div
                         key={pokemon.id}
+                        onClick={() => isOwned && onCardClick(pokemon)}
                         className={`relative group p-4 rounded-2xl border-2 transition-all duration-300 flex flex-col items-center justify-center
                             ${isOwned
-                            ? "bg-gradient-to-b from-amber-50 to-yellow-100 border-amber-400 shadow-[0_0_15px_rgba(251,191,36,0.4)] scale-[1.02]"
+                            ? "bg-gradient-to-b from-amber-50 to-yellow-100 border-amber-400 shadow-[0_0_15px_rgba(251,191,36,0.4)] scale-[1.02] cursor-pointer"
                             : "bg-white border-slate-100 hover:border-slate-200"}`}
                     >
-                        {/* Aantal badge */}
                         {isOwned && (
                             <div className="absolute -top-2 -right-2 bg-amber-500 text-white text-[10px] font-black px-2 py-0.5 rounded-full shadow-md z-10 border-2 border-white">
                                 x{amountOwned}

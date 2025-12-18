@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import shinyDexPart1 from "../../data/ShinyDexData.js";
 import shinyDexPart2 from "../../data/ShinyDexData2.js";
 import shinyDexPart3 from "../../data/ShinyDexData3.js";
@@ -7,12 +7,31 @@ import usePokemon from "../FetchPokemon.jsx";
 import ShinyDexCards from "./ShinyDexCards.jsx";
 import ShinyDexTabs from "./ShinyDexTabs.jsx";
 
+// Modals
+import ShinyDexModal from "./ShinyDexModal.jsx";
+import PlzaCollectionModal from "../Plza/PlzaCollectionModal.jsx";
+import SvCollectionModal from "../Sv/SvCollectionModal.jsx";
+
 const fullShinyDex = [...shinyDexPart1, ...shinyDexPart2, ...shinyDexPart3];
 
 export default function ShinyDex() {
     const [activeTab, setActiveTab] = useState("kanto");
     const [searchQuery, setSearchQuery] = useState("");
     const [showUnregisteredOnly, setShowUnregisteredOnly] = useState(false);
+
+    // Modal states
+    const [selectedPokemon, setSelectedPokemon] = useState(null);
+    const [selectedEntry, setSelectedEntry] = useState(null);
+
+    // Blokkeer scrollen als er een modal open is
+    useEffect(() => {
+        if (selectedPokemon || selectedEntry) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = 'unset';
+        }
+        return () => { document.body.style.overflow = 'unset'; };
+    }, [selectedPokemon, selectedEntry]);
 
     const regionEntries = fullShinyDex.filter((p) => p.region === activeTab);
     const { pokemonList } = usePokemon(regionEntries);
@@ -72,7 +91,6 @@ export default function ShinyDex() {
                             Shiny<span className="text-[#ff4d29]">Check</span>
                         </h1>
 
-                        {/* De progressiebalk is hier breder (md:w-96) en dikker (h-3) gemaakt */}
                         <div className="mt-4 w-full md:w-96">
                             <div className="flex justify-between items-end mb-1">
                                 <div className="flex flex-col">
@@ -112,7 +130,6 @@ export default function ShinyDex() {
                     <div className="absolute inset-0 opacity-[0.05] pointer-events-none bg-[linear-gradient(to_right,#64748b_1px,transparent_1px),linear-gradient(to_bottom,#64748b_1px,transparent_1px)] bg-[size:40px_40px]"></div>
 
                     <div className="relative z-10 mb-8 flex flex-col lg:flex-row justify-between items-center gap-6 bg-white/50 p-5 rounded-3xl border border-white shadow-sm">
-
                         <div className="flex flex-col items-center lg:items-start shrink-0">
                             <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Region Completion</span>
                             <h2 className="text-xl font-black uppercase italic text-slate-800">{activeTab} Dex</h2>
@@ -142,12 +159,45 @@ export default function ShinyDex() {
                                 <div className={`absolute top-1 left-1 bg-white w-3 h-3 rounded-full transition-transform duration-300 ${showUnregisteredOnly ? 'translate-x-5' : ''}`}></div>
                             </button>
                         </div>
-
                     </div>
 
-                    <ShinyDexCards displayedPokemon={filteredList} />
+                    <ShinyDexCards
+                        displayedPokemon={filteredList}
+                        onCardClick={(pokemon) => setSelectedPokemon(pokemon)}
+                    />
                 </div>
             </div>
+
+            {/* Overzicht Modal (Stap 1) */}
+            {selectedPokemon && (
+                <ShinyDexModal
+                    pokemon={selectedPokemon}
+                    onClose={() => setSelectedPokemon(null)}
+                    onSelectEntry={(entry) => setSelectedEntry(entry)}
+                />
+            )}
+
+            {/* Detail Modals (Stap 2) */}
+            {selectedEntry?.type === 'PLZA' && (
+                <PlzaCollectionModal
+                    data={selectedEntry.storedData}
+                    pokemon={selectedPokemon}
+                    originalId={selectedEntry.id}
+                    shinyIndex={selectedEntry.shinyIndex}
+                    onClose={() => setSelectedEntry(null)} // Gaat alleen terug naar ShinyDexModal
+                    gameName="Pokémon Legends: Z-A"
+                />
+            )}
+            {selectedEntry?.type === 'SV' && (
+                <SvCollectionModal
+                    data={selectedEntry.storedData}
+                    pokemon={selectedPokemon}
+                    originalId={selectedEntry.id}
+                    shinyIndex={selectedEntry.shinyIndex}
+                    onClose={() => setSelectedEntry(null)} // Gaat alleen terug naar ShinyDexModal
+                    gameName="Pokémon Scarlet & Violet"
+                />
+            )}
         </div>
     );
 }
