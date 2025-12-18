@@ -14,36 +14,23 @@ export default function SvModal({ selectedPokemon, onClose, index = 0 }) {
     const [showConfirm, setShowConfirm] = useState(false);
     const [showGotchaConfirm, setShowGotchaConfirm] = useState(false);
 
-    // Effect voor het laden van data en het resetten van de state bij een nieuwe selectie
     useEffect(() => {
         if (!selectedPokemon) return;
-
-        // RESET: Zorg dat de modal altijd leeg begint voor de nieuwe Pokémon
-        // eslint-disable-next-line react-hooks/set-state-in-effect
-        setTimer(0);
-        setCounter(0);
-        setIsPlaying(false);
-        setActiveTab("hunt");
-
         const storedData = localStorage.getItem(`sv_hunt_${selectedPokemon.id}`);
         if (storedData) {
             try {
                 const parsed = JSON.parse(storedData);
+                // eslint-disable-next-line react-hooks/set-state-in-effect
                 setTimer(parsed.timer || 0);
                 setCounter(parsed.counter || 0);
                 setIsPlaying(parsed.isPlaying || false);
-            } catch (error) {
-                console.error("Fout bij het laden van localStorage data:", error);
+            } catch {
+                setTimer(0); setCounter(0); setIsPlaying(false);
             }
         }
+        setActiveTab("hunt");
+    }, [selectedPokemon]);
 
-        // CLEANUP: Stop de timer/muziek/intervallen als de modal sluit of verandert
-        return () => {
-            setIsPlaying(false);
-        };
-    }, [selectedPokemon]); // Triggered elke keer als er een andere kaart wordt aangeklikt
-
-    // Effect voor het opslaan van wijzigingen
     useEffect(() => {
         if (!selectedPokemon) return;
         localStorage.setItem(
@@ -55,9 +42,7 @@ export default function SvModal({ selectedPokemon, onClose, index = 0 }) {
     if (!selectedPokemon) return null;
 
     const resetHunt = () => {
-        setCounter(0);
-        setTimer(0);
-        setIsPlaying(false);
+        setCounter(0); setTimer(0); setIsPlaying(false);
         if (selectedPokemon) localStorage.removeItem(`sv_hunt_${selectedPokemon.id}`);
         setShowConfirm(false);
         setActiveTab("hunt");
@@ -83,22 +68,14 @@ export default function SvModal({ selectedPokemon, onClose, index = 0 }) {
         onClose();
     };
 
-    // Dynamische kleur op basis van de index (Scarlet oranje of Violet paars)
     const accentColor = index % 2 === 0 ? "#ff4d00" : "#8c00ff";
 
     return (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-            <div
-                onClick={(e) => e.stopPropagation()}
-                className="relative bg-white border-b-4 border-r-4 border-gray-300 rounded-tr-[30px] rounded-bl-[30px] rounded-tl-lg rounded-br-lg w-full max-w-2xl flex flex-col items-center overflow-hidden shadow-2xl"
-            >
-                <button
-                    onClick={() => { setIsPlaying(false); onClose(); }}
-                    className="absolute top-4 right-4 w-10 h-10 flex items-center justify-center rounded-full bg-gray-50 text-gray-400 hover:text-gray-800 transition-all z-20 group"
-                >
+            <div onClick={(e) => e.stopPropagation()} className="relative bg-white border-b-4 border-r-4 border-gray-300 rounded-tr-[30px] rounded-bl-[30px] rounded-tl-lg rounded-br-lg w-full max-w-2xl flex flex-col items-center overflow-hidden shadow-2xl">
+                <button onClick={() => { setIsPlaying(false); onClose(); }} className="absolute top-4 right-4 w-10 h-10 flex items-center justify-center rounded-full bg-gray-50 text-gray-400 hover:text-gray-800 transition-all z-20 group">
                     <span className="text-2xl font-black group-hover:scale-110 transition-transform">✕</span>
                 </button>
-
                 <div className="w-full pt-8 px-8 flex flex-col items-center">
                     <div className="px-4 py-1 transform -skew-x-12 mb-2 shadow-sm" style={{ backgroundColor: accentColor }}>
                         <span className="text-xs font-black italic text-white tracking-widest uppercase">
@@ -109,7 +86,6 @@ export default function SvModal({ selectedPokemon, onClose, index = 0 }) {
                         {selectedPokemon.name}
                     </h2>
                 </div>
-
                 <div className="flex justify-center my-6 gap-2 z-10">
                     {[{ id: "hunt", label: "HUNT" }, { id: "settings", label: "SETTINGS" }].map((tab) => (
                         <button
@@ -124,57 +100,18 @@ export default function SvModal({ selectedPokemon, onClose, index = 0 }) {
                         </button>
                     ))}
                 </div>
-
                 <div className="w-full px-8 pb-8 flex flex-col items-center">
                     <div className="transform scale-75 -my-6 transition-transform">
-                        <PokemonSpriteModal
-                            selectedPokemon={selectedPokemon}
-                            isPlaying={isPlaying}
-                            increment={increment}
-                            setCounter={setCounter}
-                        />
+                        <PokemonSpriteModal selectedPokemon={selectedPokemon} isPlaying={isPlaying} increment={increment} setCounter={setCounter} />
                     </div>
-
                     {activeTab === "hunt" ? (
-                        <SvHuntTab
-                            timer={timer}
-                            counter={counter}
-                            increment={increment}
-                            isPlaying={isPlaying}
-                            setTimer={setTimer}
-                            setIsPlaying={setIsPlaying}
-                            setCounter={setCounter}
-                        />
+                        <SvHuntTab timer={timer} counter={counter} increment={increment} isPlaying={isPlaying} setTimer={setTimer} setIsPlaying={setIsPlaying} setCounter={setCounter} />
                     ) : (
-                        <SvSettingsTab
-                            increment={increment}
-                            setIncrement={setIncrement}
-                            timer={timer}
-                            counter={counter}
-                            setTimer={setTimer}
-                            setCounter={setCounter}
-                            onShowConfirm={() => setShowConfirm(true)}
-                            onShowGotcha={() => setShowGotchaConfirm(true)}
-                        />
+                        <SvSettingsTab increment={increment} setIncrement={setIncrement} timer={timer} counter={counter} setTimer={setTimer} setCounter={setCounter} onShowConfirm={() => setShowConfirm(true)} onShowGotcha={() => setShowGotchaConfirm(true)} />
                     )}
                 </div>
-
-                {showConfirm && (
-                    <SvGotchaReset
-                        message="RESET HUNT DATA?"
-                        onCancel={() => setShowConfirm(false)}
-                        onConfirm={resetHunt}
-                        confirmColor="from-red-500 to-red-600"
-                    />
-                )}
-                {showGotchaConfirm && (
-                    <SvGotchaReset
-                        message="SHINY CAUGHT?"
-                        onCancel={() => setShowGotchaConfirm(false)}
-                        onConfirm={gotchaHunt}
-                        confirmColor="from-green-500 to-green-600"
-                    />
-                )}
+                {showConfirm && <SvGotchaReset message="RESET HUNT DATA?" onCancel={() => setShowConfirm(false)} onConfirm={resetHunt} confirmColor="from-red-500 to-red-600" />}
+                {showGotchaConfirm && <SvGotchaReset message="SHINY CAUGHT?" onCancel={() => setShowGotchaConfirm(false)} onConfirm={gotchaHunt} confirmColor="from-green-500 to-green-600" />}
             </div>
         </div>
     );
