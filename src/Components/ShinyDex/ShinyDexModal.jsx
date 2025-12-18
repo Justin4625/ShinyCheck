@@ -39,22 +39,25 @@ export default function ShinyDexModal({ pokemon, onClose, onSelectEntry }) {
             }
         }
         return items.sort((a, b) => (b.storedData.timestamp || 0) - (a.storedData.timestamp || 0));
-    }, [pokemon]);
+    }, [pokemon, localStorage.length]);
 
     return (
         <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-md flex items-center justify-center z-50 p-4" onClick={onClose}>
             <div onClick={(e) => e.stopPropagation()} className="bg-white border-2 border-slate-100 rounded-[2.5rem] shadow-2xl w-full max-w-xl max-h-[80vh] flex flex-col overflow-hidden">
-                <div className="p-6 border-b border-slate-50 flex justify-between items-center bg-white">
-                    <div>
-                        <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Shiny Records</p>
-                        <h2 className="text-2xl font-black uppercase italic text-slate-800">
-                            #{String(pokemon.id).padStart(4, "0")} - {pokemon.name}
+                <div className="p-6 border-b border-slate-50 flex justify-between items-start bg-white">
+                    <div className="flex flex-col">
+                        <p className="text-[11px] font-black text-slate-400 uppercase tracking-[0.2em] leading-none mb-1">
+                            #{String(pokemon.id).padStart(4, "0")}
+                        </p>
+                        <h2 className="text-2xl font-black uppercase italic text-slate-800 leading-tight">
+                            {pokemon.name} <span className="text-[#ff4d29] ml-1">x{capturedItems.length}</span>
                         </h2>
                     </div>
-                    <button onClick={onClose} className="w-10 h-10 flex items-center justify-center rounded-full bg-slate-50 text-slate-400 hover:text-[#ff4d29]">
+                    <button onClick={onClose} className="w-10 h-10 flex items-center justify-center rounded-full bg-slate-50 text-slate-400 hover:text-[#ff4d29] transition-colors">
                         <span className="text-xl font-black">✕</span>
                     </button>
                 </div>
+
                 <div className="flex-1 overflow-y-auto p-6 bg-slate-50/50">
                     <div className="grid gap-3">
                         {capturedItems.map((item, idx) => (
@@ -75,6 +78,9 @@ export default function ShinyDexModal({ pokemon, onClose, onSelectEntry }) {
                                 </div>
                             </button>
                         ))}
+                        {capturedItems.length === 0 && (
+                            <p className="text-center py-10 font-black italic text-slate-400 uppercase tracking-widest">No records found</p>
+                        )}
                     </div>
                 </div>
             </div>
