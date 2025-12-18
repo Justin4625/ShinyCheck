@@ -14,18 +14,24 @@ export default function SvModal({ selectedPokemon, onClose, index = 0 }) {
     const [showConfirm, setShowConfirm] = useState(false);
     const [showGotchaConfirm, setShowGotchaConfirm] = useState(false);
 
+    // FIX: Reset state wanneer een nieuwe Pokémon wordt geselecteerd
     useEffect(() => {
         if (!selectedPokemon) return;
+
+        // Reset huidige waarden naar default
+        setTimer(0);
+        setCounter(0);
+        setIsPlaying(false);
+
         const storedData = localStorage.getItem(`sv_hunt_${selectedPokemon.id}`);
         if (storedData) {
             try {
                 const parsed = JSON.parse(storedData);
-                // eslint-disable-next-line react-hooks/set-state-in-effect
                 setTimer(parsed.timer || 0);
                 setCounter(parsed.counter || 0);
                 setIsPlaying(parsed.isPlaying || false);
             } catch {
-                setTimer(0); setCounter(0); setIsPlaying(false);
+                // Bij error blijven waarden op 0
             }
         }
         setActiveTab("hunt");
