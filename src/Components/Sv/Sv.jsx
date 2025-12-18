@@ -9,18 +9,14 @@ import SvCards from "./SvCards.jsx";
 import SvActiveHunts from "./SvActiveHunts.jsx";
 
 export default function Sv() {
-    const [activeTab, setActiveTab] = useState("base");
+    // Combineer alle datasets voor de API fetch
+    const allSvPokemon = svPokemon.concat(svTmPokemon, svIdPokemon);
+    const { pokemonList } = usePokemon(allSvPokemon);
+
     const [selectedPokemon, setSelectedPokemon] = useState(null);
+    const [activeTab, setActiveTab] = useState("base");
     const [searchQuery, setSearchQuery] = useState("");
     const [showMissingOnly, setShowMissingOnly] = useState(false);
-
-    // Dataset selectie op basis van tab
-    const currentDataSet =
-        activeTab === "indigo" ? svIdPokemon :
-            activeTab === "teal" ? svTmPokemon :
-                svPokemon;
-
-    const { pokemonList } = usePokemon(currentDataSet);
 
     const openModal = (pokemon) => setSelectedPokemon(pokemon);
     const closeModal = () => setSelectedPokemon(null);
@@ -37,49 +33,53 @@ export default function Sv() {
         return `${hrs}h ${mins}m ${secs}s`;
     };
 
-    // Filter logica met displayId voor badge-weergave per tab (altijd beginnend bij 1)
-    const filteredPokemon = currentDataSet.map((p, index) => ({
-        ...p,
-        displayId: (index + 1).toString()
-    })).filter((p) => {
+    const displayedPokemon =
+        activeTab === "base"
+            ? svPokemon
+            : activeTab === "teal"
+                ? svTmPokemon
+                : activeTab === "indigo"
+                    ? svIdPokemon
+                    : activeTab === "active"
+                        ? allSvPokemon
+                        : [];
+
+    const filteredPokemon = displayedPokemon.filter((p) => {
         if (showMissingOnly) {
             const count = Number(localStorage.getItem(`sv_shiny_${p.id}`)) || 0;
             if (count > 0) return false;
         }
+
         const query = searchQuery.toLowerCase();
         if (!query) return true;
+
         const nameMatch = p.name.toLowerCase().includes(query);
         const apiPokemon = pokemonList.find(api => api.id === p.id);
-        const typeMatch = apiPokemon?.types?.some(t => t.type.name.toLowerCase().includes(query));
+        const typeMatch = apiPokemon?.types?.some(t =>
+            t.type.name.toLowerCase().includes(query)
+        );
+
         return nameMatch || typeMatch;
     });
 
-    // GECOMBINEERDE PROGRESS LOGICA (Totaal 662 unieke Pokémon)
     const getShinyProgress = () => {
-        const caughtUniqueNames = new Set();
-        const allDataSets = [svPokemon, svTmPokemon, svIdPokemon];
-
-        allDataSets.forEach(dataSet => {
-            dataSet.forEach(p => {
-                const count = Number(localStorage.getItem(`sv_shiny_${p.id}`)) || 0;
-                if (count > 0) {
-                    caughtUniqueNames.add(p.name);
-                }
-            });
+        let uniqueShinyCount = 0;
+        allSvPokemon.forEach(p => {
+            const count = Number(localStorage.getItem(`sv_shiny_${p.id}`)) || 0;
+            if (count > 0) uniqueShinyCount += 1;
         });
-
-        return {
-            count: caughtUniqueNames.size,
-            total: 662
-        };
+        return { count: uniqueShinyCount, total: 662 };
     };
 
     const shinyProgress = getShinyProgress();
     const shinyPercentage = ((shinyProgress.count / shinyProgress.total) * 100).toFixed(1);
 
+    const modalIndex = selectedPokemon
+        ? pokemonList.findIndex(p => p.id === selectedPokemon.id)
+        : -1;
+
     return (
         <div className="relative p-3 sm:p-6 min-h-screen bg-[#f8f9fa] overflow-hidden font-sans">
-            {/* Achtergrond Decoratie */}
             <div className="absolute top-0 left-0 w-full h-full pointer-events-none z-0">
                 <div className="absolute top-[-5%] left-[-5%] w-[30%] h-[100%] bg-[#ff4d00] opacity-[0.03] rotate-12"></div>
                 <div className="absolute bottom-[-5%] right-[-5%] w-[30%] h-[100%] bg-[#8c00ff] opacity-[0.03] rotate-12"></div>
@@ -92,7 +92,6 @@ export default function Sv() {
                     </h1>
                 </div>
 
-                {/* Gedeelde Progressie Balk */}
                 <div className="w-full max-w-lg bg-white p-3 rounded-xl shadow-sm border border-gray-100">
                     <div className="flex justify-between items-end mb-1.5 px-1">
                         <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">
@@ -116,14 +115,13 @@ export default function Sv() {
                 </div>
             </div>
 
-            {/* Navigatie en Zoeken */}
             <div className="relative z-10 max-w-6xl mx-auto mb-8 flex flex-col lg:flex-row items-center gap-4">
                 <div className="flex-1 w-full overflow-x-auto">
                     <SvTabs activeTab={activeTab} setActiveTab={setActiveTab} />
                 </div>
 
                 <div className="w-full lg:w-[300px] bg-white p-3 rounded-lg shadow-sm border-b-2 border-gray-200 flex flex-col gap-2">
-                    <div className="flex items-center justify-between">
+                    <div className="flex items-center justify-between px-1">
                         <label className="text-[9px] font-black text-gray-400 uppercase tracking-widest">Unregistered</label>
                         <button
                             onClick={() => setShowMissingOnly(!showMissingOnly)}
@@ -150,21 +148,15 @@ export default function Sv() {
                 </div>
             </div>
 
-            {/* Overzicht Kaarten */}
             <div className="relative z-10 max-w-7xl mx-auto min-h-[400px]">
                 {activeTab === "active" ? (
                     <SvActiveHunts svPokemon={filteredPokemon} pokemonList={pokemonList} formatTime={formatTime} openModal={openModal} />
                 ) : (
-                    <SvCards displayedPokemon={filteredPokemon} pokemonList={pokemonList} openModal={openModal} />
+                    <SvCards displayedPokemon={filteredPokemon} pokemonList={pokemonList} openModal={openModal} activeTab={activeTab} />
                 )}
             </div>
 
-            {/* Modal */}
-            <SvModal
-                selectedPokemon={selectedPokemon}
-                onClose={closeModal}
-                index={selectedPokemon ? currentDataSet.findIndex(p => p.id === selectedPokemon.id) : -1}
-            />
+            <SvModal selectedPokemon={selectedPokemon} onClose={closeModal} index={modalIndex} />
         </div>
     );
 }
