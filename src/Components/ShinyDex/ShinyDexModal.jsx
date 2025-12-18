@@ -39,12 +39,14 @@ export default function ShinyDexModal({ pokemon, onClose, onSelectEntry }) {
             }
         }
         return items.sort((a, b) => (b.storedData.timestamp || 0) - (a.storedData.timestamp || 0));
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [pokemon, localStorage.length]);
 
     return (
         <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-md flex items-center justify-center z-50 p-4" onClick={onClose}>
             <div onClick={(e) => e.stopPropagation()} className="bg-white border-2 border-slate-100 rounded-[2.5rem] shadow-2xl w-full max-w-xl max-h-[80vh] flex flex-col overflow-hidden">
-                <div className="p-6 border-b border-slate-50 flex justify-between items-start bg-white">
+                {/* Padding verlaagd van p-6 naar pt-6 px-6 pb-4 */}
+                <div className="pt-6 px-6 pb-4 border-b border-slate-50 flex justify-between items-start bg-white">
                     <div className="flex flex-col">
                         <p className="text-[11px] font-black text-slate-400 uppercase tracking-[0.2em] leading-none mb-1">
                             #{String(pokemon.id).padStart(4, "0")}
@@ -58,7 +60,8 @@ export default function ShinyDexModal({ pokemon, onClose, onSelectEntry }) {
                     </button>
                 </div>
 
-                <div className="flex-1 overflow-y-auto p-6 bg-slate-50/50">
+                {/* Padding bovenaan verlaagd naar pt-2 */}
+                <div className="flex-1 overflow-y-auto pt-2 pb-6 px-6 bg-slate-50/50">
                     <div className="grid gap-3">
                         {capturedItems.map((item, idx) => (
                             <button key={`${item.type}_${item.shinyIndex}_${idx}`} onClick={() => onSelectEntry(item)} className="w-full text-left group bg-white border border-slate-200 p-4 rounded-2xl flex items-center justify-between hover:border-[#ff4d29] transition-all">
