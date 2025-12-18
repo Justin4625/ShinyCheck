@@ -44,7 +44,7 @@ const specialCases = {
     Eiscue: "eiscue-ice",
     Indeedee: "indeedee-male",
     Morpeko: "morpeko-full-belly",
-    Urshifu: "urshifu-single-strike",
+    Urshifu: "urshifu-single-strike", // Toegevoegd
     "Sirfetch'd": "sirfetchd",
     "Mr. Rime": "mr-rime",
     "Mr. Mime": "mr-mime",
@@ -60,7 +60,7 @@ const specialCases = {
     Lycanroc: "lycanroc-midday",
     Oricorio: "oricorio-baile",
 
-    // Paradox Pokémon (Fix voor spaties in URL)
+    // Paradox Pokémon
     "Great Tusk": "great-tusk",
     "Scream Tail": "scream-tail",
     "Brute Bonnet": "brute-bonnet",
@@ -75,14 +75,8 @@ const specialCases = {
     "Iron Thorns": "iron-thorns",
     "Roaring Moon": "roaring-moon",
     "Iron Valiant": "iron-valiant",
-    "Walking Wake": "walking-wake",
-    "Iron Leaves": "iron-leaves",
-    "Gouging Fire": "gouging-fire",
-    "Raging Bolt": "raging-bolt",
-    "Iron Crown": "iron-crown",
-    "Iron Boulder": "iron-boulder",
 
-    // Overige fixes
+    // Voeg deze toe aan je specialCases object:
     Basculegion: "basculegion-male",
     Enamorus: "enamorus-incarnate",
 };

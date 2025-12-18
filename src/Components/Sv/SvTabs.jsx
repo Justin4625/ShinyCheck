@@ -5,7 +5,7 @@ export default function SvTabs({ activeTab, setActiveTab }) {
         { id: "active", label: "ACTIVE HUNTS", disabled: false },
         { id: "base", label: "BASE GAME", disabled: false },
         { id: "teal", label: "TEAL MASK", disabled: false },
-        { id: "indigo", label: "INDIGO DISK", disabled: false },
+        { id: "indigo", label: "INDIGO DISK", disabled: true },
     ];
 
     return (

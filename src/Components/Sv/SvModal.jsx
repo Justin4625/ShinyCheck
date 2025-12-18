@@ -50,6 +50,7 @@ export default function SvModal({ selectedPokemon, onClose, index = 0 }) {
 
     const gotchaHunt = () => {
         if (!selectedPokemon) return;
+        // Gebruik ALTIJD sv_shiny_ voor alle Pokémon in Scarlet & Violet
         const currentCount = Number(localStorage.getItem(`sv_shiny_${selectedPokemon.id}`)) || 0;
         const newCount = currentCount + 1;
         localStorage.setItem(`sv_shiny_${selectedPokemon.id}`, newCount);
