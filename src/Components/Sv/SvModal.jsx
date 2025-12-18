@@ -19,6 +19,7 @@ export default function SvModal({ selectedPokemon, onClose, index = 0 }) {
         if (!selectedPokemon) return;
 
         // Reset huidige waarden naar default
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setTimer(0);
         setCounter(0);
         setIsPlaying(false);
