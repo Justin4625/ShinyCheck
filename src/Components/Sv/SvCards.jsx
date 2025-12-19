@@ -1,27 +1,14 @@
 import React from "react";
 import svPokemon from "../../data/SvData.js";
-import svTmPokemon from "../../data/SvTmData.js";
-import svIdData from "../../data/SvIdData.js";
 
-export default function SvCards({ displayedPokemon, pokemonList, openModal, activeTab }) {
+export default function SvCards({ displayedPokemon, pokemonList, openModal }) {
     const isLoading = displayedPokemon.length > 0 && displayedPokemon.some((entry) => {
         const pokemon = pokemonList.find((p) => p.id === entry.id);
         return !pokemon?.sprites?.other?.home?.front_shiny;
     });
 
-    // Functie om het nummer te bepalen op basis van de actieve lijst
-    const getStaticNumber = (entry) => {
-        let index;
-
-        if (activeTab === "teal") {
-            index = svTmPokemon.findIndex(p => p.name === entry.name);
-        } else if (activeTab === "indigo") {
-            index = svIdData.findIndex(p => p.name === entry.name);
-        } else {
-            // Default naar Base Game (ook voor de "Active Hunts" tab)
-            index = svPokemon.findIndex(p => p.id === entry.id);
-        }
-
+    const getStaticIndex = (entry) => {
+        const index = svPokemon.findIndex(p => p.id === entry.id);
         return index !== -1 ? index + 1 : 1;
     };
 
@@ -43,7 +30,7 @@ export default function SvCards({ displayedPokemon, pokemonList, openModal, acti
                 displayedPokemon.map((entry, index) => {
                     const pokemon = pokemonList.find((p) => p.id === entry.id);
                     const shinyCount = Number(localStorage.getItem(`sv_shiny_${entry.id}`)) || 0;
-                    const staticNumber = getStaticNumber(entry);
+                    const staticNumber = getStaticIndex(entry);
                     const isCaught = shinyCount > 0;
 
                     const isScarlet = index % 2 === 0;
@@ -51,7 +38,7 @@ export default function SvCards({ displayedPokemon, pokemonList, openModal, acti
 
                     return (
                         <div
-                            key={`${activeTab}-${entry.id}-${index}`}
+                            key={entry.id}
                             onClick={() => openModal(pokemon)}
                             className={`group relative border-b-4 border-r-4 rounded-tr-3xl rounded-bl-3xl rounded-tl-md rounded-br-md p-3 flex flex-col items-center justify-between cursor-pointer transition-all duration-300 hover:scale-[1.02] active:scale-95 overflow-hidden shadow-sm hover:shadow-md
                                 ${isCaught
@@ -59,16 +46,19 @@ export default function SvCards({ displayedPokemon, pokemonList, openModal, acti
                                 : "bg-white border-gray-200"
                             }`}
                         >
+                            {/* Diagonale Shine animatie voor Golden Cards */}
                             {isCaught && (
                                 <div className="absolute inset-0 w-[200%] h-full bg-gradient-to-r from-transparent via-white/40 to-transparent -skew-x-[45deg] -translate-x-full group-hover:animate-[shine_1.5s_ease-in-out_infinite] pointer-events-none" />
                             )}
 
+                            {/* S&V Hoek Decoratie */}
                             <div
                                 className={`absolute top-0 right-0 w-20 h-20 -mr-6 -mt-6 rotate-12 transition-transform group-hover:rotate-45
                                     ${isCaught ? "bg-yellow-400 opacity-20" : "opacity-5"}`}
                                 style={{ backgroundColor: isCaught ? undefined : accentColor }}
                             />
 
+                            {/* Dex Nummer Badge */}
                             <div className="w-full flex justify-between items-start mb-2 relative z-10">
                                 <div
                                     className="px-2 py-0.5 transform -skew-x-12 shadow-sm"
@@ -83,10 +73,12 @@ export default function SvCards({ displayedPokemon, pokemonList, openModal, acti
                                 )}
                             </div>
 
+                            {/* Pokémon Naam */}
                             <h2 className="w-full text-base font-black uppercase italic text-[#333] tracking-tighter truncate leading-none mb-2 relative z-10">
                                 {entry.name}
                             </h2>
 
+                            {/* Pokémon Sprite */}
                             <div className="relative py-2">
                                 <img
                                     src={pokemon?.sprites?.other?.home?.front_shiny}
@@ -96,6 +88,7 @@ export default function SvCards({ displayedPokemon, pokemonList, openModal, acti
                                 />
                             </div>
 
+                            {/* Collected Strook */}
                             <div className="w-full mt-3 relative z-10">
                                 <div
                                     className="w-full py-1.5 flex items-center justify-between px-3 rounded-md transform skew-x-[-6deg] shadow-inner"
@@ -116,6 +109,7 @@ export default function SvCards({ displayedPokemon, pokemonList, openModal, acti
                                 </div>
                             </div>
 
+                            {/* Accent streep onderaan */}
                             <div
                                 className="absolute bottom-0 left-0 w-full h-1"
                                 style={{ backgroundColor: isCaught ? "#eab308" : accentColor }}
@@ -125,6 +119,7 @@ export default function SvCards({ displayedPokemon, pokemonList, openModal, acti
                 })
             )}
 
+            {/* Voeg deze CSS toe aan je globale stylesheet of een <style> tag voor de shine animatie */}
             <style dangerouslySetInnerHTML={{ __html: `
                 @keyframes shine {
                     0% { transform: translateX(-150%) skewX(-45deg); }
