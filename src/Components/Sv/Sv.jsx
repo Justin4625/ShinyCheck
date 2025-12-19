@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import svPokemon from "../../data/SvData.js";
+import svTmPokemon from "../../data/SvTmData.js";
+import svIdData from "../../data/SvIdData.js"; // Import de nieuwe Indigo Disk data
 import usePokemon from "../FetchPokemon.jsx";
 import SvModal from "./SvModal.jsx";
 import SvTabs from "./SvTabs.jsx";
@@ -7,7 +9,9 @@ import SvCards from "./SvCards.jsx";
 import SvActiveHunts from "./SvActiveHunts.jsx";
 
 export default function Sv() {
-    const { pokemonList } = usePokemon(svPokemon);
+    // Combineer alle lijsten voor de API zodat sprites en types geladen worden
+    const allAvailablePokemon = svPokemon.concat(svTmPokemon, svIdData);
+    const { pokemonList } = usePokemon(allAvailablePokemon);
 
     const [selectedPokemon, setSelectedPokemon] = useState(null);
     const [activeTab, setActiveTab] = useState("base");
@@ -29,7 +33,19 @@ export default function Sv() {
         return `${hrs}h ${mins}m ${secs}s`;
     };
 
-    const filteredPokemon = svPokemon.filter((p) => {
+    // Bepaal welke lijst getoond moet worden op basis van de actieve tab
+    const displayedPokemonList =
+        activeTab === "base"
+            ? svPokemon
+            : activeTab === "teal"
+                ? svTmPokemon
+                : activeTab === "indigo"
+                    ? svIdData
+                    : activeTab === "active"
+                        ? allAvailablePokemon
+                        : [];
+
+    const filteredPokemon = displayedPokemonList.filter((p) => {
         if (showMissingOnly) {
             const count = Number(localStorage.getItem(`sv_shiny_${p.id}`)) || 0;
             if (count > 0) return false;
@@ -44,11 +60,13 @@ export default function Sv() {
 
     const getShinyProgress = () => {
         let uniqueShinyCount = 0;
-        svPokemon.forEach(p => {
-            const count = Number(localStorage.getItem(`sv_shiny_${p.id}`)) || 0;
+        // Gebruik een Set om unieke ID's te tellen over alle DLC's heen
+        const allIds = new Set(allAvailablePokemon.map(p => p.id));
+        allIds.forEach(id => {
+            const count = Number(localStorage.getItem(`sv_shiny_${id}`)) || 0;
             if (count > 0) uniqueShinyCount += 1;
         });
-        return { count: uniqueShinyCount, total: 400 };
+        return { count: uniqueShinyCount, total: allIds.size };
     };
 
     const shinyProgress = getShinyProgress();
@@ -78,7 +96,7 @@ export default function Sv() {
                             <span className="text-xl font-black text-[#333] italic">
                                 {shinyProgress.count}
                                 <span className="text-gray-300 mx-0.5 text-lg">/</span>
-                                400
+                                {shinyProgress.total}
                             </span>
                         </div>
                     </div>
@@ -135,7 +153,7 @@ export default function Sv() {
             <SvModal
                 selectedPokemon={selectedPokemon}
                 onClose={closeModal}
-                index={selectedPokemon ? svPokemon.findIndex(p => p.id === selectedPokemon.id) : -1}
+                index={selectedPokemon ? allAvailablePokemon.findIndex(p => p.id === selectedPokemon.id) : -1}
             />
         </div>
     );

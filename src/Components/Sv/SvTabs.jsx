@@ -2,10 +2,10 @@ import React from "react";
 
 export default function SvTabs({ activeTab, setActiveTab }) {
     const tabs = [
-        { id: "active", label: "ACTIVE HUNTS", disabled: false },
-        { id: "base", label: "BASE GAME", disabled: false },
-        { id: "teal", label: "TEAL MASK", disabled: true },
-        { id: "indigo", label: "INDIGO DISK", disabled: true },
+        { id: "active", label: "ACTIVE HUNTS"},
+        { id: "base", label: "BASE GAME"},
+        { id: "teal", label: "TEAL MASK"},
+        { id: "indigo", label: "INDIGO DISK"},
     ];
 
     return (
