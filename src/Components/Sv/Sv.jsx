@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import svPokemon from "../../data/SvData.js";
 import svTmPokemon from "../../data/SvTmData.js";
-import svIdData from "../../data/SvIdData.js"; // Import de nieuwe Indigo Disk data
+import svIdData from "../../data/SvIdData.js";
 import usePokemon from "../FetchPokemon.jsx";
 import SvModal from "./SvModal.jsx";
 import SvTabs from "./SvTabs.jsx";
@@ -9,8 +9,11 @@ import SvCards from "./SvCards.jsx";
 import SvActiveHunts from "./SvActiveHunts.jsx";
 
 export default function Sv() {
-    // Combineer alle lijsten voor de API zodat sprites en types geladen worden
-    const allAvailablePokemon = svPokemon.concat(svTmPokemon, svIdData);
+    // Maak een unieke lijst van alle Pokémon op basis van hun ID
+    const allAvailablePokemon = Array.from(
+        new Map([...svPokemon, ...svTmPokemon, ...svIdData].map(p => [p.id, p])).values()
+    );
+
     const { pokemonList } = usePokemon(allAvailablePokemon);
 
     const [selectedPokemon, setSelectedPokemon] = useState(null);
@@ -33,7 +36,7 @@ export default function Sv() {
         return `${hrs}h ${mins}m ${secs}s`;
     };
 
-    // Bepaal welke lijst getoond moet worden op basis van de actieve tab
+    // Bepaal welke lijst getoond moet worden
     const displayedPokemonList =
         activeTab === "base"
             ? svPokemon
@@ -42,7 +45,7 @@ export default function Sv() {
                 : activeTab === "indigo"
                     ? svIdData
                     : activeTab === "active"
-                        ? allAvailablePokemon
+                        ? allAvailablePokemon // Gebruikt nu de unieke lijst
                         : [];
 
     const filteredPokemon = displayedPokemonList.filter((p) => {
@@ -60,7 +63,6 @@ export default function Sv() {
 
     const getShinyProgress = () => {
         let uniqueShinyCount = 0;
-        // Gebruik een Set om unieke ID's te tellen over alle DLC's heen
         const allIds = new Set(allAvailablePokemon.map(p => p.id));
         allIds.forEach(id => {
             const count = Number(localStorage.getItem(`sv_shiny_${id}`)) || 0;
@@ -142,11 +144,21 @@ export default function Sv() {
                 </div>
             </div>
 
-            <div className="relative z-10 max-w-7xl mx-auto min-h-[400px]">
+            <div key={activeTab} className="relative z-10 max-w-7xl mx-auto min-h-[400px]">
                 {activeTab === "active" ? (
-                    <SvActiveHunts svPokemon={filteredPokemon} pokemonList={pokemonList} formatTime={formatTime} openModal={openModal} />
+                    <SvActiveHunts
+                        svPokemon={filteredPokemon}
+                        pokemonList={pokemonList}
+                        formatTime={formatTime}
+                        openModal={openModal}
+                    />
                 ) : (
-                    <SvCards displayedPokemon={filteredPokemon} pokemonList={pokemonList} openModal={openModal} activeTab={activeTab} />
+                    <SvCards
+                        displayedPokemon={filteredPokemon}
+                        pokemonList={pokemonList}
+                        openModal={openModal}
+                        activeTab={activeTab}
+                    />
                 )}
             </div>
 

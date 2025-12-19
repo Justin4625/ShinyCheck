@@ -9,17 +9,21 @@ import Collection from "./Components/Collection/Collection.jsx";
 import plzaPokemon from "./data/PlzaData.js";
 import plzaMdPokemon from "./data/PlzaMdData.js";
 import svPokemon from "./data/SvData.js";
-import svTmPokemon from "./data/SvTmData.js"; // Import Teal Mask
-import svIdData from "./data/SvIdData.js"; // Import Indigo Disk
+import svTmPokemon from "./data/SvTmData.js";
+import svIdData from "./data/SvIdData.js";
 import shinyDexPart1 from "./data/ShinyDexData.js";
 import shinyDexPart2 from "./data/ShinyDexData2.js";
 import shinyDexPart3 from "./data/ShinyDexData3.js";
 
-// Combineer alle PLZA pokemon lijsten
-const allPlzaPokemon = [...plzaPokemon, ...plzaMdPokemon];
+// Combineer alle PLZA pokemon lijsten en filter op unieke ID's
+const allPlzaPokemon = Array.from(
+    new Map([...plzaPokemon, ...plzaMdPokemon].map(p => [p.id, p])).values()
+);
 
-// Combineer alle SV pokemon lijsten (Base + DLCs) voor de collectie
-const allSvPokemon = [...svPokemon, ...svTmPokemon, ...svIdData];
+// Combineer alle SV pokemon lijsten (Base + DLCs) en filter op unieke ID's
+const allSvPokemon = Array.from(
+    new Map([...svPokemon, ...svTmPokemon, ...svIdData].map(p => [p.id, p])).values()
+);
 
 const pokemonList = [...shinyDexPart1, ...shinyDexPart2, ...shinyDexPart3];
 
@@ -33,7 +37,6 @@ const router = createBrowserRouter([{
                 path: "/collection",
                 element: <Collection
                     plzaPokemon={allPlzaPokemon}
-                    // Gebruik de volledige lijst inclusief DLC Pokémon
                     svPokemon={allSvPokemon}
                     pokemonList={pokemonList}
                 />
