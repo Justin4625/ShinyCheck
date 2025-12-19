@@ -11,7 +11,7 @@ export default function SvCards({ displayedPokemon, pokemonList, openModal, acti
 
     // Functie om het nummer te bepalen op basis van de actieve lijst
     const getStaticNumber = (entry) => {
-        let index = -1;
+        let index;
 
         if (activeTab === "teal") {
             index = svTmPokemon.findIndex(p => p.name === entry.name);
