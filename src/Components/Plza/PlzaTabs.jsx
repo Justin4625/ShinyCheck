@@ -3,7 +3,7 @@ import React from "react";
 export default function PlzaTabs({ activeTab, setActiveTab }) {
     const tabs = [
         { id: "active", label: "Active Hunts" },
-        { id: "base", label: "Base Game" },
+        { id: "base", label: "Base Dex" },
         { id: "mega", label: "Mega Dimension" },
     ];
 

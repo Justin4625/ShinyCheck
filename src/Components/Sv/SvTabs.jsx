@@ -3,7 +3,7 @@ import React from "react";
 export default function SvTabs({ activeTab, setActiveTab }) {
     const tabs = [
         { id: "active", label: "ACTIVE HUNTS"},
-        { id: "base", label: "BASE GAME"},
+        { id: "base", label: "BASE DEX"},
         { id: "teal", label: "TEAL MASK"},
         { id: "indigo", label: "INDIGO DISK"},
     ];
