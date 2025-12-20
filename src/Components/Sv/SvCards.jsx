@@ -10,14 +10,14 @@ export default function SvCards({ displayedPokemon, pokemonList, openModal, acti
         return !pokemon?.sprites?.other?.home?.front_shiny;
     });
 
-    // Bepaalt het nummer op de badge op basis van de actieve tab
+    // Bepaalt het nummer op de badge op basis van de positie in de Dex-lijst
     const getStaticIndex = (entry) => {
         let targetData = svPokemon; // Standaard Paldea (base)
 
         if (activeTab === "teal") targetData = svTmPokemon; // Kitakami
         if (activeTab === "indigo") targetData = svIdData; // Blueberry Academy
 
-        // Als we in 'active' (hunts) zitten, zoeken we in de totale samengevoegde lijst
+        // Bij 'active' zoeken we in de totale samengevoegde lijst voor de weergave-index
         if (activeTab === "active") {
             targetData = svPokemon.concat(svTmPokemon, svIdData);
         }
@@ -43,8 +43,9 @@ export default function SvCards({ displayedPokemon, pokemonList, openModal, acti
             ) : (
                 displayedPokemon.map((entry, index) => {
                     const pokemon = pokemonList.find((p) => p.id === entry.id);
+                    // De sleutel voor localStorage gebruikt nu de National Dex ID
                     const shinyCount = Number(localStorage.getItem(`sv_shiny_${entry.id}`)) || 0;
-                    const staticNumber = getStaticIndex(entry); // Gebruik de verbeterde index logica
+                    const staticNumber = getStaticIndex(entry);
                     const isCaught = shinyCount > 0;
 
                     const isScarlet = index % 2 === 0;
