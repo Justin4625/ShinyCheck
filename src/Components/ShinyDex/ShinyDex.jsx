@@ -36,14 +36,6 @@ export default function ShinyDex() {
     const regionEntries = fullShinyDex.filter((p) => p.region === activeTab);
     const { pokemonList } = usePokemon(regionEntries);
 
-    // Functie voor de handmatige reset
-    const handleResetAllData = () => {
-        if (window.confirm("Weet je zeker dat je ALLE opgeslagen shinies en data wilt verwijderen? Dit kan niet ongedaan worden gemaakt.")) {
-            localStorage.clear();
-            window.location.reload(); // Herlaad de pagina om alle stats naar 0 te zetten
-        }
-    };
-
     const isCaught = (name) => {
         const lowerName = name.toLowerCase();
         for (let i = 0; i < localStorage.length; i++) {
@@ -119,13 +111,7 @@ export default function ShinyDex() {
                     </div>
 
                     <div className="flex flex-col sm:flex-row items-center gap-4 w-full md:w-auto">
-                        {/* Reset Button */}
-                        <button
-                            onClick={handleResetAllData}
-                            className="px-4 py-2 bg-white border-2 border-red-100 rounded-xl flex items-center gap-2 group hover:bg-red-50 hover:border-red-200 transition-all shadow-sm"
-                        >
-                            <span className="text-[10px] font-black uppercase tracking-widest text-red-400 group-hover:text-red-600">Reset Data</span>
-                        </button>
+                        {/* De Reset knop is hier verwijderd */}
 
                         <div className="w-full md:w-80 bg-white/80 backdrop-blur-md border border-slate-200 p-2 px-4 rounded-2xl shadow-sm flex items-center gap-3 group focus-within:border-[#ff4d29] transition-all">
                             <svg className="w-4 h-4 text-slate-400 group-focus-within:text-[#ff4d29]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
