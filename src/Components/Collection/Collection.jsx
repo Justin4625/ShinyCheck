@@ -109,7 +109,9 @@ export default function Collection({ plzaPokemon = [], svPokemon = [], pokemonLi
             {selectedEntry?.type === 'SV' && (
                 <SvCollectionModal
                     data={selectedEntry.storedData}
-                    pokemon={pokemonList.find(p => p.name.toLowerCase() === selectedEntry.name.toLowerCase())}
+                    pokemon={pokemonList.find(p =>
+                        p.name.toLowerCase().replace(/-/g, ' ') === selectedEntry.name.toLowerCase().replace(/-/g, ' ')
+                    )}
                     originalId={selectedEntry.id}
                     shinyIndex={selectedEntry.shinyIndex}
                     formatTime={formatTime}
