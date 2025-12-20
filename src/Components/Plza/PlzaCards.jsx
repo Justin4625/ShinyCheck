@@ -4,22 +4,20 @@ import plzaPokemon from "../../data/PlzaData.js";
 import plzaMdPokemon from "../../data/PlzaMdData.js";
 
 export default function PlzaCards({ displayedPokemon, pokemonList, openModal, activeTab }) {
+    // Controleer of de sprites geladen zijn om een loading state te tonen
     const isLoading = displayedPokemon.length > 0 && displayedPokemon.some((entry) => {
         const pokemon = pokemonList.find((p) => p.id === entry.id);
         return !pokemon?.sprites?.other?.home?.front_shiny;
     });
 
+    // Nieuwe logica: Toon het volgnummer in de lijst in plaats van de National Dex ID
     const getStaticIndex = (entry) => {
         if (activeTab === "mega") {
             const index = plzaMdPokemon.findIndex(p => p.id === entry.id);
             return index + 1;
         }
         const index = plzaPokemon.findIndex(p => p.id === entry.id);
-        if (index === -1) {
-            const mdIndex = plzaMdPokemon.findIndex(p => p.id === entry.id);
-            return mdIndex !== -1 ? mdIndex + 1 : 1;
-        }
-        return index + 1;
+        return index !== -1 ? index + 1 : 1;
     };
 
     return (
@@ -39,6 +37,7 @@ export default function PlzaCards({ displayedPokemon, pokemonList, openModal, ac
             ) : (
                 displayedPokemon.map((entry) => {
                     const pokemon = pokemonList.find((p) => p.id === entry.id);
+                    // Gebruik de ID voor localStorage om consistentie met de ShinyDex te behouden
                     const shinyCount = Number(localStorage.getItem(`plza_shiny_${entry.id}`)) || 0;
                     const isCollected = shinyCount >= 1;
                     const staticNumber = getStaticIndex(entry);
@@ -60,7 +59,7 @@ export default function PlzaCards({ displayedPokemon, pokemonList, openModal, ac
                                 <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(#000_1px,transparent_1px)] bg-[size:12px_12px]"></div>
                             </div>
 
-                            {/* Nummer Badge */}
+                            {/* Nummer Badge (Volgnummer) */}
                             <div className="w-full flex justify-between items-start mb-2 relative z-10">
                                 <span className={`text-[10px] font-black tracking-tighter transition-colors ${isCollected ? "text-amber-600" : "text-cyan-600"}`}>
                                     ID: {String(staticNumber).padStart(3, "0")}
