@@ -36,6 +36,14 @@ export default function ShinyDex() {
     const regionEntries = fullShinyDex.filter((p) => p.region === activeTab);
     const { pokemonList } = usePokemon(regionEntries);
 
+    // Functie voor de handmatige reset
+    const handleResetAllData = () => {
+        if (window.confirm("Weet je zeker dat je ALLE opgeslagen shinies en data wilt verwijderen? Dit kan niet ongedaan worden gemaakt.")) {
+            localStorage.clear();
+            window.location.reload(); // Herlaad de pagina om alle stats naar 0 te zetten
+        }
+    };
+
     const isCaught = (name) => {
         const lowerName = name.toLowerCase();
         for (let i = 0; i < localStorage.length; i++) {
@@ -91,7 +99,6 @@ export default function ShinyDex() {
                             Shiny<span className="text-[#ff4d29]">Check</span>
                         </h1>
 
-                        {/* Grotere progressiebalk */}
                         <div className="mt-4 w-full md:w-96">
                             <div className="flex justify-between items-end mb-1">
                                 <div className="flex flex-col">
@@ -111,17 +118,27 @@ export default function ShinyDex() {
                         </div>
                     </div>
 
-                    <div className="w-full md:w-80 bg-white/80 backdrop-blur-md border border-slate-200 p-2 px-4 rounded-2xl shadow-sm flex items-center gap-3 group focus-within:border-[#ff4d29] transition-all">
-                        <svg className="w-4 h-4 text-slate-400 group-focus-within:text-[#ff4d29]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                        </svg>
-                        <input
-                            type="text"
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                            placeholder="SEARCH NAME OR ID..."
-                            className="w-full bg-transparent border-none outline-none text-[10px] font-black uppercase italic tracking-widest text-slate-700 placeholder:text-slate-300"
-                        />
+                    <div className="flex flex-col sm:flex-row items-center gap-4 w-full md:w-auto">
+                        {/* Reset Button */}
+                        <button
+                            onClick={handleResetAllData}
+                            className="px-4 py-2 bg-white border-2 border-red-100 rounded-xl flex items-center gap-2 group hover:bg-red-50 hover:border-red-200 transition-all shadow-sm"
+                        >
+                            <span className="text-[10px] font-black uppercase tracking-widest text-red-400 group-hover:text-red-600">Reset Data</span>
+                        </button>
+
+                        <div className="w-full md:w-80 bg-white/80 backdrop-blur-md border border-slate-200 p-2 px-4 rounded-2xl shadow-sm flex items-center gap-3 group focus-within:border-[#ff4d29] transition-all">
+                            <svg className="w-4 h-4 text-slate-400 group-focus-within:text-[#ff4d29]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                            </svg>
+                            <input
+                                type="text"
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                                placeholder="SEARCH NAME OR ID..."
+                                className="w-full bg-transparent border-none outline-none text-[10px] font-black uppercase italic tracking-widest text-slate-700 placeholder:text-slate-300"
+                            />
+                        </div>
                     </div>
                 </div>
 
@@ -169,7 +186,6 @@ export default function ShinyDex() {
                 </div>
             </div>
 
-            {/* Overzicht Modal (Stap 1) */}
             {selectedPokemon && (
                 <ShinyDexModal
                     pokemon={selectedPokemon}
@@ -178,7 +194,6 @@ export default function ShinyDex() {
                 />
             )}
 
-            {/* Detail Modals (Stap 2) */}
             {selectedEntry?.type === 'PLZA' && (
                 <PlzaCollectionModal
                     data={selectedEntry.storedData}
