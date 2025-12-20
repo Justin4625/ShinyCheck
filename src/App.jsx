@@ -1,4 +1,3 @@
-import React, { useEffect } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Plza from "./Components/Plza/Plza.jsx";
 import Layout from "./Components/Layout.jsx";
@@ -48,12 +47,6 @@ const router = createBrowserRouter([{
 );
 
 function App() {
-    // Reset de gehele localStorage bij het openen van de applicatie
-    useEffect(() => {
-        localStorage.clear();
-        console.log("LocalStorage is volledig gereset bij opstarten.");
-    }, []);
-
     return <RouterProvider router={router} />;
 }
 
