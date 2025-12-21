@@ -221,7 +221,7 @@ const svPokemon = [
     { id: 334, name: "Altaria", game: "Pokémon Scarlet & Violet" },
     { id: 672, name: "Skiddo", game: "Pokémon Scarlet & Violet" },
     { id: 673, name: "Gogoat", game: "Pokémon Scarlet & Violet" },
-    { id: 128, name: "Tauros", game: "Pokémon Scarlet & Violet" },
+    { id: 10250, name: "Tauros-paldea-combat-breed", game: "Pokémon Scarlet & Violet" },
     { id: 667, name: "Litleo", game: "Pokémon Scarlet & Violet" },
     { id: 668, name: "Pyroar", game: "Pokémon Scarlet & Violet" },
     { id: 434, name: "Stunky", game: "Pokémon Scarlet & Violet" },
