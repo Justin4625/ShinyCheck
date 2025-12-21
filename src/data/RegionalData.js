@@ -59,10 +59,10 @@ const regionalPokemon = [
     { id: 10244, name: "Hisuian Decidueye", region: "Hisui" },
 
     // --- PALDEAN FORMS ---
-    { id: 10250, name: "Paldean Wooper", region: "Paldea" },
-    { id: 10251, name: "Paldean Tauros (Combat)", region: "Paldea" },
-    { id: 10252, name: "Paldean Tauros (Blaze)", region: "Paldea" },
-    { id: 10253, name: "Paldean Tauros (Aqua)", region: "Paldea" }
+    { id: 10253, name: "Paldean Wooper", region: "Paldea" },
+    { id: 10250, name: "Paldean Tauros (Combat)", region: "Paldea" },
+    { id: 10251, name: "Paldean Tauros (Blaze)", region: "Paldea" },
+    { id: 10252, name: "Paldean Tauros (Aqua)", region: "Paldea" }
 ];
 
 export default regionalPokemon;
