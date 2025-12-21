@@ -23,36 +23,43 @@ export default function ShinyDexModal({ pokemon, onClose, onSelectEntry }) {
     // eslint-disable-next-line react-hooks/rules-of-hooks
     const capturedItems = useMemo(() => {
         const items = [];
+        const lowerBaseName = pokemon.name.toLowerCase();
 
-        allForms.forEach(form => {
-            const lowerFormName = form.name.toLowerCase();
-            for (let i = 0; i < localStorage.length; i++) {
-                const key = localStorage.key(i);
-                if (key.startsWith("plza_shinyData_") || key.startsWith("sv_shinyData_")) {
-                    try {
-                        const data = JSON.parse(localStorage.getItem(key));
-                        if (data?.pokemonName?.toLowerCase() === lowerFormName) {
+        for (let i = 0; i < localStorage.length; i++) {
+            const key = localStorage.key(i);
+            if (key.startsWith("plza_shinyData_") || key.startsWith("sv_shinyData_")) {
+                try {
+                    const data = JSON.parse(localStorage.getItem(key));
+                    if (data?.pokemonName) {
+                        const caughtName = data.pokemonName.toLowerCase();
+
+                        // Check of de gevangen naam de basisnaam bevat (bijv. "paldean wooper" bevat "wooper")
+                        if (caughtName === lowerBaseName || caughtName.includes(lowerBaseName)) {
                             const isPlza = key.startsWith("plza");
                             const keyParts = key.split("_");
                             const shinyIndex = parseInt(keyParts[keyParts.length - 1]);
                             const originalId = keyParts[2];
 
+                            // Zoek of dit een specifieke variant uit RegionalData is om de juiste naam te tonen
+                            const variantData = regionalPokemon.find(v => v.name.toLowerCase() === caughtName) || pokemon;
+
                             items.push({
-                                ...form,
+                                ...variantData,
                                 id: originalId,
                                 storedData: data,
                                 type: isPlza ? 'PLZA' : 'SV',
                                 shinyIndex: shinyIndex
                             });
                         }
-                        // eslint-disable-next-line no-unused-vars
-                    } catch (e) { /* empty */ }
-                }
+                    }
+                    // eslint-disable-next-line no-unused-vars
+                } catch (e) { /* empty */ }
             }
-        });
+        }
 
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         return items.sort((a, b) => (b.storedData.timestamp || 0) - (a.storedData.timestamp || 0));
-    }, [allForms]);
+    }, [allForms, pokemon.name]);
 
     return (
         <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-md flex items-center justify-center z-50 p-4" onClick={onClose}>
