@@ -22,6 +22,7 @@ export default function ShinyDex() {
     // Modal states
     const [selectedPokemon, setSelectedPokemon] = useState(null);
     const [selectedEntry, setSelectedEntry] = useState(null);
+    const [refreshKey, setRefreshKey] = useState(0); // Toegevoegd voor live updates
 
     // Blokkeer scrollen op de achtergrond als er een modal open is
     useEffect(() => {
@@ -71,7 +72,8 @@ export default function ShinyDex() {
         const total = fullShinyDex.length;
         const percentage = total > 0 ? ((count / total) * 100).toFixed(1) : 0;
         return { count, total, percentage };
-    }, []);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [refreshKey]); // Update stats bij verwijderen
 
     const regionStats = useMemo(() => {
         let count = 0;
@@ -81,7 +83,8 @@ export default function ShinyDex() {
         const total = regionEntries.length;
         const percentage = total > 0 ? ((count / total) * 100).toFixed(1) : 0;
         return { count, total, percentage };
-    }, [regionEntries]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [regionEntries, refreshKey]); // Update stats bij verwijderen
 
     const filteredList = pokemonList.filter(p => {
         const matchesSearch = p.name.toLowerCase().includes(searchQuery.toLowerCase()) || p.id.toString().includes(searchQuery);
@@ -182,6 +185,7 @@ export default function ShinyDex() {
                     pokemon={selectedPokemon}
                     onClose={() => setSelectedPokemon(null)}
                     onSelectEntry={(entry) => setSelectedEntry(entry)}
+                    refreshKey={refreshKey} // Geef refreshKey door
                 />
             )}
 
@@ -191,7 +195,10 @@ export default function ShinyDex() {
                     pokemon={selectedEntry}
                     originalId={selectedEntry.id}
                     shinyIndex={selectedEntry.shinyIndex}
-                    onClose={() => setSelectedEntry(null)}
+                    onClose={() => {
+                        setSelectedEntry(null);
+                        setRefreshKey(prev => prev + 1); // Trigger refresh
+                    }}
                     gameName="Pokémon Legends: Z-A"
                 />
             )}
@@ -201,7 +208,10 @@ export default function ShinyDex() {
                     pokemon={selectedEntry}
                     originalId={selectedEntry.id}
                     shinyIndex={selectedEntry.shinyIndex}
-                    onClose={() => setSelectedEntry(null)}
+                    onClose={() => {
+                        setSelectedEntry(null);
+                        setRefreshKey(prev => prev + 1); // Trigger refresh
+                    }}
                     gameName="Pokémon Scarlet & Violet"
                 />
             )}

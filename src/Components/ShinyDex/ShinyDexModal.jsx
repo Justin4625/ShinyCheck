@@ -1,7 +1,7 @@
 import React, { useMemo } from "react";
 import regionalPokemon from "../../data/RegionalData.js";
 
-export default function ShinyDexModal({ pokemon, onClose, onSelectEntry }) {
+export default function ShinyDexModal({ pokemon, onClose, onSelectEntry, refreshKey }) { // refreshKey toegevoegd
     if (!pokemon) return null;
 
     const formatTime = (seconds) => {
@@ -33,14 +33,14 @@ export default function ShinyDexModal({ pokemon, onClose, onSelectEntry }) {
                     if (data?.pokemonName) {
                         const caughtName = data.pokemonName.toLowerCase();
 
-                        // Check of de gevangen naam de basisnaam bevat (bijv. "paldean wooper" bevat "wooper")
+                        // Check of de gevangen naam de basisnaam bevat
                         if (caughtName === lowerBaseName || caughtName.includes(lowerBaseName)) {
                             const isPlza = key.startsWith("plza");
                             const keyParts = key.split("_");
                             const shinyIndex = parseInt(keyParts[keyParts.length - 1]);
                             const originalId = keyParts[2];
 
-                            // Zoek of dit een specifieke variant uit RegionalData is om de juiste naam te tonen
+                            // Zoek variant-data
                             const variantData = regionalPokemon.find(v => v.name.toLowerCase() === caughtName) || pokemon;
 
                             items.push({
@@ -57,9 +57,9 @@ export default function ShinyDexModal({ pokemon, onClose, onSelectEntry }) {
             }
         }
 
-        return items.sort((a, b) => (b.storedData.timestamp || 0) - (a.storedData.timestamp || 0));
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [allForms, pokemon.name]);
+        return items.sort((a, b) => (b.storedData.timestamp || 0) - (a.storedData.timestamp || 0));
+    }, [allForms, pokemon.name, refreshKey]); // refreshKey toegevoegd als dependency
 
     return (
         <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-md flex items-center justify-center z-50 p-4" onClick={onClose}>
