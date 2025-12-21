@@ -33,7 +33,20 @@ export default function ShinyDexModal({ pokemon, onClose, onSelectEntry, refresh
                     if (data?.pokemonName) {
                         const caughtName = data.pokemonName.toLowerCase();
 
-                        if (caughtName === lowerBaseName || caughtName.includes(lowerBaseName)) {
+                        // Check of de naam matcht
+                        const matchesName = caughtName === lowerBaseName || caughtName.includes(lowerBaseName);
+
+                        // SPECIFIEKE UITZONDERING VOOR PORYGON:
+                        // Als de geselecteerde pokemon "Porygon" is, mag de gevangen naam
+                        // niet "porygon2" of "porygon-z" zijn.
+                        let isException = false;
+                        if (lowerBaseName === "porygon") {
+                            if (caughtName === "porygon2" || caughtName === "porygon-z") {
+                                isException = true;
+                            }
+                        }
+
+                        if (matchesName && !isException) {
                             const isPlza = key.startsWith("plza");
                             const keyParts = key.split("_");
                             const shinyIndex = parseInt(keyParts[keyParts.length - 1]);
