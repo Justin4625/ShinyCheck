@@ -9,7 +9,7 @@ export default function SvTabs({ activeTab, setActiveTab }) {
     ];
 
     return (
-        <div className="flex flex-wrap lg:flex-nowrap w-full gap-1.5 sm:gap-2">
+        <div className="flex flex-nowrap w-full gap-1 sm:gap-2 overflow-hidden">
             {tabs.map((tab, index) => {
                 const isActive = activeTab === tab.id;
                 const accentColor = index % 2 === 0 ? "from-[#ff4d00] to-[#ff6a00]" : "from-[#8c00ff] to-[#a23dff]";
@@ -20,7 +20,7 @@ export default function SvTabs({ activeTab, setActiveTab }) {
                         disabled={tab.disabled}
                         onClick={() => !tab.disabled && setActiveTab(tab.id)}
                         className={`
-                            relative flex-1 min-w-[100px] h-9 transition-all duration-300 transform skew-x-[-15deg]
+                            relative flex-1 h-9 transition-all duration-300 transform skew-x-[-15deg]
                             border-b-4 
                             ${tab.disabled
                             ? "bg-gray-100 border-gray-200 text-gray-400 cursor-not-allowed opacity-60"
@@ -30,7 +30,7 @@ export default function SvTabs({ activeTab, setActiveTab }) {
                         }
                         `}
                     >
-                        <span className="relative block text-center font-black italic text-[9px] sm:text-[10px] tracking-widest transform skew-x-[15deg]">
+                        <span className="relative block text-center font-black italic text-[8px] sm:text-[10px] tracking-tighter sm:tracking-widest transform skew-x-[15deg]">
                             {tab.label}
 
                             {tab.disabled && (
