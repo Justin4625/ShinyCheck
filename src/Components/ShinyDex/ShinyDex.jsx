@@ -2,6 +2,7 @@ import React, { useState, useMemo, useEffect } from "react";
 import shinyDexPart1 from "../../data/ShinyDexData.js";
 import shinyDexPart2 from "../../data/ShinyDexData2.js";
 import shinyDexPart3 from "../../data/ShinyDexData3.js";
+import regionalPokemon from "../../data/RegionalData.js";
 
 import usePokemon from "../FetchPokemon.jsx";
 import ShinyDexCards from "./ShinyDexCards.jsx";
@@ -9,6 +10,7 @@ import ShinyDexTabs from "./ShinyDexTabs.jsx";
 
 // Modals
 import ShinyDexModal from "./ShinyDexModal.jsx";
+import ShinyDexRegionals from "./ShinyDexRegionals.jsx";
 import PlzaCollectionModal from "../Plza/PlzaCollectionModal.jsx";
 import SvCollectionModal from "../Sv/SvCollectionModal.jsx";
 
@@ -23,15 +25,19 @@ export default function ShinyDex() {
     const [selectedPokemon, setSelectedPokemon] = useState(null);
     const [selectedEntry, setSelectedEntry] = useState(null);
 
+    // States voor regionale tussenstap
+    const [regionalBase, setRegionalBase] = useState(null);
+    const [isRegionalModalOpen, setIsRegionalModalOpen] = useState(false);
+
     // Blokkeer scrollen op de achtergrond als er een modal open is
     useEffect(() => {
-        if (selectedPokemon || selectedEntry) {
+        if (selectedPokemon || selectedEntry || isRegionalModalOpen) {
             document.body.style.overflow = 'hidden';
         } else {
             document.body.style.overflow = 'unset';
         }
         return () => { document.body.style.overflow = 'unset'; };
-    }, [selectedPokemon, selectedEntry]);
+    }, [selectedPokemon, selectedEntry, isRegionalModalOpen]);
 
     const regionEntries = fullShinyDex.filter((p) => p.region === activeTab);
     const { pokemonList } = usePokemon(regionEntries);
@@ -79,6 +85,25 @@ export default function ShinyDex() {
         return matchesSearch && matchesUnregistered;
     });
 
+    const handleOpenModal = (pokemon) => {
+        // Check of deze pokemon regionale varianten heeft
+        const hasVariants = regionalPokemon.some(p =>
+            p.name.toLowerCase().includes(pokemon.name.toLowerCase())
+        );
+
+        if (hasVariants) {
+            setRegionalBase(pokemon);
+            setIsRegionalModalOpen(true);
+        } else {
+            setSelectedPokemon(pokemon);
+        }
+    };
+
+    const handleSelectVariant = (variant) => {
+        setIsRegionalModalOpen(false);
+        setSelectedPokemon(variant);
+    };
+
     return (
         <div className="relative min-h-screen bg-[#f8fafc] p-4 sm:p-8 font-sans overflow-hidden text-slate-900">
             <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-orange-200/40 rounded-full blur-[120px] pointer-events-none"></div>
@@ -111,8 +136,6 @@ export default function ShinyDex() {
                     </div>
 
                     <div className="flex flex-col sm:flex-row items-center gap-4 w-full md:w-auto">
-                        {/* De Reset knop is hier verwijderd */}
-
                         <div className="w-full md:w-80 bg-white/80 backdrop-blur-md border border-slate-200 p-2 px-4 rounded-2xl shadow-sm flex items-center gap-3 group focus-within:border-[#ff4d29] transition-all">
                             <svg className="w-4 h-4 text-slate-400 group-focus-within:text-[#ff4d29]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -167,10 +190,18 @@ export default function ShinyDex() {
 
                     <ShinyDexCards
                         displayedPokemon={filteredList}
-                        onCardClick={(pokemon) => setSelectedPokemon(pokemon)}
+                        onCardClick={handleOpenModal}
                     />
                 </div>
             </div>
+
+            {/* Regionals Choice Modal */}
+            <ShinyDexRegionals
+                isOpen={isRegionalModalOpen}
+                onClose={() => setIsRegionalModalOpen(false)}
+                basePokemon={regionalBase}
+                onSelectVariant={handleSelectVariant}
+            />
 
             {selectedPokemon && (
                 <ShinyDexModal

@@ -1,4 +1,5 @@
 import React from "react";
+import regionalPokemon from "../../data/RegionalData.js";
 
 export default function ShinyDexCards({ displayedPokemon, onCardClick }) {
 
@@ -27,6 +28,11 @@ export default function ShinyDexCards({ displayedPokemon, onCardClick }) {
                 const amountOwned = getCollectionCount(pokemon.name);
                 const isOwned = amountOwned > 0;
 
+                // Check of deze pokemon varianten heeft voor de badge
+                const hasVariants = regionalPokemon.some(p =>
+                    p.name.toLowerCase().includes(pokemon.name.toLowerCase())
+                );
+
                 return (
                     <div
                         key={pokemon.id}
@@ -39,6 +45,13 @@ export default function ShinyDexCards({ displayedPokemon, onCardClick }) {
                         {isOwned && (
                             <div className="absolute -top-2 -right-2 bg-amber-500 text-white text-[10px] font-black px-2 py-0.5 rounded-full shadow-md z-10 border-2 border-white">
                                 x{amountOwned}
+                            </div>
+                        )}
+
+                        {/* Badge voor varianten */}
+                        {hasVariants && isOwned && (
+                            <div className="absolute -top-2 -left-2 bg-cyan-500 text-white text-[8px] font-black px-1.5 py-0.5 rounded-md shadow-sm z-10 border border-white animate-pulse">
+                                FORMS
                             </div>
                         )}
 
