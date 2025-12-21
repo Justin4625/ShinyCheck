@@ -2,7 +2,6 @@ import React, { useState, useMemo, useEffect } from "react";
 import shinyDexPart1 from "../../data/ShinyDexData.js";
 import shinyDexPart2 from "../../data/ShinyDexData2.js";
 import shinyDexPart3 from "../../data/ShinyDexData3.js";
-import regionalPokemon from "../../data/RegionalData.js";
 
 import usePokemon from "../FetchPokemon.jsx";
 import ShinyDexCards from "./ShinyDexCards.jsx";
@@ -10,7 +9,6 @@ import ShinyDexTabs from "./ShinyDexTabs.jsx";
 
 // Modals
 import ShinyDexModal from "./ShinyDexModal.jsx";
-import ShinyDexRegionalModal from "./ShinyDexRegionalModal.jsx";
 import PlzaCollectionModal from "../Plza/PlzaCollectionModal.jsx";
 import SvCollectionModal from "../Sv/SvCollectionModal.jsx";
 
@@ -25,34 +23,33 @@ export default function ShinyDex() {
     const [selectedPokemon, setSelectedPokemon] = useState(null);
     const [selectedEntry, setSelectedEntry] = useState(null);
 
-    // States voor regionale tussenstap
-    const [regionalBase, setRegionalBase] = useState(null);
-    const [isRegionalModalOpen, setIsRegionalModalOpen] = useState(false);
-
     // Blokkeer scrollen op de achtergrond als er een modal open is
     useEffect(() => {
-        if (selectedPokemon || selectedEntry || isRegionalModalOpen) {
+        if (selectedPokemon || selectedEntry) {
             document.body.style.overflow = 'hidden';
         } else {
             document.body.style.overflow = 'unset';
         }
         return () => { document.body.style.overflow = 'unset'; };
-    }, [selectedPokemon, selectedEntry, isRegionalModalOpen]);
+    }, [selectedPokemon, selectedEntry]);
 
     const regionEntries = fullShinyDex.filter((p) => p.region === activeTab);
     const { pokemonList } = usePokemon(regionEntries);
 
+    // Checkt of de basisvorm of een variant (zoals Paldean) gevangen is
     const isCaught = (baseName) => {
         const lowerBaseName = baseName.toLowerCase();
         for (let i = 0; i < localStorage.length; i++) {
             const key = localStorage.key(i);
             if (key.startsWith("plza_shinyData_") || key.startsWith("sv_shinyData_")) {
-                const data = JSON.parse(localStorage.getItem(key));
-                if (data?.pokemonName) {
-                    const caughtName = data.pokemonName.toLowerCase();
-                    // Check of de gevangen naam gelijk is OF een variant is (bijv. "paldean wooper" bevat "wooper")
-                    if (caughtName === lowerBaseName || caughtName.includes(lowerBaseName)) return true;
-                }
+                try {
+                    const data = JSON.parse(localStorage.getItem(key));
+                    if (data?.pokemonName) {
+                        const caughtName = data.pokemonName.toLowerCase();
+                        if (caughtName === lowerBaseName || caughtName.includes(lowerBaseName)) return true;
+                    }
+                    // eslint-disable-next-line no-unused-vars
+                } catch (e) { /* empty */ }
             }
         }
         return false;
@@ -63,8 +60,11 @@ export default function ShinyDex() {
         for (let i = 0; i < localStorage.length; i++) {
             const key = localStorage.key(i);
             if (key.startsWith("plza_shinyData_") || key.startsWith("sv_shinyData_")) {
-                const data = JSON.parse(localStorage.getItem(key));
-                if (data?.pokemonName) caughtNames.add(data.pokemonName.toLowerCase());
+                try {
+                    const data = JSON.parse(localStorage.getItem(key));
+                    if (data?.pokemonName) caughtNames.add(data.pokemonName.toLowerCase());
+                    // eslint-disable-next-line no-unused-vars
+                } catch (e) { /* empty */ }
             }
         }
         const count = caughtNames.size;
@@ -88,25 +88,6 @@ export default function ShinyDex() {
         const matchesUnregistered = showUnregisteredOnly ? !isCaught(p.name) : true;
         return matchesSearch && matchesUnregistered;
     });
-
-    const handleOpenModal = (pokemon) => {
-        // Check of deze pokemon regionale varianten heeft
-        const hasVariants = regionalPokemon.some(p =>
-            p.name.toLowerCase().includes(pokemon.name.toLowerCase())
-        );
-
-        if (hasVariants) {
-            setRegionalBase(pokemon);
-            setIsRegionalModalOpen(true);
-        } else {
-            setSelectedPokemon(pokemon);
-        }
-    };
-
-    const handleSelectVariant = (variant) => {
-        setIsRegionalModalOpen(false);
-        setSelectedPokemon(variant);
-    };
 
     return (
         <div className="relative min-h-screen bg-[#f8fafc] p-4 sm:p-8 font-sans overflow-hidden text-slate-900">
@@ -132,7 +113,7 @@ export default function ShinyDex() {
                             </div>
                             <div className="h-3 w-full bg-slate-200 rounded-full overflow-hidden shadow-inner">
                                 <div
-                                    className="h-full bg-[#ff4d29] transition-all duration-1000 shadow-[0_0_8px_rgba(255,77,41,0.4)]"
+                                    className="h-full bg-[#ff4d29] transition-all duration-1000"
                                     style={{ width: `${globalStats.percentage}%` }}
                                 />
                             </div>
@@ -141,9 +122,6 @@ export default function ShinyDex() {
 
                     <div className="flex flex-col sm:flex-row items-center gap-4 w-full md:w-auto">
                         <div className="w-full md:w-80 bg-white/80 backdrop-blur-md border border-slate-200 p-2 px-4 rounded-2xl shadow-sm flex items-center gap-3 group focus-within:border-[#ff4d29] transition-all">
-                            <svg className="w-4 h-4 text-slate-400 group-focus-within:text-[#ff4d29]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                            </svg>
                             <input
                                 type="text"
                                 value={searchQuery}
@@ -194,18 +172,10 @@ export default function ShinyDex() {
 
                     <ShinyDexCards
                         displayedPokemon={filteredList}
-                        onCardClick={handleOpenModal}
+                        onCardClick={(p) => setSelectedPokemon(p)}
                     />
                 </div>
             </div>
-
-            {/* Regionals Choice Modal */}
-            <ShinyDexRegionalModal
-                isOpen={isRegionalModalOpen}
-                onClose={() => setIsRegionalModalOpen(false)}
-                basePokemon={regionalBase}
-                onSelectVariant={handleSelectVariant}
-            />
 
             {selectedPokemon && (
                 <ShinyDexModal
@@ -218,7 +188,7 @@ export default function ShinyDex() {
             {selectedEntry?.type === 'PLZA' && (
                 <PlzaCollectionModal
                     data={selectedEntry.storedData}
-                    pokemon={selectedPokemon}
+                    pokemon={selectedEntry}
                     originalId={selectedEntry.id}
                     shinyIndex={selectedEntry.shinyIndex}
                     onClose={() => setSelectedEntry(null)}
@@ -228,7 +198,7 @@ export default function ShinyDex() {
             {selectedEntry?.type === 'SV' && (
                 <SvCollectionModal
                     data={selectedEntry.storedData}
-                    pokemon={selectedPokemon}
+                    pokemon={selectedEntry}
                     originalId={selectedEntry.id}
                     shinyIndex={selectedEntry.shinyIndex}
                     onClose={() => setSelectedEntry(null)}
