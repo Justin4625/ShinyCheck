@@ -51,7 +51,7 @@ const svPokemon = [
     { id: 284, name: "Masquerain", game: "Pokémon Scarlet & Violet" },
     { id: 418, name: "Buizel", game: "Pokémon Scarlet & Violet" },
     { id: 419, name: "Floatzel", game: "Pokémon Scarlet & Violet" },
-    { id: 194, name: "Wooper", game: "Pokémon Scarlet & Violet" },
+    { id: 10250, name: "Wooper-paldea", game: "Pokémon Scarlet & Violet" },
     { id: 980, name: "Clodsire", game: "Pokémon Scarlet & Violet" },
     { id: 54, name: "Psyduck", game: "Pokémon Scarlet & Violet" },
     { id: 55, name: "Golduck", game: "Pokémon Scarlet & Violet" },
