@@ -4,20 +4,21 @@ import svTmPokemon from "../../data/SvTmData.js";
 import svIdData from "../../data/SvIdData.js";
 
 export default function SvCards({ displayedPokemon, pokemonList, openModal, activeTab }) {
-    // Toont loading scherm als sprites van getoonde Pokémon nog laden
+    // Verbeterde loading check: controleert of de pokemon bestaat EN of de sprite er is.
+    // Dit vangt vertragingen op tijdens het tab-switchen en zoeken.
     const isLoading = displayedPokemon.length > 0 && displayedPokemon.some((entry) => {
         const pokemon = pokemonList.find((p) => p.id === entry.id);
-        return !pokemon?.sprites?.other?.home?.front_shiny;
+        // Als de pokemon nog niet in de lijst staat OF de sprite ontbreekt -> laden
+        return !pokemon || !pokemon?.sprites?.other?.home?.front_shiny;
     });
 
     // Bepaalt het nummer op de badge op basis van de positie in de Dex-lijst
     const getStaticIndex = (entry) => {
-        let targetData = svPokemon; // Standaard Paldea (base)
+        let targetData = svPokemon;
 
-        if (activeTab === "teal") targetData = svTmPokemon; // Kitakami
-        if (activeTab === "indigo") targetData = svIdData; // Blueberry Academy
+        if (activeTab === "teal") targetData = svTmPokemon;
+        if (activeTab === "indigo") targetData = svIdData;
 
-        // Bij 'active' zoeken we in de totale samengevoegde lijst voor de weergave-index
         if (activeTab === "active") {
             targetData = svPokemon.concat(svTmPokemon, svIdData);
         }
@@ -43,7 +44,6 @@ export default function SvCards({ displayedPokemon, pokemonList, openModal, acti
             ) : (
                 displayedPokemon.map((entry, index) => {
                     const pokemon = pokemonList.find((p) => p.id === entry.id);
-                    // De sleutel voor localStorage gebruikt nu de National Dex ID
                     const shinyCount = Number(localStorage.getItem(`sv_shiny_${entry.id}`)) || 0;
                     const staticNumber = getStaticIndex(entry);
                     const isCaught = shinyCount > 0;
@@ -61,6 +61,10 @@ export default function SvCards({ displayedPokemon, pokemonList, openModal, acti
                                 : "bg-white border-gray-200"
                             }`}
                         >
+                            <div className="absolute inset-0 opacity-[0.03] pointer-events-none overflow-hidden rounded-tr-3xl rounded-bl-3xl">
+                                <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(#000_1px,transparent_1px)] bg-[size:10px_10px]"></div>
+                            </div>
+
                             {isCaught && (
                                 <div className="absolute inset-0 w-[200%] h-full bg-gradient-to-r from-transparent via-white/40 to-transparent -skew-x-[45deg] -translate-x-full group-hover:animate-[shine_1.5s_ease-in-out_infinite] pointer-events-none" />
                             )}
@@ -71,7 +75,6 @@ export default function SvCards({ displayedPokemon, pokemonList, openModal, acti
                                 style={{ backgroundColor: isCaught ? undefined : accentColor }}
                             />
 
-                            {/* Badge met het juiste volgnummer per Dex */}
                             <div className="w-full flex justify-between items-start mb-2 relative z-10">
                                 <div
                                     className="px-2 py-0.5 transform -skew-x-12 shadow-sm"
@@ -91,7 +94,6 @@ export default function SvCards({ displayedPokemon, pokemonList, openModal, acti
                                     {entry.name}
                                 </h2>
 
-                                {/* Pokémon Types badges */}
                                 <div className="flex gap-1 flex-wrap">
                                     {pokemon?.types?.map((t) => (
                                         <span
@@ -110,10 +112,11 @@ export default function SvCards({ displayedPokemon, pokemonList, openModal, acti
                             </div>
 
                             <div className="relative py-2">
+                                <div className={`absolute inset-0 rounded-full blur-2xl opacity-20 transition-all ${isCaught ? 'bg-yellow-400' : 'bg-gray-300'}`}></div>
                                 <img
                                     src={pokemon?.sprites?.other?.home?.front_shiny}
                                     alt={entry.name}
-                                    className={`w-24 h-24 sm:w-28 sm:h-28 object-contain transition-transform duration-300 group-hover:scale-110
+                                    className={`w-24 h-24 sm:w-28 sm:h-28 object-contain relative z-10 transition-transform duration-300 group-hover:scale-110
                                         ${isCaught ? "drop-shadow-[0_0_8px_rgba(250,204,21,0.6)]" : "drop-shadow-md"}`}
                                 />
                             </div>
