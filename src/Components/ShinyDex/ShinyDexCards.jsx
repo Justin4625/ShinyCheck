@@ -3,17 +3,21 @@ import regionalPokemon from "../../data/RegionalData.js";
 
 export default function ShinyDexCards({ displayedPokemon, onCardClick }) {
 
-    const getCollectionCount = (name) => {
+    const getCollectionCount = (baseName) => {
         let count = 0;
-        const lowerName = name.toLowerCase();
+        const lowerBaseName = baseName.toLowerCase();
 
         for (let i = 0; i < localStorage.length; i++) {
             const key = localStorage.key(i);
             if (key.startsWith("plza_shinyData_") || key.startsWith("sv_shinyData_")) {
                 try {
                     const data = JSON.parse(localStorage.getItem(key));
-                    if (data && data.pokemonName && data.pokemonName.toLowerCase() === lowerName) {
-                        count++;
+                    if (data?.pokemonName) {
+                        const caughtName = data.pokemonName.toLowerCase();
+                        // Tel de basisvorm en alle varianten (zoals Paldean, Alolan, etc.)
+                        if (caughtName === lowerBaseName || caughtName.includes(lowerBaseName)) {
+                            count++;
+                        }
                     }
                     // eslint-disable-next-line no-unused-vars
                 } catch (e) { /* empty */ }

@@ -42,13 +42,17 @@ export default function ShinyDex() {
     const regionEntries = fullShinyDex.filter((p) => p.region === activeTab);
     const { pokemonList } = usePokemon(regionEntries);
 
-    const isCaught = (name) => {
-        const lowerName = name.toLowerCase();
+    const isCaught = (baseName) => {
+        const lowerBaseName = baseName.toLowerCase();
         for (let i = 0; i < localStorage.length; i++) {
             const key = localStorage.key(i);
             if (key.startsWith("plza_shinyData_") || key.startsWith("sv_shinyData_")) {
                 const data = JSON.parse(localStorage.getItem(key));
-                if (data?.pokemonName?.toLowerCase() === lowerName) return true;
+                if (data?.pokemonName) {
+                    const caughtName = data.pokemonName.toLowerCase();
+                    // Check of de gevangen naam gelijk is OF een variant is (bijv. "paldean wooper" bevat "wooper")
+                    if (caughtName === lowerBaseName || caughtName.includes(lowerBaseName)) return true;
+                }
             }
         }
         return false;
