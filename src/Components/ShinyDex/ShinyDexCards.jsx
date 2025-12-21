@@ -14,8 +14,19 @@ export default function ShinyDexCards({ displayedPokemon, onCardClick }) {
                     const data = JSON.parse(localStorage.getItem(key));
                     if (data?.pokemonName) {
                         const caughtName = data.pokemonName.toLowerCase();
-                        // Tel de basisvorm en alle varianten (zoals Paldean, Alolan, etc.)
-                        if (caughtName === lowerBaseName || caughtName.includes(lowerBaseName)) {
+
+                        // Check of de naam matcht
+                        const matchesName = caughtName === lowerBaseName || caughtName.includes(lowerBaseName);
+
+                        // SPECIFIEKE UITZONDERING VOOR PORYGON:
+                        let isException = false;
+                        if (lowerBaseName === "porygon") {
+                            if (caughtName === "porygon2" || caughtName === "porygon-z") {
+                                isException = true;
+                            }
+                        }
+
+                        if (matchesName && !isException) {
                             count++;
                         }
                     }
@@ -52,7 +63,6 @@ export default function ShinyDexCards({ displayedPokemon, onCardClick }) {
                             </div>
                         )}
 
-                        {/* Badge voor varianten */}
                         {hasVariants && isOwned && (
                             <div className="absolute -top-2 -left-2 bg-cyan-500 text-white text-[8px] font-black px-1.5 py-0.5 rounded-md shadow-sm z-10 border border-white animate-pulse">
                                 FORMS
