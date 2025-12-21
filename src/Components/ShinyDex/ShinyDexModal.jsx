@@ -57,8 +57,8 @@ export default function ShinyDexModal({ pokemon, onClose, onSelectEntry }) {
             }
         }
 
-        // eslint-disable-next-line react-hooks/exhaustive-deps
         return items.sort((a, b) => (b.storedData.timestamp || 0) - (a.storedData.timestamp || 0));
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [allForms, pokemon.name]);
 
     return (
