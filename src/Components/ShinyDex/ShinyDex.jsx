@@ -10,7 +10,7 @@ import ShinyDexTabs from "./ShinyDexTabs.jsx";
 
 // Modals
 import ShinyDexModal from "./ShinyDexModal.jsx";
-import ShinyDexRegionals from "./ShinyDexRegionals.jsx";
+import ShinyDexRegionalModal from "./ShinyDexRegionalModal.jsx";
 import PlzaCollectionModal from "../Plza/PlzaCollectionModal.jsx";
 import SvCollectionModal from "../Sv/SvCollectionModal.jsx";
 
@@ -196,7 +196,7 @@ export default function ShinyDex() {
             </div>
 
             {/* Regionals Choice Modal */}
-            <ShinyDexRegionals
+            <ShinyDexRegionalModal
                 isOpen={isRegionalModalOpen}
                 onClose={() => setIsRegionalModalOpen(false)}
                 basePokemon={regionalBase}

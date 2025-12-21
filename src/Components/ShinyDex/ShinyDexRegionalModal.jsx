@@ -1,7 +1,7 @@
 import React from "react";
 import regionalPokemon from "../../data/RegionalData.js";
 
-export default function ShinyDexRegionals({ isOpen, onClose, basePokemon, onSelectVariant }) {
+export default function ShinyDexRegionalModal({ isOpen, onClose, basePokemon, onSelectVariant }) {
     if (!isOpen || !basePokemon) return null;
 
     // Filter varianten die de naam van de basePokemon bevatten
