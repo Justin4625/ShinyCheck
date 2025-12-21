@@ -95,10 +95,13 @@ export default function Collection({ plzaPokemon = [], svPokemon = [], pokemonLi
                 />
             )}
 
+            {/* In src/Components/Collection/Collection.jsx */}
+
             {selectedEntry?.type === 'PLZA' && (
                 <PlzaCollectionModal
                     data={selectedEntry.storedData}
-                    pokemon={pokemonList.find(p => p.name.toLowerCase() === selectedEntry.name.toLowerCase())}
+                    // Zoek nu op ID in plaats van naam
+                    pokemon={pokemonList.find(p => p.id === selectedEntry.id)}
                     originalId={selectedEntry.id}
                     shinyIndex={selectedEntry.shinyIndex}
                     formatTime={formatTime}
@@ -106,12 +109,12 @@ export default function Collection({ plzaPokemon = [], svPokemon = [], pokemonLi
                     gameName="Pokémon Legends: Z-A"
                 />
             )}
+
             {selectedEntry?.type === 'SV' && (
                 <SvCollectionModal
                     data={selectedEntry.storedData}
-                    pokemon={pokemonList.find(p =>
-                        p.name.toLowerCase().replace(/-/g, ' ') === selectedEntry.name.toLowerCase().replace(/-/g, ' ')
-                    )}
+                    // Zoek nu op ID in plaats van naam
+                    pokemon={pokemonList.find(p => p.id === selectedEntry.id)}
                     originalId={selectedEntry.id}
                     shinyIndex={selectedEntry.shinyIndex}
                     formatTime={formatTime}

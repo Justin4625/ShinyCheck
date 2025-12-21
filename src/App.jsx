@@ -14,6 +14,7 @@ import svIdData from "./data/SvIdData.js";
 import shinyDexPart1 from "./data/ShinyDexData.js";
 import shinyDexPart2 from "./data/ShinyDexData2.js";
 import shinyDexPart3 from "./data/ShinyDexData3.js";
+import regionalPokemon from "./data/RegionalData.js";
 
 // Combineer alle PLZA pokemon lijsten en filter op unieke ID's
 const allPlzaPokemon = Array.from(
@@ -25,7 +26,7 @@ const allSvPokemon = Array.from(
     new Map([...svPokemon, ...svTmPokemon, ...svIdData].map(p => [p.id, p])).values()
 );
 
-const pokemonList = [...shinyDexPart1, ...shinyDexPart2, ...shinyDexPart3];
+const pokemonList = [...shinyDexPart1, ...shinyDexPart2, ...shinyDexPart3, ...regionalPokemon];
 
 const router = createBrowserRouter([{
         element: <Layout/>,
