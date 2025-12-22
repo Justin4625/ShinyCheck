@@ -60,7 +60,7 @@ const specialCases = {
     Lycanroc: "lycanroc-midday",
     Oricorio: "oricorio-baile",
 
-    // Paradox Pokémon (Fix voor spaties in URL)
+    // Paradox Pokémon
     "Great Tusk": "great-tusk",
     "Scream Tail": "scream-tail",
     "Brute Bonnet": "brute-bonnet",
@@ -81,6 +81,56 @@ const specialCases = {
     "Raging Bolt": "raging-bolt",
     "Iron Crown": "iron-crown",
     "Iron Boulder": "iron-boulder",
+
+    // --- REGIONAL FORMS FIXES ---
+    // Alolan
+    "Alolan Raichu": "raichu-alola",
+    "Alolan Sandshrew": "sandshrew-alola",
+    "Alolan Sandslash": "sandslash-alola",
+    "Alolan Vulpix": "vulpix-alola",
+    "Alolan Ninetales": "ninetales-alola",
+    "Alolan Diglett": "diglett-alola",
+    "Alolan Dugtrio": "dugtrio-alola",
+    "Alolan Meowth": "meowth-alola",
+    "Alolan Persian": "persian-alola",
+    "Alolan Geodude": "geodude-alola",
+    "Alolan Graveler": "graveler-alola",
+    "Alolan Golem": "golem-alola",
+    "Alolan Grimer": "grimer-alola",
+    "Alolan Muk": "muk-alola",
+    "Alolan Exeggutor": "exeggutor-alola",
+
+    // Galarian
+    "Galarian Meowth": "meowth-galar",
+    "Galarian Slowpoke": "slowpoke-galar",
+    "Galarian Slowbro": "slowbro-galar",
+    "Galarian Weezing": "weezing-galar",
+    "Galarian Slowking": "slowking-galar",
+
+    // Hisuian
+    "Hisuian Growlithe": "growlithe-hisui",
+    "Hisuian Arcanine": "arcanine-hisui",
+    "Hisuian Voltorb": "voltorb-hisui",
+    "Hisuian Electrode": "electrode-hisui",
+    "Hisuian Typhlosion": "typhlosion-hisui",
+    "Hisuian Qwilfish": "qwilfish-hisui",
+    "Hisuian Sneasel": "sneasel-hisui",
+    "Hisuian Samurott": "samurott-hisui",
+    "Hisuian Lilligant": "lilligant-hisui",
+    "Hisuian Zorua": "zorua-hisui",
+    "Hisuian Zoroark": "zoroark-hisui",
+    "Hisuian Braviary": "braviary-hisui",
+    "Hisuian Sliggoo": "sliggoo-hisui",
+    "Hisuian Goodra": "goodra-hisui",
+    "Hisuian Avalugg": "avalugg-hisui",
+    "Hisuian Decidueye": "decidueye-hisui",
+    "Hisuian Basculin": "basculin-white-striped",
+
+    // Paldean
+    "Paldean Wooper": "wooper-paldea",
+    "Paldean Tauros (Combat)": "tauros-paldea-combat-breed",
+    "Paldean Tauros (Blaze)": "tauros-paldea-blaze-breed",
+    "Paldean Tauros (Aqua)": "tauros-paldea-aqua-breed",
 
     // Overige fixes
     Basculegion: "basculegion-male",

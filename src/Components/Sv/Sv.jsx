@@ -7,11 +7,13 @@ import SvModal from "./SvModal.jsx";
 import SvTabs from "./SvTabs.jsx";
 import SvCards from "./SvCards.jsx";
 import SvActiveHunts from "./SvActiveHunts.jsx";
+import svRegionalPokemon from "../../data/SvRegionalData.js";
+import svRegionalData from "../../data/SvRegionalData.js";
 
 export default function Sv() {
     // Maak een unieke lijst van alle Pokémon op basis van hun ID
     const allAvailablePokemon = Array.from(
-        new Map([...svPokemon, ...svTmPokemon, ...svIdData].map(p => [p.id, p])).values()
+        new Map([...svPokemon, ...svTmPokemon, ...svIdData, ...svRegionalPokemon].map(p => [p.id, p])).values()
     );
 
     const { pokemonList } = usePokemon(allAvailablePokemon);
@@ -44,9 +46,11 @@ export default function Sv() {
                 ? svTmPokemon
                 : activeTab === "indigo"
                     ? svIdData
-                    : activeTab === "active"
-                        ? allAvailablePokemon // Gebruikt nu de unieke lijst
-                        : [];
+                    : activeTab === "regional" // Nieuwe check
+                        ? svRegionalData
+                        : activeTab === "active"
+                            ? allAvailablePokemon
+                            : [];
 
     const filteredPokemon = displayedPokemonList.filter((p) => {
         if (showMissingOnly) {
