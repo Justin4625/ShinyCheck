@@ -30,14 +30,12 @@ export default function ShinyDexCards({ displayedPokemon, onCardClick, loading, 
                             count++;
                         }
                     }
-                    // eslint-disable-next-line no-unused-vars
-                } catch (e) { /* empty */ }
+                } catch (e) { /* eslint-disable-line no-unused-vars */ }
             }
         }
         return count;
     };
 
-    // Toon lader als de data nog wordt geladen
     if (loading) {
         return (
             <div className="flex flex-col items-center justify-center py-24 w-full">
@@ -49,7 +47,6 @@ export default function ShinyDexCards({ displayedPokemon, onCardClick, loading, 
         );
     }
 
-    // Toon melding als er geen Pokémon zijn gevonden na filtering
     if (displayedPokemon.length === 0) {
         return (
             <div className="flex flex-col items-center justify-center py-20 w-full bg-white/20 rounded-[3rem] border-2 border-dashed border-slate-200">
@@ -70,7 +67,6 @@ export default function ShinyDexCards({ displayedPokemon, onCardClick, loading, 
                 const amountOwned = getCollectionCount(pokemon.name);
                 const isOwned = amountOwned > 0;
 
-                // Check of deze pokemon varianten heeft voor de badge
                 const hasVariants = regionalPokemon.some(p =>
                     p.name.toLowerCase().includes(pokemon.name.toLowerCase())
                 );

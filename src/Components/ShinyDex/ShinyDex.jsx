@@ -22,7 +22,7 @@ export default function ShinyDex() {
     // Modal states
     const [selectedPokemon, setSelectedPokemon] = useState(null);
     const [selectedEntry, setSelectedEntry] = useState(null);
-    const [refreshKey, setRefreshKey] = useState(0); // Toegevoegd voor live updates
+    const [refreshKey, setRefreshKey] = useState(0);
 
     // Blokkeer scrollen op de achtergrond als er een modal open is
     useEffect(() => {
@@ -35,10 +35,9 @@ export default function ShinyDex() {
     }, [selectedPokemon, selectedEntry]);
 
     const regionEntries = fullShinyDex.filter((p) => p.region === activeTab);
-    // Destructureer ook 'loading' uit de hook
     const { pokemonList, loading } = usePokemon(regionEntries);
 
-    // Checkt of de basisvorm of een variant (zoals Paldean) gevangen is
+    // Bepaalt of een Pokémon 'goud' is (gevangen) conform de logica in ShinyDexCards
     const isCaught = (baseName) => {
         const lowerBaseName = baseName.toLowerCase();
         for (let i = 0; i < localStorage.length; i++) {
@@ -48,44 +47,41 @@ export default function ShinyDex() {
                     const data = JSON.parse(localStorage.getItem(key));
                     if (data?.pokemonName) {
                         const caughtName = data.pokemonName.toLowerCase();
-                        if (caughtName === lowerBaseName || caughtName.includes(lowerBaseName)) return true;
+                        const matchesName = caughtName === lowerBaseName || caughtName.includes(lowerBaseName);
+
+                        // Specifieke uitzondering voor Porygon (gekopieerd uit ShinyDexCards)
+                        let isException = false;
+                        if (lowerBaseName === "porygon") {
+                            if (caughtName === "porygon2" || caughtName === "porygon-z") {
+                                isException = true;
+                            }
+                        }
+
+                        if (matchesName && !isException) return true;
                     }
-                    // eslint-disable-next-line no-unused-vars
-                } catch (e) { /* empty */ }
+                } catch (e) { /* eslint-disable-line no-unused-vars */ }
             }
         }
         return false;
     };
 
     const globalStats = useMemo(() => {
-        const caughtNames = new Set();
-        for (let i = 0; i < localStorage.length; i++) {
-            const key = localStorage.key(i);
-            if (key.startsWith("plza_shinyData_") || key.startsWith("sv_shinyData_")) {
-                try {
-                    const data = JSON.parse(localStorage.getItem(key));
-                    if (data?.pokemonName) caughtNames.add(data.pokemonName.toLowerCase());
-                    // eslint-disable-next-line no-unused-vars
-                } catch (e) { /* empty */ }
-            }
-        }
-        const count = caughtNames.size;
+        // Tel hoeveel unieke Pokémon uit de totale lijst als 'caught' (goud) worden gemarkeerd
+        const count = fullShinyDex.filter(p => isCaught(p.name)).length;
         const total = fullShinyDex.length;
         const percentage = total > 0 ? ((count / total) * 100).toFixed(1) : 0;
         return { count, total, percentage };
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [refreshKey]); // Update stats bij verwijderen
+    }, [refreshKey]);
 
     const regionStats = useMemo(() => {
-        let count = 0;
-        regionEntries.forEach(p => {
-            if (isCaught(p.name)) count++;
-        });
+        // Tel hoeveel Pokémon in de huidige regio 'goud' zijn
+        const count = regionEntries.filter(p => isCaught(p.name)).length;
         const total = regionEntries.length;
         const percentage = total > 0 ? ((count / total) * 100).toFixed(1) : 0;
         return { count, total, percentage };
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [regionEntries, refreshKey]); // Update stats bij verwijderen
+    }, [regionEntries, refreshKey]);
 
     const filteredList = pokemonList.filter(p => {
         const matchesSearch = p.name.toLowerCase().includes(searchQuery.toLowerCase()) || p.id.toString().includes(searchQuery);
@@ -188,7 +184,7 @@ export default function ShinyDex() {
                     pokemon={selectedPokemon}
                     onClose={() => setSelectedPokemon(null)}
                     onSelectEntry={(entry) => setSelectedEntry(entry)}
-                    refreshKey={refreshKey} // Geef refreshKey door
+                    refreshKey={refreshKey}
                 />
             )}
 
@@ -200,7 +196,7 @@ export default function ShinyDex() {
                     shinyIndex={selectedEntry.shinyIndex}
                     onClose={() => {
                         setSelectedEntry(null);
-                        setRefreshKey(prev => prev + 1); // Trigger refresh
+                        setRefreshKey(prev => prev + 1);
                     }}
                     gameName="Pokémon Legends: Z-A"
                 />
@@ -213,7 +209,7 @@ export default function ShinyDex() {
                     shinyIndex={selectedEntry.shinyIndex}
                     onClose={() => {
                         setSelectedEntry(null);
-                        setRefreshKey(prev => prev + 1); // Trigger refresh
+                        setRefreshKey(prev => prev + 1);
                     }}
                     gameName="Pokémon Scarlet & Violet"
                 />
