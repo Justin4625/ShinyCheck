@@ -2,29 +2,34 @@ import React from "react";
 import svPokemon from "../../data/SvData.js";
 import svTmPokemon from "../../data/SvTmData.js";
 import svIdData from "../../data/SvIdData.js";
+import svRegionalPokemon from "../../data/RegionalData.js";
 
 export default function SvCards({ displayedPokemon, pokemonList, openModal, activeTab }) {
     // Verbeterde loading check: controleert of de pokemon bestaat EN of de sprite er is.
-    // Dit vangt vertragingen op tijdens het tab-switchen en zoeken.
     const isLoading = displayedPokemon.length > 0 && displayedPokemon.some((entry) => {
         const pokemon = pokemonList.find((p) => p.id === entry.id);
-        // Als de pokemon nog niet in de lijst staat OF de sprite ontbreekt -> laden
         return !pokemon || !pokemon?.sprites?.other?.home?.front_shiny;
     });
 
-    // Bepaalt het nummer op de badge op basis van de positie in de Dex-lijst
-    const getStaticIndex = (entry) => {
-        let targetData = svPokemon;
+    // Bepaalt het nummer op de badge
+    const getBadgeNumber = (entry) => {
+        // Voor de regional tab tonen we direct het National ID (bijv. 10100)
+        if (activeTab === "regional") {
+            return entry.id;
+        }
 
+        // Voor de overige tabs berekenen we de index in de specifieke Dex-lijst
+        let targetData = svPokemon;
         if (activeTab === "teal") targetData = svTmPokemon;
         if (activeTab === "indigo") targetData = svIdData;
 
         if (activeTab === "active") {
-            targetData = svPokemon.concat(svTmPokemon, svIdData);
+            targetData = [...svPokemon, ...svTmPokemon, ...svIdData, ...svRegionalPokemon];
         }
 
         const index = targetData.findIndex(p => p.id === entry.id);
-        return index !== -1 ? index + 1 : 1;
+        const staticNumber = index !== -1 ? index + 1 : 1;
+        return String(staticNumber).padStart(3, "0");
     };
 
     return (
@@ -45,7 +50,7 @@ export default function SvCards({ displayedPokemon, pokemonList, openModal, acti
                 displayedPokemon.map((entry, index) => {
                     const pokemon = pokemonList.find((p) => p.id === entry.id);
                     const shinyCount = Number(localStorage.getItem(`sv_shiny_${entry.id}`)) || 0;
-                    const staticNumber = getStaticIndex(entry);
+                    const badgeNumber = getBadgeNumber(entry);
                     const isCaught = shinyCount > 0;
 
                     const isScarlet = index % 2 === 0;
@@ -81,7 +86,7 @@ export default function SvCards({ displayedPokemon, pokemonList, openModal, acti
                                     style={{ backgroundColor: isCaught ? "#eab308" : accentColor }}
                                 >
                                     <span className="text-[10px] font-black italic text-white tracking-tighter">
-                                        No. {String(staticNumber).padStart(3, "0")}
+                                        No. {badgeNumber}
                                     </span>
                                 </div>
                                 {isCaught && (

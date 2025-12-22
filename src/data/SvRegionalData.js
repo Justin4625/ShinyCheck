@@ -41,10 +41,6 @@ const svRegionalPokemon = [
     { id: 10243, name: "Hisuian Avalugg", game: "Pokémon Scarlet & Violet" },
     { id: 10244, name: "Hisuian Decidueye", game: "Pokémon Scarlet & Violet" },
     { id: 10247, name: "Hisuian Basculin", game: "Pokémon Scarlet & Violet" },
-
-    // --- PALDEAN FORMS ---
-    { id: 10253, name: "Paldean Wooper", game: "Pokémon Scarlet & Violet" },
-    { id: 10250, name: "Paldean Tauros (Combat)", game: "Pokémon Scarlet & Violet" },
 ];
 
 export default svRegionalPokemon;
