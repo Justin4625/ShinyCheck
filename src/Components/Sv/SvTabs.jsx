@@ -6,6 +6,7 @@ export default function SvTabs({ activeTab, setActiveTab }) {
         { id: "base", label: "BASE DEX"},
         { id: "teal", label: "TEAL MASK"},
         { id: "indigo", label: "INDIGO DISK"},
+        { id: "regional", label: "REGIONAL FORMS"},
     ];
 
     return (
