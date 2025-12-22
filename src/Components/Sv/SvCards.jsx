@@ -1,28 +1,65 @@
-import React from "react";
+import React, { useState } from "react";
 import svPokemon from "../../data/SvData.js";
 import svTmPokemon from "../../data/SvTmData.js";
 import svIdData from "../../data/SvIdData.js";
+import regionalPokemon from "../../data/RegionalData.js";
+import SvRegionalsModal from "./SvRegionalsModal.jsx";
 
 export default function SvCards({ displayedPokemon, pokemonList, openModal, activeTab }) {
-    // Verbeterde loading check: controleert of de pokemon bestaat EN of de sprite er is.
-    // Dit vangt vertragingen op tijdens het tab-switchen en zoeken.
+    const [regionalSelection, setRegionalSelection] = useState(null);
+
+    // Controleert of de pokemon data en sprites geladen zijn
     const isLoading = displayedPokemon.length > 0 && displayedPokemon.some((entry) => {
         const pokemon = pokemonList.find((p) => p.id === entry.id);
-        // Als de pokemon nog niet in de lijst staat OF de sprite ontbreekt -> laden
         return !pokemon || !pokemon?.sprites?.other?.home?.front_shiny;
     });
 
-    // Bepaalt het nummer op de badge op basis van de positie in de Dex-lijst
+    const handleCardClick = (entry, pokemon) => {
+        // Controleer of de basisnaam in de regionalPokemon lijst staat
+        const hasRegionals = regionalPokemon.some(p =>
+            p.name.trim().toLowerCase() === entry.name.trim().toLowerCase()
+        );
+
+        if (hasRegionals) {
+            setRegionalSelection(entry);
+        } else {
+            openModal(pokemon);
+        }
+    };
+
+    const handleSelectVariant = (variantId, variantName) => {
+        // Zoek de uitgebreide API data voor de specifieke variant-ID
+        const variantPokemon = pokemonList.find(p => p.id === variantId);
+
+        // Maak een object dat de unieke variant-ID behoudt voor Active Hunts & Collection
+        const dataToOpen = variantPokemon ? {
+            ...variantPokemon,
+            name: variantName,
+            id: variantId
+        } : {
+            // Fallback voor sprites als de API data nog niet in de lijst zit
+            id: variantId,
+            name: variantName,
+            sprites: {
+                other: {
+                    home: {
+                        front_shiny: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/shiny/${variantId}.png`
+                    }
+                }
+            }
+        };
+
+        setRegionalSelection(null);
+        openModal(dataToOpen);
+    };
+
     const getStaticIndex = (entry) => {
         let targetData = svPokemon;
-
         if (activeTab === "teal") targetData = svTmPokemon;
         if (activeTab === "indigo") targetData = svIdData;
-
         if (activeTab === "active") {
             targetData = svPokemon.concat(svTmPokemon, svIdData);
         }
-
         const index = targetData.findIndex(p => p.id === entry.id);
         return index !== -1 ? index + 1 : 1;
     };
@@ -44,17 +81,17 @@ export default function SvCards({ displayedPokemon, pokemonList, openModal, acti
             ) : (
                 displayedPokemon.map((entry, index) => {
                     const pokemon = pokemonList.find((p) => p.id === entry.id);
+                    // Haal shiny status op basis van de ID uit localStorage
                     const shinyCount = Number(localStorage.getItem(`sv_shiny_${entry.id}`)) || 0;
                     const staticNumber = getStaticIndex(entry);
                     const isCaught = shinyCount > 0;
 
-                    const isScarlet = index % 2 === 0;
-                    const accentColor = isScarlet ? "#ff4d00" : "#8c00ff";
+                    const accentColor = index % 2 === 0 ? "#ff4d00" : "#8c00ff";
 
                     return (
                         <div
                             key={entry.id}
-                            onClick={() => openModal(pokemon)}
+                            onClick={() => handleCardClick(entry, pokemon)}
                             className={`group relative border-b-4 border-r-4 rounded-tr-3xl rounded-bl-3xl rounded-tl-md rounded-br-md p-3 flex flex-col items-center justify-between cursor-pointer transition-all duration-300 hover:scale-[1.02] active:scale-95 overflow-hidden shadow-sm hover:shadow-md
                                 ${isCaught
                                 ? "bg-gradient-to-br from-yellow-50 via-white to-yellow-100 border-yellow-400 shadow-[0_0_15px_rgba(250,204,21,0.2)]"
@@ -84,9 +121,7 @@ export default function SvCards({ displayedPokemon, pokemonList, openModal, acti
                                         No. {String(staticNumber).padStart(3, "0")}
                                     </span>
                                 </div>
-                                {isCaught && (
-                                    <span className="text-sm drop-shadow-sm">⭐</span>
-                                )}
+                                {isCaught && <span className="text-sm drop-shadow-sm">⭐</span>}
                             </div>
 
                             <div className="w-full relative z-10 mb-2">
@@ -148,6 +183,14 @@ export default function SvCards({ displayedPokemon, pokemonList, openModal, acti
                         </div>
                     );
                 })
+            )}
+
+            {regionalSelection && (
+                <SvRegionalsModal
+                    pokemon={regionalSelection}
+                    onClose={() => setRegionalSelection(null)}
+                    onSelect={handleSelectVariant}
+                />
             )}
 
             <style dangerouslySetInnerHTML={{ __html: `
