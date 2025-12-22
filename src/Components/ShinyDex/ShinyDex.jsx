@@ -35,7 +35,8 @@ export default function ShinyDex() {
     }, [selectedPokemon, selectedEntry]);
 
     const regionEntries = fullShinyDex.filter((p) => p.region === activeTab);
-    const { pokemonList } = usePokemon(regionEntries);
+    // Destructureer ook 'loading' uit de hook
+    const { pokemonList, loading } = usePokemon(regionEntries);
 
     // Checkt of de basisvorm of een variant (zoals Paldean) gevangen is
     const isCaught = (baseName) => {
@@ -176,6 +177,8 @@ export default function ShinyDex() {
                     <ShinyDexCards
                         displayedPokemon={filteredList}
                         onCardClick={(p) => setSelectedPokemon(p)}
+                        loading={loading}
+                        searchQuery={searchQuery}
                     />
                 </div>
             </div>

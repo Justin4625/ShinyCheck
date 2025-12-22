@@ -1,7 +1,7 @@
 import React from "react";
 import regionalPokemon from "../../data/RegionalData.js";
 
-export default function ShinyDexCards({ displayedPokemon, onCardClick }) {
+export default function ShinyDexCards({ displayedPokemon, onCardClick, loading, searchQuery }) {
 
     const getCollectionCount = (baseName) => {
         let count = 0;
@@ -36,6 +36,33 @@ export default function ShinyDexCards({ displayedPokemon, onCardClick }) {
         }
         return count;
     };
+
+    // Toon lader als de data nog wordt geladen
+    if (loading) {
+        return (
+            <div className="flex flex-col items-center justify-center py-24 w-full">
+                <div className="w-12 h-12 border-4 border-slate-200 border-t-[#ff4d29] rounded-full animate-spin mb-4"></div>
+                <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 animate-pulse">
+                    Loading Pokémon Data...
+                </p>
+            </div>
+        );
+    }
+
+    // Toon melding als er geen Pokémon zijn gevonden na filtering
+    if (displayedPokemon.length === 0) {
+        return (
+            <div className="flex flex-col items-center justify-center py-20 w-full bg-white/20 rounded-[3rem] border-2 border-dashed border-slate-200">
+                <div className="text-4xl mb-4 opacity-20">🔍</div>
+                <p className="text-sm font-black uppercase italic text-slate-400">
+                    No Pokémon found {searchQuery && `for "${searchQuery}"`}
+                </p>
+                <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest mt-1">
+                    Try another name, ID or clear your filters
+                </p>
+            </div>
+        );
+    }
 
     return (
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 pb-20">
