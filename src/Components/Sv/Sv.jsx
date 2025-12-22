@@ -16,6 +16,11 @@ export default function Sv() {
         new Map([...svPokemon, ...svTmPokemon, ...svIdData, ...svRegionalPokemon].map(p => [p.id, p])).values()
     );
 
+    // Filter voor de progressiebar: sluit regionale vormen uit
+    const progressPokemon = Array.from(
+        new Map([...svPokemon, ...svTmPokemon, ...svIdData].map(p => [p.id, p])).values()
+    );
+
     const { pokemonList } = usePokemon(allAvailablePokemon);
 
     const [selectedPokemon, setSelectedPokemon] = useState(null);
@@ -46,7 +51,7 @@ export default function Sv() {
                 ? svTmPokemon
                 : activeTab === "indigo"
                     ? svIdData
-                    : activeTab === "regional" // Nieuwe check
+                    : activeTab === "regional"
                         ? svRegionalData
                         : activeTab === "active"
                             ? allAvailablePokemon
@@ -65,9 +70,11 @@ export default function Sv() {
         return nameMatch || typeMatch;
     });
 
+    // Aangepaste progressie logica
     const getShinyProgress = () => {
         let uniqueShinyCount = 0;
-        const allIds = new Set(allAvailablePokemon.map(p => p.id));
+        // Gebruik progressPokemon in plaats van allAvailablePokemon om regional uit te sluiten
+        const allIds = new Set(progressPokemon.map(p => p.id));
         allIds.forEach(id => {
             const count = Number(localStorage.getItem(`sv_shiny_${id}`)) || 0;
             if (count > 0) uniqueShinyCount += 1;
@@ -76,7 +83,9 @@ export default function Sv() {
     };
 
     const shinyProgress = getShinyProgress();
-    const shinyPercentage = ((shinyProgress.count / shinyProgress.total) * 100).toFixed(1);
+    const shinyPercentage = shinyProgress.total > 0
+        ? ((shinyProgress.count / shinyProgress.total) * 100).toFixed(1)
+        : 0;
 
     return (
         <div className="relative p-3 sm:p-6 min-h-screen bg-[#f8f9fa] overflow-hidden font-sans">
