@@ -135,6 +135,13 @@ const specialCases = {
     // Overige fixes
     Basculegion: "basculegion-male",
     Enamorus: "enamorus-incarnate",
+
+    // --- REGIONAL FORMS FIXES ---
+    "Alolan Marowak": "marowak-alola",
+    "Galarian Farfetch'd": "farfetchd-galar",
+    "Galarian Mr. Mime": "mr-mime-galar",
+    "Galarian Yamask": "yamask-galar",
+    "Galarian Stunfisk": "stunfisk-galar",
 };
 
 export default specialCases;

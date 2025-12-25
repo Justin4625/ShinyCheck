@@ -2,6 +2,7 @@ import React from "react";
 // Importeer de bronbestanden om de originele index te bepalen
 import plzaPokemon from "../../data/PlzaData/PlzaData.js";
 import plzaMdPokemon from "../../data/PlzaData/PlzaMdData.js";
+import plzaRegionalPokemon from "../../data/PlzaData/PlzaRegionalData.jsx";
 
 export default function PlzaCards({ displayedPokemon, pokemonList, openModal, activeTab }) {
     // Controleer of de sprites geladen zijn om een loading state te tonen
@@ -14,6 +15,11 @@ export default function PlzaCards({ displayedPokemon, pokemonList, openModal, ac
     const getStaticIndex = (entry) => {
         if (activeTab === "mega") {
             const index = plzaMdPokemon.findIndex(p => p.id === entry.id);
+            return index + 1;
+        }
+        // Voeg logica toe voor de regional tab
+        if (activeTab === "regional") {
+            const index = plzaRegionalPokemon.findIndex(p => p.id === entry.id);
             return index + 1;
         }
         const index = plzaPokemon.findIndex(p => p.id === entry.id);
