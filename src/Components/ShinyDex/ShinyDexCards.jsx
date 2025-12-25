@@ -1,5 +1,5 @@
 import React from "react";
-import regionalPokemon from "../../data/RegionalData.js";
+import regionalPokemon from "../../data/ShinyDexData/RegionalData.js";
 
 export default function ShinyDexCards({ displayedPokemon, onCardClick, loading, searchQuery }) {
 

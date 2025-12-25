@@ -1,7 +1,7 @@
 import React from "react";
 // Importeer de bronbestanden om de originele index te bepalen
-import plzaPokemon from "../../data/PlzaData.js";
-import plzaMdPokemon from "../../data/PlzaMdData.js";
+import plzaPokemon from "../../data/PlzaData/PlzaData.js";
+import plzaMdPokemon from "../../data/PlzaData/PlzaMdData.js";
 
 export default function PlzaCards({ displayedPokemon, pokemonList, openModal, activeTab }) {
     // Controleer of de sprites geladen zijn om een loading state te tonen

@@ -1,8 +1,8 @@
 import React from "react";
-import svPokemon from "../../data/SvData.js";
-import svTmPokemon from "../../data/SvTmData.js";
-import svIdData from "../../data/SvIdData.js";
-import svRegionalPokemon from "../../data/RegionalData.js";
+import svPokemon from "../../data/SvData/SvData.js";
+import svTmPokemon from "../../data/SvData/SvTmData.js";
+import svIdData from "../../data/SvData/SvIdData.js";
+import svRegionalPokemon from "../../data/ShinyDexData/RegionalData.js";
 
 export default function SvCards({ displayedPokemon, pokemonList, openModal, activeTab }) {
     // Verbeterde loading check: controleert of de pokemon bestaat EN of de sprite er is.

@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from "react";
-import svPokemon from "../../data/SvData.js";
-import svTmPokemon from "../../data/SvTmData.js";
-import svIdData from "../../data/SvIdData.js";
+import svPokemon from "../../data/SvData/SvData.js";
+import svTmPokemon from "../../data/SvData/SvTmData.js";
+import svIdData from "../../data/SvData/SvIdData.js";
 import usePokemon from "../FetchPokemon.jsx";
 import SvModal from "./SvModal.jsx";
 import SvTabs from "./SvTabs.jsx";
 import SvCards from "./SvCards.jsx";
 import SvActiveHunts from "./SvActiveHunts.jsx";
-import svRegionalPokemon from "../../data/SvRegionalData.js";
-import svRegionalData from "../../data/SvRegionalData.js";
+import svRegionalPokemon from "../../data/SvData/SvRegionalData.js";
+import svRegionalData from "../../data/SvData/SvRegionalData.js";
 
 export default function Sv() {
     // Maak een unieke lijst van alle Pokémon op basis van hun ID

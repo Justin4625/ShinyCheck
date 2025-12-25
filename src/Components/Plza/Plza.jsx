@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import plzaPokemon from "../../data/PlzaData.js";
-import plzaMdPokemon from "../../data/PlzaMdData.js";
+import plzaPokemon from "../../data/PlzaData/PlzaData.js";
+import plzaMdPokemon from "../../data/PlzaData/PlzaMdData.js";
 import usePokemon from "../FetchPokemon.jsx";
 import PlzaModal from "./PlzaModal.jsx";
 import PlzaTabs from "./PlzaTabs.jsx";

@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import regionalPokemon from "../../data/RegionalData.js";
+import regionalPokemon from "../../data/ShinyDexData/RegionalData.js";
 
 export default function ShinyDexModal({ pokemon, onClose, onSelectEntry, refreshKey }) {
     if (!pokemon) return null;

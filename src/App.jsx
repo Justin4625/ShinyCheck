@@ -6,16 +6,16 @@ import Sv from "./Components/Sv/Sv.jsx";
 import Collection from "./Components/Collection/Collection.jsx";
 
 // Data imports
-import plzaPokemon from "./data/PlzaData.js";
-import plzaMdPokemon from "./data/PlzaMdData.js";
-import svPokemon from "./data/SvData.js";
-import svTmPokemon from "./data/SvTmData.js";
-import svIdData from "./data/SvIdData.js";
-import shinyDexPart1 from "./data/ShinyDexData.js";
-import shinyDexPart2 from "./data/ShinyDexData2.js";
-import shinyDexPart3 from "./data/ShinyDexData3.js";
-import regionalPokemon from "./data/RegionalData.js";
-import svRegionalPokemon from "./data/SvRegionalData.js";
+import plzaPokemon from "./data/PlzaData/PlzaData.js";
+import plzaMdPokemon from "./data/PlzaData/PlzaMdData.js";
+import svPokemon from "./data/SvData/SvData.js";
+import svTmPokemon from "./data/SvData/SvTmData.js";
+import svIdData from "./data/SvData/SvIdData.js";
+import shinyDexPart1 from "./data/ShinyDexData/ShinyDexData.js";
+import shinyDexPart2 from "./data/ShinyDexData/ShinyDexData2.js";
+import shinyDexPart3 from "./data/ShinyDexData/ShinyDexData3.js";
+import regionalPokemon from "./data/ShinyDexData/RegionalData.js";
+import svRegionalPokemon from "./data/SvData/SvRegionalData.js";
 
 // Combineer alle PLZA pokemon lijsten en filter op unieke ID's
 const allPlzaPokemon = Array.from(

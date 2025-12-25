@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useEffect } from "react";
-import shinyDexPart1 from "../../data/ShinyDexData.js";
-import shinyDexPart2 from "../../data/ShinyDexData2.js";
-import shinyDexPart3 from "../../data/ShinyDexData3.js";
+import shinyDexPart1 from "../../data/ShinyDexData/ShinyDexData.js";
+import shinyDexPart2 from "../../data/ShinyDexData/ShinyDexData2.js";
+import shinyDexPart3 from "../../data/ShinyDexData/ShinyDexData3.js";
 
 import usePokemon from "../FetchPokemon.jsx";
 import ShinyDexCards from "./ShinyDexCards.jsx";
