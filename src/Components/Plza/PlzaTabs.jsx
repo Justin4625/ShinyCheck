@@ -5,6 +5,7 @@ export default function PlzaTabs({ activeTab, setActiveTab }) {
         { id: "active", label: "Active Hunts" },
         { id: "base", label: "Base Dex" },
         { id: "mega", label: "Mega Dimension" },
+        { id: "regional", label: "Regional Forms" },
     ];
 
     return (

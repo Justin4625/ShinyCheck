@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import plzaPokemon from "../../data/PlzaData/PlzaData.js";
 import plzaMdPokemon from "../../data/PlzaData/PlzaMdData.js";
+import plzaRegionalPokemon from "../../data/PlzaData/PlzaRegionalData.jsx";
 import usePokemon from "../FetchPokemon.jsx";
 import PlzaModal from "./PlzaModal.jsx";
 import PlzaTabs from "./PlzaTabs.jsx";
@@ -8,7 +9,12 @@ import PlzaActiveHunts from "./PlzaActiveHunts.jsx";
 import PlzaCards from "./PlzaCards.jsx";
 
 export default function Plza() {
-    const { pokemonList } = usePokemon(plzaPokemon.concat(plzaMdPokemon));
+    // Combineer alle Pokémon voor de API fetch en modal navigatie
+    const allAvailablePokemon = Array.from(
+        new Map([...plzaPokemon, ...plzaMdPokemon, ...plzaRegionalPokemon].map(p => [p.id, p])).values()
+    );
+
+    const { pokemonList } = usePokemon(allAvailablePokemon);
 
     const [selectedPokemon, setSelectedPokemon] = useState(null);
     const [activeTab, setActiveTab] = useState("base");
@@ -35,9 +41,11 @@ export default function Plza() {
             ? plzaPokemon
             : activeTab === "mega"
                 ? plzaMdPokemon
-                : activeTab === "active"
-                    ? plzaPokemon.concat(plzaMdPokemon)
-                    : [];
+                : activeTab === "regional"
+                    ? plzaRegionalPokemon
+                    : activeTab === "active"
+                        ? allAvailablePokemon
+                        : [];
 
     const filteredPokemon = displayedPokemon.filter((p) => {
         if (showMissingOnly) {
@@ -59,18 +67,22 @@ export default function Plza() {
 
     const getShinyProgress = () => {
         let uniqueShinyCount = 0;
-        plzaPokemon.concat(plzaMdPokemon).forEach(p => {
+        // Progressie wordt berekend over base en mega, exclusief regional (conform SV structuur)
+        const progressPokemon = [...plzaPokemon, ...plzaMdPokemon];
+        progressPokemon.forEach(p => {
             const count = Number(localStorage.getItem(`plza_shiny_${p.id}`)) || 0;
             if (count > 0) uniqueShinyCount += 1;
         });
-        return { count: uniqueShinyCount, total: 364 };
+        return { count: uniqueShinyCount, total: progressPokemon.length };
     };
 
     const shinyProgress = getShinyProgress();
-    const shinyPercentage = ((shinyProgress.count / shinyProgress.total) * 100).toFixed(1);
+    const shinyPercentage = shinyProgress.total > 0
+        ? ((shinyProgress.count / shinyProgress.total) * 100).toFixed(1)
+        : 0;
 
     const modalIndex = selectedPokemon
-        ? pokemonList.findIndex(p => p.id === selectedPokemon.id)
+        ? allAvailablePokemon.findIndex(p => p.id === selectedPokemon.id)
         : -1;
 
     return (
@@ -103,7 +115,7 @@ export default function Plza() {
                         <div className="flex items-baseline gap-1.5">
                             <span className="text-lg font-black text-slate-900 italic">{shinyProgress.count}</span>
                             <span className="text-slate-300 font-bold text-xs">/</span>
-                            <span className="text-slate-400 font-bold text-[10px]">364</span>
+                            <span className="text-slate-400 font-bold text-[10px]">{shinyProgress.total}</span>
                             <span className="ml-1 text-pink-500 font-black italic text-sm">{shinyPercentage}%</span>
                         </div>
                     </div>
@@ -157,7 +169,7 @@ export default function Plza() {
                 )}
             </div>
 
-            <PlzaModal selectedPokemon={selectedPokemon} onClose={closeModal} index={modalIndex} />
+            <PlzaModal selectedPokemon={selectedPokemon} onClose={closeModal} index={modalIndex} allAvailablePokemon={allAvailablePokemon} />
         </div>
     );
 }
