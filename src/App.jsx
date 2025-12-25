@@ -16,10 +16,11 @@ import shinyDexPart2 from "./data/ShinyDexData/ShinyDexData2.js";
 import shinyDexPart3 from "./data/ShinyDexData/ShinyDexData3.js";
 import regionalPokemon from "./data/ShinyDexData/RegionalData.js";
 import svRegionalPokemon from "./data/SvData/SvRegionalData.js";
+import plzaRegionalPokemon from "./data/PlzaData/PlzaRegionalData.jsx";
 
 // Combineer alle PLZA pokemon lijsten en filter op unieke ID's
 const allPlzaPokemon = Array.from(
-    new Map([...plzaPokemon, ...plzaMdPokemon].map(p => [p.id, p])).values()
+    new Map([...plzaPokemon, ...plzaMdPokemon, ...plzaRegionalPokemon].map(p => [p.id, p])).values()
 );
 
 // Combineer alle SV pokemon lijsten (Base + DLCs) en filter op unieke ID's
