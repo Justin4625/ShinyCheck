@@ -1,8 +1,6 @@
 import React from "react";
-// Importeer de bronbestanden om de originele index te bepalen
 import plzaPokemon from "../../data/PlzaData/PlzaData.js";
 import plzaMdPokemon from "../../data/PlzaData/PlzaMdData.js";
-import plzaRegionalPokemon from "../../data/PlzaData/PlzaRegionalData.jsx";
 
 export default function PlzaCards({ displayedPokemon, pokemonList, openModal, activeTab }) {
     // Controleer of de sprites geladen zijn om een loading state te tonen
@@ -11,17 +9,19 @@ export default function PlzaCards({ displayedPokemon, pokemonList, openModal, ac
         return !pokemon?.sprites?.other?.home?.front_shiny;
     });
 
-    // Nieuwe logica: Toon het volgnummer in de lijst in plaats van de National Dex ID
     const getStaticIndex = (entry) => {
+        // Voor de Regional tab tonen we de specifieke Form ID uit de data
+        if (activeTab === "regional") {
+            return entry.id;
+        }
+
+        // Voor Mega's gebruiken we een volgnummer (1, 2, 3...)
         if (activeTab === "mega") {
             const index = plzaMdPokemon.findIndex(p => p.id === entry.id);
             return index + 1;
         }
-        // Voeg logica toe voor de regional tab
-        if (activeTab === "regional") {
-            const index = plzaRegionalPokemon.findIndex(p => p.id === entry.id);
-            return index + 1;
-        }
+
+        // Voor de basis lijst gebruiken we een volgnummer
         const index = plzaPokemon.findIndex(p => p.id === entry.id);
         return index !== -1 ? index + 1 : 1;
     };
