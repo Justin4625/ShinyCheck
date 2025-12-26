@@ -127,7 +127,7 @@ export default function ShinyDex() {
                                     <span className={`text-[10px] font-black uppercase tracking-widest leading-none ${
                                         isNewYearTheme ? "text-blue-300" : "text-slate-400"
                                     }`}>
-                                        {isNewYearTheme ? "2025 National Progress" : "Global National Dex"}
+                                        {"Global National Dex"}
                                     </span>
                                     <span className={`text-[14px] font-black mt-1 italic ${isNewYearTheme ? "text-white" : "text-slate-600"}`}>
                                         {globalStats.count} <span className="text-slate-500">/</span> {globalStats.total}
