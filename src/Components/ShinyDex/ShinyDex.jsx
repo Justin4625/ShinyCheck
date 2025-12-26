@@ -215,7 +215,7 @@ export default function ShinyDex() {
                             isNewYearTheme ? "bg-slate-950/50 border-slate-800" : "bg-slate-100/50 border-slate-200"
                         }`}>
                             <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
-                                {isNewYearTheme ? "Show Missing" : "Unregistered"}
+                                {"Unregistered"}
                             </span>
                             <button
                                 onClick={() => setShowUnregisteredOnly(!showUnregisteredOnly)}
