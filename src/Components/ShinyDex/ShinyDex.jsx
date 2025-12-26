@@ -24,6 +24,14 @@ export default function ShinyDex() {
     const [selectedEntry, setSelectedEntry] = useState(null);
     const [refreshKey, setRefreshKey] = useState(0);
 
+    // --- AUTOMATISCHE THEMA LOGICA ---
+    const isNewYearTheme = useMemo(() => {
+        const now = new Date();
+        // Het thema is actief tot 3 januari 2026, 00:00:00
+        const expiryDate = new Date(2026, 0, 3, 0, 0, 0);
+        return now < expiryDate;
+    }, []);
+
     // Blokkeer scrollen op de achtergrond als er een modal open is
     useEffect(() => {
         if (selectedPokemon || selectedEntry) {
@@ -66,7 +74,6 @@ export default function ShinyDex() {
     };
 
     const globalStats = useMemo(() => {
-        // Tel hoeveel unieke Pokémon uit de totale lijst als 'caught' (goud) worden gemarkeerd
         const count = fullShinyDex.filter(p => isCaught(p.name)).length;
         const total = fullShinyDex.length;
         const percentage = total > 0 ? ((count / total) * 100).toFixed(1) : 0;
@@ -75,7 +82,6 @@ export default function ShinyDex() {
     }, [refreshKey]);
 
     const regionStats = useMemo(() => {
-        // Tel hoeveel Pokémon in de huidige regio 'goud' zijn
         const count = regionEntries.filter(p => isCaught(p.name)).length;
         const total = regionEntries.length;
         const percentage = total > 0 ? ((count / total) * 100).toFixed(1) : 0;
@@ -90,82 +96,136 @@ export default function ShinyDex() {
     });
 
     return (
-        <div className="relative min-h-screen bg-[#f8fafc] p-4 sm:p-8 font-sans overflow-hidden text-slate-900">
-            <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-orange-200/40 rounded-full blur-[120px] pointer-events-none"></div>
-            <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-cyan-200/40 rounded-full blur-[120px] pointer-events-none"></div>
+        <div className={`relative min-h-screen p-4 sm:p-8 font-sans overflow-hidden transition-colors duration-1000 ${
+            isNewYearTheme ? "bg-[#0f172a] text-slate-100" : "bg-[#f8fafc] text-slate-900"
+        }`}>
+            {/* Achtergrond elementen die veranderen op basis van thema */}
+            <div className={`absolute top-[-10%] left-[-10%] w-[50%] h-[50%] rounded-full blur-[120px] pointer-events-none transition-colors duration-1000 ${
+                isNewYearTheme ? "bg-blue-600/20" : "bg-orange-200/40"
+            }`}></div>
+            <div className={`absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] rounded-full blur-[120px] pointer-events-none transition-colors duration-1000 ${
+                isNewYearTheme ? "bg-amber-500/10" : "bg-cyan-200/40"
+            }`}></div>
+
+            {isNewYearTheme && (
+                <div className="absolute inset-0 opacity-[0.1] pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] animate-pulse"></div>
+            )}
 
             <div className="relative z-10 max-w-7xl mx-auto">
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-8 px-4 gap-6">
                     <div className="flex flex-col w-full md:w-auto">
-                        <h1 className="text-3xl sm:text-5xl font-black tracking-tighter uppercase italic text-slate-900">
-                            Shiny<span className="text-[#ff4d29]">Check</span>
+                        <h1 className={`text-4xl sm:text-6xl font-black tracking-tighter uppercase italic flex items-center gap-3 transition-colors duration-1000 ${
+                            isNewYearTheme ? "text-white" : "text-slate-900"
+                        }`}>
+                            Shiny<span className={isNewYearTheme ? "text-amber-400 drop-shadow-[0_0_10px_rgba(251,191,36,0.5)]" : "text-[#ff4d29]"}>Check</span>
+                            {isNewYearTheme && <span className="text-2xl not-italic animate-bounce">🥂</span>}
                         </h1>
 
                         <div className="mt-4 w-full md:w-96">
                             <div className="flex justify-between items-end mb-1">
                                 <div className="flex flex-col">
-                                    <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest leading-none">Global National Dex</span>
-                                    <span className="text-[12px] font-black text-slate-600 mt-1 italic">
-                                        {globalStats.count} <span className="text-slate-400">/</span> {globalStats.total}
+                                    <span className={`text-[10px] font-black uppercase tracking-widest leading-none ${
+                                        isNewYearTheme ? "text-blue-300" : "text-slate-400"
+                                    }`}>
+                                        {isNewYearTheme ? "2025 National Progress" : "Global National Dex"}
+                                    </span>
+                                    <span className={`text-[14px] font-black mt-1 italic ${isNewYearTheme ? "text-white" : "text-slate-600"}`}>
+                                        {globalStats.count} <span className="text-slate-500">/</span> {globalStats.total}
                                     </span>
                                 </div>
-                                <span className="text-[13px] font-black text-[#ff4d29]">{globalStats.percentage}%</span>
+                                <span className={`text-[15px] font-black ${isNewYearTheme ? "text-amber-400" : "text-[#ff4d29]"}`}>
+                                    {globalStats.percentage}%
+                                </span>
                             </div>
-                            <div className="h-3 w-full bg-slate-200 rounded-full overflow-hidden shadow-inner">
+                            <div className={`h-3.5 w-full rounded-full overflow-hidden shadow-inner border transition-colors duration-1000 ${
+                                isNewYearTheme ? "bg-slate-800/50 border-slate-700" : "bg-slate-200 border-transparent"
+                            }`}>
                                 <div
-                                    className="h-full bg-[#ff4d29] transition-all duration-1000"
+                                    className={`h-full transition-all duration-1000 ${
+                                        isNewYearTheme ? "bg-gradient-to-r from-blue-500 via-cyan-400 to-amber-400 shadow-[0_0_15px_rgba(59,130,246,0.5)]" : "bg-[#ff4d29]"
+                                    }`}
                                     style={{ width: `${globalStats.percentage}%` }}
                                 />
                             </div>
                         </div>
                     </div>
 
-                    <div className="flex flex-col sm:flex-row items-center gap-4 w-full md:w-auto">
-                        <div className="w-full md:w-80 bg-white/80 backdrop-blur-md border border-slate-200 p-2 px-4 rounded-2xl shadow-sm flex items-center gap-3 group focus-within:border-[#ff4d29] transition-all">
-                            <input
-                                type="text"
-                                value={searchQuery}
-                                onChange={(e) => setSearchQuery(e.target.value)}
-                                placeholder="SEARCH NAME OR ID..."
-                                className="w-full bg-transparent border-none outline-none text-[10px] font-black uppercase italic tracking-widest text-slate-700 placeholder:text-slate-300"
-                            />
-                        </div>
+                    <div className={`w-full md:w-80 backdrop-blur-xl border p-2 px-4 rounded-2xl flex items-center gap-3 transition-all duration-1000 ${
+                        isNewYearTheme ? "bg-slate-800/40 border-slate-700 shadow-2xl" : "bg-white border-slate-200 shadow-sm"
+                    }`}>
+                        <input
+                            type="text"
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            placeholder={"SEARCH NAME OR ID..."}
+                            className={`w-full bg-transparent border-none outline-none text-[10px] font-black uppercase italic tracking-widest ${
+                                isNewYearTheme ? "text-white placeholder:text-slate-500" : "text-slate-700 placeholder:text-slate-300"
+                            }`}
+                        />
                     </div>
                 </div>
 
                 <ShinyDexTabs activeTab={activeTab} setActiveTab={setActiveTab} />
 
-                <div className="mt-8 bg-white/40 backdrop-blur-2xl rounded-[3rem] border border-white shadow-xl p-6 sm:p-10 relative overflow-hidden">
-                    <div className="absolute inset-0 opacity-[0.05] pointer-events-none bg-[linear-gradient(to_right,#64748b_1px,transparent_1px),linear-gradient(to_bottom,#64748b_1px,transparent_1px)] bg-[size:40px_40px]"></div>
-
-                    <div className="relative z-10 mb-8 flex flex-col lg:flex-row justify-between items-center gap-6 bg-white/50 p-5 rounded-3xl border border-white shadow-sm">
+                <div className={`mt-8 backdrop-blur-3xl rounded-[3.5rem] border p-6 sm:p-10 relative overflow-hidden transition-all duration-1000 ${
+                    isNewYearTheme ? "bg-slate-900/60 border-slate-700/50 shadow-[0_0_50px_rgba(0,0,0,0.3)]" : "bg-white/40 border-white shadow-xl"
+                }`}>
+                    <div className={`relative z-10 mb-10 flex flex-col lg:flex-row justify-between items-center gap-6 p-6 rounded-3xl border transition-all duration-1000 ${
+                        isNewYearTheme ? "bg-slate-800/30 border-slate-700/50" : "bg-white/50 border-white shadow-sm"
+                    }`}>
                         <div className="flex flex-col items-center lg:items-start shrink-0">
-                            <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Region Completion</span>
-                            <h2 className="text-xl font-black uppercase italic text-slate-800">{activeTab} Dex</h2>
+                            <span className={`text-[10px] font-black uppercase tracking-[0.3em] ${isNewYearTheme ? "text-amber-400/80" : "text-slate-400"}`}>
+                                {isNewYearTheme ? "Countdown to Mastery" : "Region Completion"}
+                            </span>
+                            <h2 className={`text-2xl font-black uppercase italic ${isNewYearTheme ? "text-white" : "text-slate-800"}`}>
+                                {activeTab} {isNewYearTheme ? "Region" : "Dex"}
+                            </h2>
                         </div>
 
                         <div className="flex flex-col items-center w-full max-w-md">
-                            <div className="flex items-baseline gap-2 mb-1">
-                                <span className="text-2xl font-black text-slate-900">{regionStats.count}</span>
-                                <span className="text-slate-400 font-bold">/</span>
-                                <span className="text-sm font-bold text-slate-500">{regionStats.total}</span>
-                                <span className="ml-2 text-cyan-600 font-black italic">{regionStats.percentage}%</span>
+                            <div className="flex items-baseline gap-2 mb-2">
+                                <span className={`text-3xl font-black transition-colors ${isNewYearTheme ? "text-white" : "text-slate-900"}`}>
+                                    {regionStats.count}
+                                </span>
+                                <span className="text-slate-500 font-bold text-xl">/</span>
+                                <span className={`text-lg font-bold ${isNewYearTheme ? "text-slate-400" : "text-slate-500"}`}>
+                                    {regionStats.total}
+                                </span>
+                                <div className={`ml-3 px-3 py-1 rounded-lg border transition-all ${
+                                    isNewYearTheme ? "bg-blue-500/20 border-blue-500/30" : "bg-transparent border-transparent"
+                                }`}>
+                                    <span className={`font-black italic ${isNewYearTheme ? "text-blue-400" : "text-cyan-600"}`}>
+                                        {regionStats.percentage}%
+                                    </span>
+                                </div>
                             </div>
-                            <div className="h-2 w-full bg-slate-200 rounded-full overflow-hidden border border-white shadow-inner">
+                            <div className={`h-2.5 w-full rounded-full overflow-hidden border transition-colors ${
+                                isNewYearTheme ? "bg-slate-950 border-slate-800 shadow-inner" : "bg-slate-200 border-white"
+                            }`}>
                                 <div
-                                    className="h-full bg-gradient-to-r from-cyan-500 to-blue-500 transition-all duration-1000"
+                                    className={`h-full transition-all duration-1000 ${
+                                        isNewYearTheme ? "bg-gradient-to-r from-blue-600 to-cyan-400" : "bg-gradient-to-r from-cyan-500 to-blue-500"
+                                    }`}
                                     style={{ width: `${regionStats.percentage}%` }}
                                 />
                             </div>
                         </div>
 
-                        <div className="flex items-center gap-3 bg-slate-100/50 p-2 px-4 rounded-2xl border border-slate-200 shrink-0">
-                            <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest">Unregistered</span>
+                        <div className={`flex items-center gap-4 p-3 px-5 rounded-2xl border transition-all ${
+                            isNewYearTheme ? "bg-slate-950/50 border-slate-800" : "bg-slate-100/50 border-slate-200"
+                        }`}>
+                            <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                                {isNewYearTheme ? "Show Missing" : "Unregistered"}
+                            </span>
                             <button
                                 onClick={() => setShowUnregisteredOnly(!showUnregisteredOnly)}
-                                className={`relative w-10 h-5 rounded-full transition-colors duration-300 focus:outline-none ${showUnregisteredOnly ? 'bg-[#ff4d29]' : 'bg-slate-300'}`}
+                                className={`relative w-12 h-6 rounded-full transition-all duration-500 focus:outline-none ${
+                                    showUnregisteredOnly
+                                        ? (isNewYearTheme ? 'bg-amber-400 shadow-[0_0_15px_rgba(251,191,36,0.4)]' : 'bg-[#ff4d29]')
+                                        : 'bg-slate-300'
+                                }`}
                             >
-                                <div className={`absolute top-1 left-1 bg-white w-3 h-3 rounded-full transition-transform duration-300 ${showUnregisteredOnly ? 'translate-x-5' : ''}`}></div>
+                                <div className={`absolute top-1 left-1 bg-white w-4 h-4 rounded-full transition-transform duration-500 shadow-md ${showUnregisteredOnly ? 'translate-x-6' : ''}`}></div>
                             </button>
                         </div>
                     </div>
