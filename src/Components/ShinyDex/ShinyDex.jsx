@@ -114,11 +114,11 @@ export default function ShinyDex() {
             <div className="relative z-10 max-w-7xl mx-auto">
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-8 px-4 gap-6">
                     <div className="flex flex-col w-full md:w-auto">
-                        <h1 className={`text-4xl sm:text-6xl font-black tracking-tighter uppercase italic flex items-center gap-3 transition-colors duration-1000 ${
+                        <h1 className={`text-4xl sm:text-6xl font-black tracking-tighter uppercase italic flex items-center transition-colors duration-1000 ${
                             isNewYearTheme ? "text-white" : "text-slate-900"
                         }`}>
                             Shiny<span className={isNewYearTheme ? "text-amber-400 drop-shadow-[0_0_10px_rgba(251,191,36,0.5)]" : "text-[#ff4d29]"}>Check</span>
-                            {isNewYearTheme && <span className="text-2xl not-italic animate-bounce">🥂</span>}
+                            {isNewYearTheme && <span className="text-2xl not-italic animate-bounce ml-3">🥂</span>}
                         </h1>
 
                         <div className="mt-4 w-full md:w-96">
