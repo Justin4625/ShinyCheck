@@ -55,7 +55,10 @@ export default function ShinyDex() {
                     const data = JSON.parse(localStorage.getItem(key));
                     if (data?.pokemonName) {
                         const caughtName = data.pokemonName.toLowerCase();
-                        const matchesName = caughtName === lowerBaseName || caughtName.includes(lowerBaseName);
+
+                        // VERBETERDE LOGICA: Woordgrenzen om foutieve matches zoals Abra/Crabrawler te voorkomen
+                        const matchesName = caughtName === lowerBaseName ||
+                            new RegExp(`\\b${lowerBaseName}\\b`).test(caughtName);
 
                         // Specifieke uitzondering voor Porygon (gekopieerd uit ShinyDexCards)
                         let isException = false;
