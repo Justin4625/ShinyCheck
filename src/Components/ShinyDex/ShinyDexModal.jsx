@@ -15,7 +15,8 @@ export default function ShinyDexModal({ pokemon, onClose, onSelectEntry, refresh
     // eslint-disable-next-line react-hooks/rules-of-hooks
     const allForms = useMemo(() => {
         const variants = regionalPokemon.filter(p =>
-            p.name.toLowerCase().includes(pokemon.name.toLowerCase()) && p.id !== pokemon.id
+            // Ook hier: gebruik woordgrenzen voor de variant-check
+            new RegExp(`\\b${pokemon.name.toLowerCase()}\\b`, 'i').test(p.name.toLowerCase()) && p.id !== pokemon.id
         );
         return [pokemon, ...variants];
     }, [pokemon]);
@@ -33,12 +34,12 @@ export default function ShinyDexModal({ pokemon, onClose, onSelectEntry, refresh
                     if (data?.pokemonName) {
                         const caughtName = data.pokemonName.toLowerCase();
 
-                        // Check of de naam matcht
-                        const matchesName = caughtName === lowerBaseName || caughtName.includes(lowerBaseName);
+                        // VERBETERDE LOGICA: Gebruik RegExp met \b (woordgrenzen)
+                        // zodat 'Abra' niet matcht in 'Crabrawler'
+                        const matchesName = caughtName === lowerBaseName ||
+                            new RegExp(`\\b${lowerBaseName}\\b`).test(caughtName);
 
                         // SPECIFIEKE UITZONDERING VOOR PORYGON:
-                        // Als de geselecteerde pokemon "Porygon" is, mag de gevangen naam
-                        // niet "porygon2" of "porygon-z" zijn.
                         let isException = false;
                         if (lowerBaseName === "porygon") {
                             if (caughtName === "porygon2" || caughtName === "porygon-z") {

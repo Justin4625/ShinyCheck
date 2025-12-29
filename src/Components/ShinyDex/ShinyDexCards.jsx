@@ -23,8 +23,9 @@ export default function ShinyDexCards({ displayedPokemon, onCardClick, loading, 
                     if (data?.pokemonName) {
                         const caughtName = data.pokemonName.toLowerCase();
 
-                        // Check of de naam matcht
-                        const matchesName = caughtName === lowerBaseName || caughtName.includes(lowerBaseName);
+                        // VERBETERDE LOGICA: Gebruik woordgrenzen (\b) om te voorkomen dat 'Abra' matcht in 'Crabrawler'
+                        const matchesName = caughtName === lowerBaseName ||
+                            new RegExp(`\\b${lowerBaseName}\\b`).test(caughtName);
 
                         // SPECIFIEKE UITZONDERING VOOR PORYGON:
                         let isException = false;
