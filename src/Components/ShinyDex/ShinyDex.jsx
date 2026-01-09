@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useMemo, useEffect } from "react";
 import shinyDexPart1 from "../../data/ShinyDexData/ShinyDexData.js";
 import shinyDexPart2 from "../../data/ShinyDexData/ShinyDexData2.js";
@@ -12,6 +13,7 @@ import ShinyDexModal from "./ShinyDexModal.jsx";
 import PlzaCollectionModal from "../Plza/PlzaCollectionModal.jsx";
 import SvCollectionModal from "../Sv/SvCollectionModal.jsx";
 import PogoAddPokemon from "../Pogo/PogoAddPokemon.jsx";
+import PogoCollectionModal from "../Pogo/PogoCollectionModal.jsx";
 
 const fullShinyDex = [...shinyDexPart1, ...shinyDexPart2, ...shinyDexPart3];
 
@@ -82,7 +84,6 @@ export default function ShinyDex() {
         const total = fullShinyDex.length;
         const percentage = total > 0 ? ((count / total) * 100).toFixed(1) : 0;
         return { count, total, percentage };
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [refreshKey]);
 
     const regionStats = useMemo(() => {
@@ -90,7 +91,6 @@ export default function ShinyDex() {
         const total = regionEntries.length;
         const percentage = total > 0 ? ((count / total) * 100).toFixed(1) : 0;
         return { count, total, percentage };
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [regionEntries, refreshKey]);
 
     const filteredList = pokemonList.filter(p => {
@@ -137,7 +137,7 @@ export default function ShinyDex() {
                             </div>
                             <div className={`h-3.5 w-full rounded-full overflow-hidden shadow-inner border transition-colors duration-1000 ${isNewYearTheme ? "bg-slate-800/50 border-slate-700" : "bg-slate-200 border-transparent"}`}>
                                 <div
-                                    className={`h-full transition-all duration-1000 ${isNewYearTheme ? "bg-gradient-to-r from-blue-500 via-cyan-400 to-amber-400 shadow-[0_0_15px_rgba(59,130,246,0.5)]" : "bg-[#ff4d29]"}`}
+                                    className={`h-full transition-all duration-1000 ${isNewYearTheme ? "bg-gradient-to-r from-blue-500 via-cyan-400 to-amber-400" : "bg-[#ff4d29]"}`}
                                     style={{ width: `${globalStats.percentage}%` }}
                                 />
                             </div>
@@ -207,6 +207,7 @@ export default function ShinyDex() {
                 </div>
             </div>
 
+            {/* MODALS */}
             {selectedPokemon && (
                 <ShinyDexModal
                     pokemon={selectedPokemon}
@@ -241,6 +242,7 @@ export default function ShinyDex() {
                     gameName="Pokémon Legends: Z-A"
                 />
             )}
+
             {selectedEntry?.type === 'SV' && (
                 <SvCollectionModal
                     data={selectedEntry.storedData}
@@ -255,31 +257,17 @@ export default function ShinyDex() {
                 />
             )}
 
-            {/* POGO Entry Modal */}
             {selectedEntry?.type === 'POGO' && (
-                <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-md flex items-center justify-center z-[120]" onClick={() => setSelectedEntry(null)}>
-                    <div onClick={(e) => e.stopPropagation()} className="bg-white p-8 rounded-[3rem] border-4 border-emerald-400 w-full max-w-md shadow-2xl relative overflow-hidden">
-                        <div className="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-emerald-400 to-cyan-400"></div>
-                        <div className="flex justify-between items-start mb-6">
-                            <div>
-                                <p className="text-emerald-500 font-black uppercase text-[10px] tracking-[0.2em] mb-1">Pokémon GO Entry</p>
-                                <h2 className="text-3xl font-black uppercase italic text-slate-800 tracking-tighter">{selectedEntry.name}</h2>
-                            </div>
-                            <img src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/shiny/${selectedEntry.id}.png`} className="w-20 h-20 drop-shadow-lg" alt="" />
-                        </div>
-                        <div className="grid grid-cols-2 gap-4 mb-6">
-                            <div className="bg-emerald-50 p-4 rounded-3xl border border-emerald-100 shadow-sm text-center">
-                                <p className="text-[9px] font-black text-emerald-600 uppercase tracking-widest mb-1">Encounters</p>
-                                <p className="text-2xl font-black italic text-slate-900 leading-none">{selectedEntry.storedData.counter}</p>
-                            </div>
-                            <div className="bg-emerald-50 p-4 rounded-3xl border border-emerald-100 shadow-sm text-center">
-                                <p className="text-[9px] font-black text-emerald-600 uppercase tracking-widest mb-1">Captured</p>
-                                <p className="text-[13px] font-black italic text-slate-700 leading-none">{new Date(selectedEntry.storedData.timestamp).toLocaleDateString('nl-NL')}</p>
-                            </div>
-                        </div>
-                        <button onClick={() => setSelectedEntry(null)} className="w-full py-4 bg-emerald-500 text-white rounded-2xl font-black uppercase italic text-xs tracking-[0.2em] shadow-lg shadow-emerald-100 active:scale-95 transition-all">Close Entry</button>
-                    </div>
-                </div>
+                <PogoCollectionModal
+                    data={selectedEntry.storedData}
+                    pokemon={selectedEntry}
+                    shinyIndex={selectedEntry.shinyIndex}
+                    originalId={selectedEntry.id}
+                    onClose={() => {
+                        setSelectedEntry(null);
+                        setRefreshKey(prev => prev + 1);
+                    }}
+                />
             )}
         </div>
     );
