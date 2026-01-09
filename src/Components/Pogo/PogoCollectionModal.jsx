@@ -121,7 +121,6 @@ export default function PogoCollectionModal({ data, onClose, pokemon, shinyIndex
 
                     {/* Game (Altijd Pokémon GO) */}
                     <div className="bg-emerald-500/10 p-3 rounded-2xl border-2 border-emerald-500/20 flex justify-center items-center gap-3">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Pokémon_GO_logo.svg/512px-Pokémon_GO_logo.svg.png" className="h-6 object-contain" alt="GO" />
                         <span className="text-xs font-black italic text-emerald-700 uppercase tracking-widest">Pokémon GO</span>
                     </div>
 
