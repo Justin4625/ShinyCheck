@@ -17,7 +17,8 @@ export default function ShinyDexCards({ displayedPokemon, onCardClick, loading, 
 
         for (let i = 0; i < localStorage.length; i++) {
             const key = localStorage.key(i);
-            if (key.startsWith("plza_shinyData_") || key.startsWith("sv_shinyData_")) {
+            // UPDATE: Check nu op alle drie de prefixes: plza, sv én pogo
+            if (key.startsWith("plza_shinyData_") || key.startsWith("sv_shinyData_") || key.startsWith("pogo_shinyData_")) {
                 try {
                     const data = JSON.parse(localStorage.getItem(key));
                     if (data?.pokemonName) {
