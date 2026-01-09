@@ -47,6 +47,9 @@ export default function SvCollectionModal({ data, onClose, pokemon, shinyIndex, 
 
         const storageKey = `sv_shinyData_${originalId}_${shinyIndex}`;
         localStorage.setItem(storageKey, JSON.stringify(updatedData));
+
+        // Sluit de modal om "een stap terug" te gaan
+        onClose();
         window.location.reload();
     };
 
@@ -84,7 +87,6 @@ export default function SvCollectionModal({ data, onClose, pokemon, shinyIndex, 
 
                 <div className="w-full space-y-4 z-10">
                     <div className="grid grid-cols-2 gap-4">
-                        {/* Encounters */}
                         <div className="bg-gray-50 border border-gray-100 p-4 rounded-2xl transform -skew-x-3 shadow-sm flex flex-col items-center">
                             <p className="text-[8px] font-black text-slate-400 uppercase mb-1">Encounters</p>
                             {isEditing ? (
@@ -93,7 +95,6 @@ export default function SvCollectionModal({ data, onClose, pokemon, shinyIndex, 
                                 <p className="text-2xl font-black italic text-orange-600">{data.counter}</p>
                             )}
                         </div>
-                        {/* Duration */}
                         <div className="bg-gray-50 border border-gray-100 p-4 rounded-2xl transform -skew-x-3 shadow-sm flex flex-col items-center">
                             <p className="text-[8px] font-black text-slate-400 uppercase mb-1">Duration</p>
                             {isEditing ? (
@@ -111,17 +112,15 @@ export default function SvCollectionModal({ data, onClose, pokemon, shinyIndex, 
                         </div>
                     </div>
 
-                    {/* Captured On Edit */}
                     <div className="bg-gray-50/50 border border-gray-100 p-3 rounded-xl transform -skew-x-3 shadow-sm flex justify-between items-center px-6">
                         <span className="text-[8px] font-black text-slate-400 uppercase tracking-widest">Captured On</span>
                         {isEditing ? (
-                            <input type="datetime-local" value={editTimestamp} onChange={(e) => setEditTimestamp(e.target.value)} className="text-[10px] font-black bg-orange-50 rounded p-1 border-none focus:ring-1 focus:ring-orange-500" />
+                            <input type="datetime-local" value={editTimestamp} onChange={(e) => setEditTimestamp(e.target.value)} className="text-[10px] font-black bg-orange-50 rounded p-1 border-none" />
                         ) : (
                             <span className="text-[10px] font-black italic text-slate-500 uppercase">{formatDate(data.timestamp)}</span>
                         )}
                     </div>
 
-                    {/* Game (Statisch) */}
                     <div className="bg-gray-50 border border-gray-100 p-3 rounded-xl transform -skew-x-3 shadow-sm flex justify-between items-center px-6">
                         <span className="text-[8px] font-black text-slate-400 uppercase tracking-widest">Game</span>
                         <span className="text-xs font-black italic text-orange-600 uppercase">{gameName}</span>
