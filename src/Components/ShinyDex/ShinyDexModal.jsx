@@ -1,7 +1,7 @@
 import React, { useMemo } from "react";
 import regionalPokemon from "../../data/ShinyDexData/RegionalData.js";
 
-export default function ShinyDexModal({ pokemon, onClose, onSelectEntry, refreshKey }) {
+export default function ShinyDexModal({ pokemon, onClose, onSelectEntry, onAddPokemon, refreshKey }) {
     if (!pokemon) return null;
 
     const formatTime = (seconds) => {
@@ -15,7 +15,6 @@ export default function ShinyDexModal({ pokemon, onClose, onSelectEntry, refresh
     // eslint-disable-next-line react-hooks/rules-of-hooks
     const allForms = useMemo(() => {
         const variants = regionalPokemon.filter(p =>
-            // Ook hier: gebruik woordgrenzen voor de variant-check
             new RegExp(`\\b${pokemon.name.toLowerCase()}\\b`, 'i').test(p.name.toLowerCase()) && p.id !== pokemon.id
         );
         return [pokemon, ...variants];
@@ -33,26 +32,16 @@ export default function ShinyDexModal({ pokemon, onClose, onSelectEntry, refresh
                     const data = JSON.parse(localStorage.getItem(key));
                     if (data?.pokemonName) {
                         const caughtName = data.pokemonName.toLowerCase();
+                        const matchesName = caughtName === lowerBaseName || new RegExp(`\\b${lowerBaseName}\\b`).test(caughtName);
 
-                        // VERBETERDE LOGICA: Gebruik RegExp met \b (woordgrenzen)
-                        // zodat 'Abra' niet matcht in 'Crabrawler'
-                        const matchesName = caughtName === lowerBaseName ||
-                            new RegExp(`\\b${lowerBaseName}\\b`).test(caughtName);
-
-                        // SPECIFIEKE UITZONDERING VOOR PORYGON:
                         let isException = false;
-                        if (lowerBaseName === "porygon") {
-                            if (caughtName === "porygon2" || caughtName === "porygon-z") {
-                                isException = true;
-                            }
-                        }
+                        if (lowerBaseName === "porygon" && (caughtName === "porygon2" || caughtName === "porygon-z")) isException = true;
 
                         if (matchesName && !isException) {
                             const isPlza = key.startsWith("plza");
                             const keyParts = key.split("_");
                             const shinyIndex = parseInt(keyParts[keyParts.length - 1]);
                             const originalId = keyParts[2];
-
                             const variantData = regionalPokemon.find(v => v.name.toLowerCase() === caughtName) || pokemon;
 
                             items.push({
@@ -68,7 +57,6 @@ export default function ShinyDexModal({ pokemon, onClose, onSelectEntry, refresh
                 } catch (e) { /* empty */ }
             }
         }
-
         return items.sort((a, b) => (b.storedData.timestamp || 0) - (a.storedData.timestamp || 0));
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [allForms, pokemon.name, refreshKey]);
@@ -79,9 +67,7 @@ export default function ShinyDexModal({ pokemon, onClose, onSelectEntry, refresh
 
                 <div className="pt-6 px-6 pb-4 border-b border-slate-50 flex justify-between items-start bg-white">
                     <div className="flex flex-col">
-                        <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-0.5">
-                            National Dex Entry
-                        </p>
+                        <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-0.5">National Dex Entry</p>
                         <h2 className="text-2xl font-black uppercase italic text-slate-800 leading-tight">
                             {pokemon.name} <span className="text-[#ff4d29] ml-1">x{capturedItems.length}</span>
                         </h2>
@@ -91,7 +77,14 @@ export default function ShinyDexModal({ pokemon, onClose, onSelectEntry, refresh
                     </button>
                 </div>
 
-                <div className="flex-1 overflow-y-auto pt-2 pb-6 px-6 bg-slate-50/50">
+                <div className="flex-1 overflow-y-auto pt-4 pb-6 px-6 bg-slate-50/50">
+                    <button
+                        onClick={() => onAddPokemon(pokemon)}
+                        className="w-full mb-5 py-4 bg-slate-900 text-white rounded-2xl font-black uppercase italic text-xs tracking-[0.2em] shadow-lg shadow-slate-200 hover:bg-slate-800 active:scale-95 transition-all flex items-center justify-center gap-2"
+                    >
+                        <span className="text-lg">+</span> Add New {pokemon.name}
+                    </button>
+
                     <div className="grid gap-3">
                         {capturedItems.map((item, idx) => (
                             <button
@@ -119,15 +112,13 @@ export default function ShinyDexModal({ pokemon, onClose, onSelectEntry, refresh
                                         <p className="text-xl font-black italic text-slate-900 leading-none">{item.storedData.counter}</p>
                                     </div>
                                     <div className="px-2 py-0.5 bg-slate-100 rounded-lg border border-slate-200">
-                                        <p className="text-sm font-black text-slate-600 italic leading-none">
-                                            {formatTime(item.storedData.timer || 0)}
-                                        </p>
+                                        <p className="text-sm font-black text-slate-600 italic leading-none">{formatTime(item.storedData.timer || 0)}</p>
                                     </div>
                                 </div>
                             </button>
                         ))}
                         {capturedItems.length === 0 && (
-                            <p className="text-center py-10 font-black italic text-slate-400 uppercase tracking-widest">No records found</p>
+                            <p className="text-center py-10 font-black italic text-slate-400 uppercase tracking-widest opacity-40">No records found</p>
                         )}
                     </div>
                 </div>

@@ -11,6 +11,7 @@ import ShinyDexTabs from "./ShinyDexTabs.jsx";
 import ShinyDexModal from "./ShinyDexModal.jsx";
 import PlzaCollectionModal from "../Plza/PlzaCollectionModal.jsx";
 import SvCollectionModal from "../Sv/SvCollectionModal.jsx";
+import ShinyDexAddPokemon from "./ShinyDexAddPokemon.jsx";
 
 const fullShinyDex = [...shinyDexPart1, ...shinyDexPart2, ...shinyDexPart3];
 
@@ -22,6 +23,7 @@ export default function ShinyDex() {
     // Modal states
     const [selectedPokemon, setSelectedPokemon] = useState(null);
     const [selectedEntry, setSelectedEntry] = useState(null);
+    const [addingPokemon, setAddingPokemon] = useState(null); // Nieuwe state voor toevoegen
     const [refreshKey, setRefreshKey] = useState(0);
 
     // --- AUTOMATISCHE THEMA LOGICA ---
@@ -34,13 +36,13 @@ export default function ShinyDex() {
 
     // Blokkeer scrollen op de achtergrond als er een modal open is
     useEffect(() => {
-        if (selectedPokemon || selectedEntry) {
+        if (selectedPokemon || selectedEntry || addingPokemon) {
             document.body.style.overflow = 'hidden';
         } else {
             document.body.style.overflow = 'unset';
         }
         return () => { document.body.style.overflow = 'unset'; };
-    }, [selectedPokemon, selectedEntry]);
+    }, [selectedPokemon, selectedEntry, addingPokemon]);
 
     const regionEntries = fullShinyDex.filter((p) => p.region === activeTab);
     const { pokemonList, loading } = usePokemon(regionEntries);
@@ -56,11 +58,11 @@ export default function ShinyDex() {
                     if (data?.pokemonName) {
                         const caughtName = data.pokemonName.toLowerCase();
 
-                        // VERBETERDE LOGICA: Woordgrenzen om foutieve matches zoals Abra/Crabrawler te voorkomen
+                        // VERBETERDE LOGICA: Woordgrenzen om foutieve matches te voorkomen
                         const matchesName = caughtName === lowerBaseName ||
                             new RegExp(`\\b${lowerBaseName}\\b`).test(caughtName);
 
-                        // Specifieke uitzondering voor Porygon (gekopieerd uit ShinyDexCards)
+                        // Specifieke uitzondering voor Porygon
                         let isException = false;
                         if (lowerBaseName === "porygon") {
                             if (caughtName === "porygon2" || caughtName === "porygon-z") {
@@ -247,7 +249,19 @@ export default function ShinyDex() {
                     pokemon={selectedPokemon}
                     onClose={() => setSelectedPokemon(null)}
                     onSelectEntry={(entry) => setSelectedEntry(entry)}
+                    onAddPokemon={(p) => {
+                        setAddingPokemon(p);
+                        setSelectedPokemon(null);
+                    }}
                     refreshKey={refreshKey}
+                />
+            )}
+
+            {addingPokemon && (
+                <ShinyDexAddPokemon
+                    pokemon={addingPokemon}
+                    onClose={() => setAddingPokemon(null)}
+                    onSave={() => setRefreshKey(prev => prev + 1)}
                 />
             )}
 
