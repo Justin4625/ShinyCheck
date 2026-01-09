@@ -27,7 +27,6 @@ export default function ShinyDexModal({ pokemon, onClose, onSelectEntry, onAddPo
 
         for (let i = 0; i < localStorage.length; i++) {
             const key = localStorage.key(i);
-            // Ook pogo_Data meenemen in de lijst
             if (key.startsWith("plza_shinyData_") || key.startsWith("sv_shinyData_") || key.startsWith("pogo_shinyData_")) {
                 try {
                     const data = JSON.parse(localStorage.getItem(key));
@@ -55,7 +54,6 @@ export default function ShinyDexModal({ pokemon, onClose, onSelectEntry, onAddPo
                             });
                         }
                     }
-                    // eslint-disable-next-line no-unused-vars
                 } catch (e) { /* empty */ }
             }
         }
@@ -64,7 +62,8 @@ export default function ShinyDexModal({ pokemon, onClose, onSelectEntry, onAddPo
     }, [allForms, pokemon.name, refreshKey]);
 
     return (
-        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-md flex items-center justify-center z-50 p-4" onClick={onClose}>
+        /* onClick={onClose} is hier verwijderd zodat klikken op de achtergrond de modal niet sluit */
+        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-md flex items-center justify-center z-50 p-4">
             <div onClick={(e) => e.stopPropagation()} className="bg-white border-2 border-slate-100 rounded-[2.5rem] shadow-2xl w-full max-w-xl max-h-[80vh] flex flex-col overflow-hidden">
 
                 <div className="pt-6 px-6 pb-4 border-b border-slate-50 flex justify-between items-start bg-white">
@@ -74,13 +73,13 @@ export default function ShinyDexModal({ pokemon, onClose, onSelectEntry, onAddPo
                             {pokemon.name} <span className="text-[#ff4d29] ml-1">x{capturedItems.length}</span>
                         </h2>
                     </div>
+                    {/* Alleen deze knop sluit nu de modal */}
                     <button onClick={onClose} className="w-10 h-10 flex items-center justify-center rounded-full bg-slate-50 text-slate-400 hover:text-[#ff4d29] transition-colors">
                         <span className="text-xl font-black">✕</span>
                     </button>
                 </div>
 
                 <div className="flex-1 overflow-y-auto pt-4 pb-6 px-6 bg-slate-50/50">
-                    {/* Pokémon GO Add Button */}
                     <button
                         onClick={() => onAddPokemon(pokemon)}
                         className="w-full mb-5 py-4 bg-emerald-500 text-white rounded-2xl font-black uppercase italic text-xs tracking-[0.2em] shadow-lg shadow-emerald-100 hover:bg-emerald-600 active:scale-95 transition-all flex items-center justify-center gap-3 border-b-4 border-emerald-700"

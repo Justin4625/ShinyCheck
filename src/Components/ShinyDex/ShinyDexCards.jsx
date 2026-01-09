@@ -17,14 +17,14 @@ export default function ShinyDexCards({ displayedPokemon, onCardClick, loading, 
 
         for (let i = 0; i < localStorage.length; i++) {
             const key = localStorage.key(i);
-            // UPDATE: Check nu op alle drie de prefixes: plza, sv én pogo
+            // Check op alle drie de prefixes: plza, sv én pogo
             if (key.startsWith("plza_shinyData_") || key.startsWith("sv_shinyData_") || key.startsWith("pogo_shinyData_")) {
                 try {
                     const data = JSON.parse(localStorage.getItem(key));
                     if (data?.pokemonName) {
                         const caughtName = data.pokemonName.toLowerCase();
 
-                        // VERBETERDE LOGICA: Gebruik woordgrenzen (\b) om te voorkomen dat 'Abra' matcht in 'Crabrawler'
+                        // VERBETERDE LOGICA: Woordgrenzen (\b) om te voorkomen dat 'Abra' matcht in 'Crabrawler'
                         const matchesName = caughtName === lowerBaseName ||
                             new RegExp(`\\b${lowerBaseName}\\b`).test(caughtName);
 
@@ -90,15 +90,16 @@ export default function ShinyDexCards({ displayedPokemon, onCardClick, loading, 
                 return (
                     <div
                         key={pokemon.id}
-                        onClick={() => isOwned && onCardClick(pokemon)}
-                        className={`relative group p-4 rounded-2xl border-2 transition-all duration-500 flex flex-col items-center justify-center
+                        // AANPASSING: De check 'isOwned &&' is verwijderd, zodat je op ELK kaartje kunt klikken
+                        onClick={() => onCardClick(pokemon)}
+                        className={`relative group p-4 rounded-2xl border-2 transition-all duration-500 flex flex-col items-center justify-center cursor-pointer
                             ${isOwned
                             ? isNewYearTheme
-                                ? "bg-gradient-to-b from-slate-800 to-slate-900 border-amber-500/50 shadow-[0_0_20px_rgba(251,191,36,0.2)] scale-[1.02] cursor-pointer"
-                                : "bg-gradient-to-b from-amber-50 to-yellow-100 border-amber-400 shadow-[0_0_15px_rgba(251,191,36,0.4)] scale-[1.02] cursor-pointer"
+                                ? "bg-gradient-to-b from-slate-800 to-slate-900 border-amber-500/50 shadow-[0_0_20px_rgba(251,191,36,0.2)] scale-[1.02]"
+                                : "bg-gradient-to-b from-amber-50 to-yellow-100 border-amber-400 shadow-[0_0_15px_rgba(251,191,36,0.4)] scale-[1.02]"
                             : isNewYearTheme
-                                ? "bg-slate-950/40 border-slate-800 hover:border-slate-700"
-                                : "bg-white border-slate-100 hover:border-slate-200"
+                                ? "bg-slate-950/40 border-slate-800 hover:border-slate-700 hover:bg-slate-900/60"
+                                : "bg-white border-slate-100 hover:border-slate-200 hover:bg-slate-50"
                         }
                         `}
                     >
@@ -145,7 +146,7 @@ export default function ShinyDexCards({ displayedPokemon, onCardClick, loading, 
                                 src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/shiny/${pokemon.id}.png`}
                                 alt={pokemon.name}
                                 className={`w-20 h-20 object-contain drop-shadow-md transition-all duration-500 group-hover:scale-110 z-10 
-                                    ${!isOwned ? "grayscale opacity-30" : ""}`}
+                                    ${!isOwned ? "grayscale opacity-30 group-hover:grayscale-0 group-hover:opacity-100" : ""}`}
                                 loading="lazy"
                             />
                         </div>
