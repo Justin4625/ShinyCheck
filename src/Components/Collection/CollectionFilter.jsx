@@ -1,15 +1,16 @@
 import React from "react";
 
-export default function CollectionFilter({filter, setFilter, searchQuery, setSearchQuery, totalCount, plzaCount, svCount}) {
+export default function CollectionFilter({filter, setFilter, searchQuery, setSearchQuery, totalCount, plzaCount, svCount, pogoCount}) {
     return (
-        <div className="relative z-10 max-w-5xl mx-auto mb-12 flex flex-col md:flex-row items-center justify-center gap-4">
+        <div className="relative z-10 max-w-6xl mx-auto mb-12 flex flex-col md:flex-row items-center justify-center gap-4">
 
             {/* Filters - Pill stijl */}
             <div className="flex flex-wrap justify-center gap-2">
                 {[
-                    { id: "all", label: "All Games", count: totalCount },
-                    { id: "PLZA", label: "Legends: Z-A", count: plzaCount },
-                    { id: "SV", label: "Scarlet & Violet", count: svCount }
+                    { id: "all", label: "All Games", count: totalCount, activeClass: "border-slate-500 text-slate-700" },
+                    { id: "PLZA", label: "Legends: Z-A", count: plzaCount, activeClass: "border-cyan-500 text-cyan-600" },
+                    { id: "SV", label: "Scarlet & Violet", count: svCount, activeClass: "border-orange-500 text-orange-600" },
+                    { id: "POGO", label: "Pokémon GO", count: pogoCount, activeClass: "border-emerald-500 text-emerald-600" }
                 ].map((tab) => {
                     const isActive = filter === tab.id;
                     return (
@@ -18,7 +19,7 @@ export default function CollectionFilter({filter, setFilter, searchQuery, setSea
                             onClick={() => setFilter(tab.id)}
                             className={`px-5 py-2 rounded-full font-black italic text-[10px] tracking-widest uppercase transition-all duration-300 border-2
                                 ${isActive
-                                ? "bg-white border-cyan-500 text-cyan-600 shadow-xl scale-105 z-10"
+                                ? `bg-white shadow-xl scale-105 z-10 ${tab.activeClass}`
                                 : "bg-slate-900/60 border-white/10 text-slate-400 hover:border-white/30 hover:text-white"}`}
                         >
                             {tab.label} ({tab.count})
