@@ -53,11 +53,6 @@ export default function PlzaCollectionModal({ data, onClose, pokemon, shinyIndex
 
         // Sluit de modal om "een stap terug" te gaan
         onClose();
-
-        // Optioneel: Alleen als je wilt dat de lijst direct ververst zonder volledige herlaad,
-        // kun je een refresh-functie uit de parent aanroepen,
-        // maar een reload zorgt dat alle localStorage data weer vers is.
-        window.location.reload();
     };
 
     const deleteShinyLogic = () => {

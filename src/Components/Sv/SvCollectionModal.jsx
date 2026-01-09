@@ -50,7 +50,6 @@ export default function SvCollectionModal({ data, onClose, pokemon, shinyIndex, 
 
         // Sluit de modal om "een stap terug" te gaan
         onClose();
-        window.location.reload();
     };
 
     const deleteShinyLogic = () => {
