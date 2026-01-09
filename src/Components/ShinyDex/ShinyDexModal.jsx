@@ -54,6 +54,7 @@ export default function ShinyDexModal({ pokemon, onClose, onSelectEntry, onAddPo
                             });
                         }
                     }
+                    // eslint-disable-next-line no-unused-vars
                 } catch (e) { /* empty */ }
             }
         }
