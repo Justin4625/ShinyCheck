@@ -6,7 +6,7 @@ export default function ShinyDexCards({ displayedPokemon, onCardClick, loading, 
     // --- POKÉMON GO THEME LOGICA ---
     const isPogoTheme = useMemo(() => {
         const now = new Date();
-        const expiryDate = new Date(2026, 1, 1, 0, 0, 0);
+        const expiryDate = new Date(2026, 0, 16, 0, 0, 0);
         return now < expiryDate;
     }, []);
 
