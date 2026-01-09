@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import PlzaCollectionModal from "../Plza/PlzaCollectionModal.jsx";
 import SvCollectionModal from "../Sv/SvCollectionModal.jsx";
+import PogoCollectionModal from "../Pogo/PogoCollectionModal.jsx";
 import CollectionFilter from "./CollectionFilter.jsx";
 import CollectionCards from "./CollectionCards.jsx";
 
@@ -44,9 +45,20 @@ export default function Collection({ plzaPokemon = [], svPokemon = [], pokemonLi
         return items;
     });
 
-    const totalCount = plzaHunts.length + svHunts.length;
+    // Nieuwe logica voor Pokémon GO hunts
+    const pogoHunts = pokemonList.flatMap((p) => {
+        const count = Number(localStorage.getItem(`pogo_shiny_${p.id}`)) || 0;
+        const items = [];
+        for (let i = 1; i <= count; i++) {
+            const data = JSON.parse(localStorage.getItem(`pogo_shinyData_${p.id}_${i}`));
+            if (data) items.push({ ...p, storedData: data, shinyIndex: i, type: 'POGO' });
+        }
+        return items;
+    });
 
-    const allShinies = [...plzaHunts, ...svHunts]
+    const totalCount = plzaHunts.length + svHunts.length + pogoHunts.length;
+
+    const allShinies = [...plzaHunts, ...svHunts, ...pogoHunts]
         .filter((entry) => {
             const matchesSearch = entry.name.toLowerCase().includes(searchQuery.toLowerCase());
             const matchesFilter = filter === "all" || entry.type === filter;
@@ -77,6 +89,7 @@ export default function Collection({ plzaPokemon = [], svPokemon = [], pokemonLi
                 totalCount={totalCount}
                 plzaCount={plzaHunts.length}
                 svCount={svHunts.length}
+                pogoCount={pogoHunts.length}
             />
 
             {allShinies.length === 0 ? (
@@ -95,12 +108,9 @@ export default function Collection({ plzaPokemon = [], svPokemon = [], pokemonLi
                 />
             )}
 
-            {/* In src/Components/Collection/Collection.jsx */}
-
             {selectedEntry?.type === 'PLZA' && (
                 <PlzaCollectionModal
                     data={selectedEntry.storedData}
-                    // Zoek nu op ID in plaats van naam
                     pokemon={pokemonList.find(p => p.id === selectedEntry.id)}
                     originalId={selectedEntry.id}
                     shinyIndex={selectedEntry.shinyIndex}
@@ -113,13 +123,22 @@ export default function Collection({ plzaPokemon = [], svPokemon = [], pokemonLi
             {selectedEntry?.type === 'SV' && (
                 <SvCollectionModal
                     data={selectedEntry.storedData}
-                    // Zoek nu op ID in plaats van naam
                     pokemon={pokemonList.find(p => p.id === selectedEntry.id)}
                     originalId={selectedEntry.id}
                     shinyIndex={selectedEntry.shinyIndex}
                     formatTime={formatTime}
                     onClose={() => setSelectedEntry(null)}
                     gameName="Pokémon Scarlet & Violet"
+                />
+            )}
+
+            {selectedEntry?.type === 'POGO' && (
+                <PogoCollectionModal
+                    data={selectedEntry.storedData}
+                    pokemon={pokemonList.find(p => p.id === selectedEntry.id)}
+                    originalId={selectedEntry.id}
+                    shinyIndex={selectedEntry.shinyIndex}
+                    onClose={() => setSelectedEntry(null)}
                 />
             )}
         </div>
