@@ -27,7 +27,8 @@ export default function ShinyDexModal({ pokemon, onClose, onSelectEntry, onAddPo
 
         for (let i = 0; i < localStorage.length; i++) {
             const key = localStorage.key(i);
-            if (key.startsWith("plza_shinyData_") || key.startsWith("sv_shinyData_")) {
+            // Ook pogo_Data meenemen in de lijst
+            if (key.startsWith("plza_shinyData_") || key.startsWith("sv_shinyData_") || key.startsWith("pogo_shinyData_")) {
                 try {
                     const data = JSON.parse(localStorage.getItem(key));
                     if (data?.pokemonName) {
@@ -38,7 +39,8 @@ export default function ShinyDexModal({ pokemon, onClose, onSelectEntry, onAddPo
                         if (lowerBaseName === "porygon" && (caughtName === "porygon2" || caughtName === "porygon-z")) isException = true;
 
                         if (matchesName && !isException) {
-                            const isPlza = key.startsWith("plza");
+                            const gamePrefix = key.split("_")[0];
+                            const gameType = gamePrefix.toUpperCase();
                             const keyParts = key.split("_");
                             const shinyIndex = parseInt(keyParts[keyParts.length - 1]);
                             const originalId = keyParts[2];
@@ -48,7 +50,7 @@ export default function ShinyDexModal({ pokemon, onClose, onSelectEntry, onAddPo
                                 ...variantData,
                                 id: originalId,
                                 storedData: data,
-                                type: isPlza ? 'PLZA' : 'SV',
+                                type: gameType,
                                 shinyIndex: shinyIndex
                             });
                         }
@@ -78,11 +80,12 @@ export default function ShinyDexModal({ pokemon, onClose, onSelectEntry, onAddPo
                 </div>
 
                 <div className="flex-1 overflow-y-auto pt-4 pb-6 px-6 bg-slate-50/50">
+                    {/* Pokémon GO Add Button */}
                     <button
                         onClick={() => onAddPokemon(pokemon)}
-                        className="w-full mb-5 py-4 bg-slate-900 text-white rounded-2xl font-black uppercase italic text-xs tracking-[0.2em] shadow-lg shadow-slate-200 hover:bg-slate-800 active:scale-95 transition-all flex items-center justify-center gap-2"
+                        className="w-full mb-5 py-4 bg-emerald-500 text-white rounded-2xl font-black uppercase italic text-xs tracking-[0.2em] shadow-lg shadow-emerald-100 hover:bg-emerald-600 active:scale-95 transition-all flex items-center justify-center gap-3 border-b-4 border-emerald-700"
                     >
-                        <span className="text-lg">+</span> Add New {pokemon.name}
+                        <span className="text-xl">+</span> Add to Pokémon GO
                     </button>
 
                     <div className="grid gap-3">
@@ -93,13 +96,19 @@ export default function ShinyDexModal({ pokemon, onClose, onSelectEntry, onAddPo
                                 className="w-full text-left group bg-white border-2 border-slate-100 p-4 rounded-2xl flex items-center justify-between hover:border-[#ff4d29] transition-all shadow-sm"
                             >
                                 <div className="flex items-center gap-4">
-                                    <div className={`w-14 h-14 rounded-xl flex items-center justify-center ${item.type === 'PLZA' ? 'bg-cyan-50 text-cyan-500' : 'bg-orange-50 text-orange-500'}`}>
+                                    <div className={`w-14 h-14 rounded-xl flex items-center justify-center ${
+                                        item.type === 'POGO' ? 'bg-emerald-50 text-emerald-500' :
+                                            item.type === 'PLZA' ? 'bg-cyan-50 text-cyan-500' : 'bg-orange-50 text-orange-500'
+                                    }`}>
                                         <img src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/shiny/${item.id}.png`} className="w-12 h-12 object-contain" alt={item.name} />
                                     </div>
                                     <div>
                                         <p className="text-lg font-black text-slate-800 uppercase italic leading-none mb-1">{item.name}</p>
-                                        <p className={`text-[9px] font-black uppercase tracking-widest mb-1 ${item.type === 'PLZA' ? 'text-cyan-600' : 'text-orange-600'}`}>
-                                            {item.type === 'PLZA' ? 'Legends: Z-A' : 'Scarlet & Violet'}
+                                        <p className={`text-[9px] font-black uppercase tracking-widest mb-1 ${
+                                            item.type === 'POGO' ? 'text-emerald-600' :
+                                                item.type === 'PLZA' ? 'text-cyan-600' : 'text-orange-600'
+                                        }`}>
+                                            {item.type === 'POGO' ? 'Pokémon GO' : item.type === 'PLZA' ? 'Legends: Z-A' : 'Scarlet & Violet'}
                                         </p>
                                         <p className="text-[11px] font-bold text-slate-400 italic">
                                             {new Date(item.storedData.timestamp).toLocaleDateString('nl-NL')}
