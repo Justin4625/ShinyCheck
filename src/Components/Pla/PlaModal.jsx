@@ -19,42 +19,44 @@ function HuntTab({ timer, counter, increment, isPlaying, setTimer, setIsPlaying,
     return (
         <div className="flex flex-col items-center gap-6 w-full relative z-10">
             <div className="flex flex-wrap items-center gap-4 justify-center w-full">
-                {/* Timer Display */}
-                <div className="relative group">
-                    <div className="bg-slate-50 px-6 py-3 border-b-2 border-amber-500 rounded-2xl min-w-[140px] text-center shadow-sm group-hover:bg-white transition-colors">
-                        <span className="block text-slate-700 font-black italic text-lg tracking-tight">
+                {/* Timer Display - Antieke Veldgids Stijl */}
+                <div className="relative transform -skew-x-3">
+                    <div className="bg-[#f4f1ea] px-6 py-3 border-b-4 border-amber-900/60 shadow-md">
+                        <span className="block transform skew-x-3 text-slate-800 font-black italic text-lg tracking-tight">
                             {formatTime(timer)}
                         </span>
                     </div>
-                    <label className="absolute -top-2.5 left-3 text-[8px] font-black text-slate-400 uppercase tracking-[0.2em]">Duration</label>
+                    <label className="absolute -top-3 left-2 text-[9px] font-black text-amber-900/40 uppercase tracking-widest italic bg-[#f4f1ea] px-1">Duration</label>
                 </div>
 
-                {/* Counter Display */}
+                {/* Counter Display - Antieke Veldgids Stijl */}
                 <div className="flex items-center gap-3">
-                    <div className="relative group">
-                        <div className="bg-slate-50 px-8 py-3 border-b-2 border-amber-600 rounded-2xl min-w-[100px] text-center shadow-sm group-hover:bg-white transition-colors">
-                            <span className="block text-2xl font-black italic text-slate-900 tracking-tighter">
+                    <div className="relative transform -skew-x-3">
+                        <div className="bg-[#f4f1ea] px-8 py-3 border-b-4 border-slate-900 shadow-md">
+                            <span className="block transform skew-x-3 text-2xl font-black italic text-slate-900 tracking-tighter">
                                 {counter}
                             </span>
                         </div>
-                        <label className="absolute -top-2.5 left-3 text-[8px] font-black text-slate-400 uppercase tracking-[0.2em]">Encounters</label>
+                        <label className="absolute -top-3 left-2 text-[9px] font-black text-amber-900/40 uppercase tracking-widest italic bg-[#f4f1ea] px-1">Encounters</label>
                     </div>
                     <button
                         onClick={() => setCounter((prev) => Math.max(0, prev - Number(increment)))}
-                        className="h-12 w-12 bg-slate-50 text-slate-400 font-black rounded-2xl hover:bg-amber-50 hover:text-amber-600 transition-all border border-slate-100 shadow-sm"
+                        className="h-12 w-12 bg-[#eaddca] text-amber-900 font-black transform -skew-x-12 hover:bg-red-800 hover:text-white transition-all border-b-4 border-amber-900/30 shadow-sm flex items-center justify-center"
                     >
-                        -{increment}
+                        <span className="block transform skew-x-12">-{increment}</span>
                     </button>
                 </div>
             </div>
 
             <button
                 onClick={() => setIsPlaying((p) => !p)}
-                className={`px-12 py-3.5 font-black italic tracking-[0.3em] uppercase text-white shadow-xl rounded-2xl transition-all duration-300 hover:scale-105 active:scale-95 text-xs ${
-                    isPlaying ? "bg-slate-800" : "bg-gradient-to-r from-amber-400 via-amber-500 to-orange-500 shadow-amber-200"
+                className={`px-12 py-3.5 font-black italic tracking-[0.3em] uppercase text-white shadow-xl transform -skew-x-6 transition-all duration-300 hover:scale-105 active:scale-95 text-xs border-b-4 border-black/30 ${
+                    isPlaying ? "bg-slate-800" : "bg-amber-700 shadow-amber-900/20"
                 }`}
             >
-                {isPlaying ? "PAUSE" : timer > 0 ? "CONTINUE" : "START HUNT"}
+                <span className="block transform skew-x-6">
+                    {isPlaying ? "PAUSE" : timer > 0 ? "CONTINUE" : "START HUNT"}
+                </span>
             </button>
         </div>
     );
@@ -70,40 +72,49 @@ function SettingsTab({ increment, setIncrement, timer, setTimer, counter, setCou
         setTimer(hours * 3600 + minutes * 60 + seconds);
     }, [hours, minutes, seconds, setTimer]);
 
-    const inputContainerClass = "relative flex flex-col items-center group";
-    const labelClass = "text-[8px] font-black text-slate-400 uppercase tracking-[0.2em] mb-1.5";
-    const inputClass = "w-20 sm:w-24 px-3 py-2 bg-slate-50 border-b-2 border-slate-200 text-center font-black italic text-slate-800 rounded-xl focus:outline-none focus:border-amber-500 focus:bg-white transition-all duration-300 shadow-sm text-sm";
+    const labelClass = "text-[9px] font-black text-amber-900/50 uppercase tracking-widest mb-1 italic transform skew-x-3";
+    // Breedte aangepast naar w-16/w-18 voor een betere balans tussen 'groot genoeg' en 'past precies'
+    const inputClass = "w-16 sm:w-18 px-1.5 py-2 bg-[#f4f1ea] border-2 border-amber-900/10 border-b-amber-900/30 text-center font-black italic text-slate-800 transform -skew-x-6 focus:outline-none focus:border-amber-700 transition-all text-sm shadow-inner";
 
     return (
         <div className="w-full max-w-2xl mx-auto relative z-10 px-4">
-            <div className="bg-slate-50/50 p-6 rounded-3xl border border-slate-100 flex flex-col gap-8 shadow-inner">
-                <div className="flex flex-col sm:flex-row items-center justify-around gap-8">
-                    <div className="flex gap-4">
-                        <div className={inputContainerClass}>
-                            <label className={labelClass}>Increment</label>
+            <div className="bg-[#eaddca]/30 p-6 border-2 border-amber-900/10 shadow-inner flex flex-col gap-8">
+                <div className="flex flex-wrap items-center justify-center gap-6 sm:gap-10">
+
+                    {/* Logistieke Groep: Inc & Count */}
+                    <div className="flex gap-3 sm:gap-5">
+                        <div className="flex flex-col items-center">
+                            <label className={labelClass}>Inc.</label>
                             <input type="number" min="1" value={increment} onChange={(e) => setIncrement(Math.max(1, Number(e.target.value)))} className={inputClass} />
                         </div>
-                        <div className={inputContainerClass}>
-                            <label className={labelClass}>Encounters</label>
-                            <input type="number" min="0" value={counter} onChange={(e) => setCounter(Math.max(0, Number(e.target.value)))} className={`${inputClass} border-amber-600 text-lg`} />
+                        <div className="flex flex-col items-center">
+                            <label className={labelClass}>Count</label>
+                            <input type="number" min="0" value={counter} onChange={(e) => setCounter(Math.max(0, Number(e.target.value)))} className={`${inputClass} border-amber-600 text-base`} />
                         </div>
                     </div>
-                    <div className="flex gap-2">
+
+                    {/* Chronologische Groep: Hrs, Min, Sec */}
+                    <div className="flex gap-2 sm:gap-3">
                         {["Hrs", "Min", "Sec"].map((label, i) => {
                             const val = i === 0 ? hours : i === 1 ? minutes : seconds;
                             const set = i === 0 ? setHours : i === 1 ? setMinutes : setSeconds;
                             return (
-                                <div key={label} className={inputContainerClass}>
+                                <div key={label} className="flex flex-col items-center">
                                     <label className={labelClass}>{label}</label>
-                                    <input type="number" min="0" max={i === 0 ? undefined : 59} value={val} onChange={(e) => set(Math.max(0, Number(e.target.value)))} className={`${inputClass} border-amber-500 w-16 sm:w-20`} />
+                                    <input type="number" min="0" max={i === 0 ? undefined : 59} value={val} onChange={(e) => set(Math.max(0, Number(e.target.value)))} className={`${inputClass} border-amber-800 w-14 sm:w-16`} />
                                 </div>
                             );
                         })}
                     </div>
                 </div>
-                <div className="flex justify-center gap-4">
-                    <button onClick={onShowConfirm} className="px-10 py-3 bg-white border border-slate-200 text-slate-400 font-black italic rounded-2xl hover:text-red-500 hover:border-red-200 transition-all text-[10px] uppercase tracking-widest shadow-sm">Reset</button>
-                    <button onClick={onShowGotcha} className="px-10 py-3 bg-gradient-to-r from-amber-500 to-orange-500 text-white font-black italic rounded-2xl hover:scale-105 transition-all shadow-lg shadow-amber-200 text-[10px] uppercase tracking-widest">Gotcha</button>
+
+                <div className="flex justify-center gap-6 mt-2">
+                    <button onClick={onShowConfirm} className="px-8 py-3 bg-white border-2 border-amber-900/10 border-b-4 border-b-slate-200 text-slate-400 font-black italic transform -skew-x-12 hover:text-red-800 hover:border-b-red-800 transition-all text-[11px] uppercase tracking-widest shadow-sm">
+                        <span className="block transform skew-x-12">Reset Survey</span>
+                    </button>
+                    <button onClick={onShowGotcha} className="px-10 py-3 bg-amber-700 text-white font-black italic transform -skew-x-12 hover:bg-amber-600 transition-all shadow-lg border-b-4 border-black/30 text-[11px] uppercase tracking-widest">
+                        <span className="block transform skew-x-12">Shiny Found</span>
+                    </button>
                 </div>
             </div>
         </div>
@@ -111,15 +122,18 @@ function SettingsTab({ increment, setIncrement, timer, setTimer, counter, setCou
 }
 
 // --- INTERNE COMPONENT: ConfirmModal ---
-function ConfirmModal({ message, onCancel, onConfirm, confirmColor = "from-amber-500 to-orange-600" }) {
+function ConfirmModal({ message, onCancel, onConfirm, confirmColor = "from-amber-600 to-amber-800" }) {
     return (
-        <div className="fixed inset-0 flex items-center justify-center z-[60] bg-slate-900/60 backdrop-blur-md p-4">
-            <div className="bg-white border-2 border-slate-100 rounded-[2.5rem] shadow-2xl p-8 w-full max-w-[440px] text-center flex flex-col gap-6 transform transition-all overflow-hidden relative">
-                <div className="absolute inset-0 pointer-events-none opacity-[0.03] bg-[linear-gradient(to_right,#000_1px,transparent_1px),linear-gradient(to_bottom,#000_1px,transparent_1px)] bg-[size:20px_20px]"></div>
+        <div className="fixed inset-0 flex items-center justify-center z-[60] bg-slate-900/80 backdrop-blur-sm p-4">
+            <div className="bg-[#f4f1ea] border-b-8 border-r-8 border-amber-900/20 p-8 w-full max-w-[440px] text-center flex flex-col gap-6 relative overflow-hidden shadow-2xl">
                 <p className="relative z-10 text-slate-800 font-black italic text-xl uppercase tracking-tighter leading-tight">{message}</p>
                 <div className="relative z-10 flex justify-center gap-4 mt-2">
-                    <button onClick={onCancel} className="flex-1 px-6 py-3 bg-slate-50 border border-slate-200 text-slate-400 font-black italic rounded-2xl text-[10px] uppercase tracking-widest hover:bg-white hover:text-slate-600 transition-all active:scale-95 shadow-sm">Cancel</button>
-                    <button onClick={onConfirm} className={`flex-1 px-6 py-3 bg-gradient-to-r ${confirmColor} text-white font-black italic rounded-2xl text-[10px] uppercase tracking-widest shadow-lg transition-all hover:scale-105 active:scale-95`}>Confirm</button>
+                    <button onClick={onCancel} className="flex-1 px-6 py-3 bg-white border-b-4 border-slate-200 text-slate-400 font-black italic transform -skew-x-12 text-[10px] uppercase tracking-widest hover:text-slate-600 transition-all shadow-sm">
+                        <span className="block transform skew-x-12">Cancel</span>
+                    </button>
+                    <button onClick={onConfirm} className={`flex-1 px-6 py-3 bg-gradient-to-r ${confirmColor} text-white font-black italic transform -skew-x-12 text-[10px] uppercase tracking-widest shadow-lg border-b-4 border-black/20 transition-all hover:scale-105`}>
+                        <span className="block transform skew-x-12">Confirm</span>
+                    </button>
                 </div>
             </div>
         </div>
@@ -192,39 +206,42 @@ export default function PlaModal({ selectedPokemon, onClose }) {
     };
 
     return (
-        <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-md flex items-center justify-center z-50 p-4">
-            <div onClick={(e) => e.stopPropagation()} className="relative bg-white border border-slate-100 rounded-[2.5rem] shadow-2xl p-6 sm:p-8 w-full max-w-2xl flex flex-col items-center overflow-hidden">
-                <div className="absolute inset-0 pointer-events-none opacity-[0.03] bg-[linear-gradient(to_right,#000_1px,transparent_1px),linear-gradient(to_bottom,#000_1px,transparent_1px)] bg-[size:30px_30px]"></div>
+        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-md flex items-center justify-center z-50 p-4">
+            {/* Modal Container met Houten Rand effect */}
+            <div onClick={(e) => e.stopPropagation()} className="relative bg-[#f4f1ea] border-b-[12px] border-r-[12px] border-amber-900/10 p-6 sm:p-8 w-full max-w-2xl flex flex-col items-center overflow-hidden shadow-2xl">
+                <div className="absolute inset-0 pointer-events-none opacity-[0.05] bg-[url('https://www.transparenttextures.com/patterns/paper-fibers.png')]"></div>
 
-                <button onClick={() => { setIsPlaying(false); onClose(); }} className="absolute top-5 right-5 w-10 h-10 flex items-center justify-center rounded-full bg-slate-50 text-slate-400 hover:text-amber-500 transition-all z-20 group">
+                <button onClick={() => { setIsPlaying(false); onClose(); }} className="absolute top-5 right-5 w-10 h-10 flex items-center justify-center bg-white/50 text-slate-400 hover:text-amber-800 transition-all z-20 group border border-amber-900/10">
                     <span className="text-xl font-black group-hover:scale-110 transition-transform">✕</span>
                 </button>
 
                 <div className="flex flex-col items-center mb-6 relative z-10">
-                    <div className="px-3 py-1 bg-amber-500 rounded-full mb-2 shadow-lg shadow-amber-200">
-                        <span className="text-[10px] font-black italic text-white tracking-widest uppercase">
+                    <div className="px-4 py-1 bg-amber-700 transform -skew-x-12 mb-2 shadow-md">
+                        <span className="text-[10px] font-black italic text-white tracking-widest uppercase block transform skew-x-12">
                             No. {String(selectedPokemon.id).padStart(3, "0")}
                         </span>
                     </div>
-                    <h2 className="text-3xl font-black uppercase italic text-slate-800 tracking-tighter">{selectedPokemon.name}</h2>
+                    <h2 className="text-3xl font-black uppercase italic text-slate-800 tracking-tighter border-b-2 border-amber-900/10 pb-1 px-6">{selectedPokemon.name}</h2>
                 </div>
 
-                <div className="flex justify-center mb-8 gap-2 z-10">
+                <div className="flex justify-center mb-8 gap-2 z-10 w-full max-w-md">
                     {["hunt", "settings"].map((tab) => (
                         <button
                             key={tab}
                             onClick={() => setActiveTab(tab)}
-                            className={`px-10 py-2 text-[11px] font-black italic tracking-widest transition-all rounded-xl border-2 ${
-                                activeTab === tab ? 'bg-white border-amber-500 text-amber-600 shadow-lg shadow-amber-100' : 'bg-slate-50 border-transparent text-slate-400 hover:bg-white hover:border-slate-200'
+                            className={`flex-1 py-2 text-[11px] font-black italic tracking-widest transition-all transform -skew-x-12 border-b-4 ${
+                                activeTab === tab
+                                    ? 'bg-amber-600 border-amber-900 text-white shadow-lg -translate-y-1'
+                                    : 'bg-white border-slate-200 text-slate-400 hover:bg-[#eaddca]'
                             }`}
                         >
-                            {tab.toUpperCase()}
+                            <span className="block transform skew-x-12">{tab.toUpperCase()}</span>
                         </button>
                     ))}
                 </div>
 
                 <div className="transform scale-90 mb-4 transition-transform relative z-10">
-                    <div className="absolute inset-0 bg-amber-400/10 blur-3xl rounded-full"></div>
+                    <div className="absolute inset-0 bg-amber-400/20 blur-3xl rounded-full"></div>
                     <PokemonSpriteModal selectedPokemon={selectedPokemon} isPlaying={isPlaying} increment={increment} setCounter={setCounter} />
                 </div>
 
@@ -241,8 +258,8 @@ export default function PlaModal({ selectedPokemon, onClose }) {
                     />
                 )}
 
-                {showConfirm && <ConfirmModal message="RESET HUNT DATA?" onCancel={() => setShowConfirm(false)} onConfirm={resetHunt} confirmColor="from-red-500 to-red-600" />}
-                {showGotchaConfirm && <ConfirmModal message="SHINY CAUGHT?" onCancel={() => setShowGotchaConfirm(false)} onConfirm={gotchaHunt} confirmColor="from-amber-500 to-amber-600" />}
+                {showConfirm && <ConfirmModal message="RESET HUNT DATA?" onCancel={() => setShowConfirm(false)} onConfirm={resetHunt} confirmColor="from-red-700 to-red-950" />}
+                {showGotchaConfirm && <ConfirmModal message="SHINY CAUGHT?" onCancel={() => setShowGotchaConfirm(false)} onConfirm={gotchaHunt} confirmColor="from-amber-600 to-amber-700" />}
             </div>
         </div>
     );
