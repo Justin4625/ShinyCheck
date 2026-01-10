@@ -98,7 +98,8 @@ export default function ShinyDexModal({ pokemon, onClose, onSelectEntry, onAddPo
                                 <div className="flex items-center gap-4">
                                     <div className={`w-14 h-14 rounded-xl flex items-center justify-center ${
                                         item.type === 'POGO' ? 'bg-emerald-50 text-emerald-500' :
-                                            item.type === 'PLZA' ? 'bg-cyan-50 text-cyan-500' : 'bg-orange-50 text-orange-500'
+                                            item.type === 'PLZA' ? 'bg-cyan-50 text-cyan-500' :
+                                                item.type === 'PLA' ? 'bg-amber-50 text-amber-600' : 'bg-orange-50 text-orange-500'
                                     }`}>
                                         <img src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/shiny/${item.id}.png`} className="w-12 h-12 object-contain" alt={item.name} />
                                     </div>
@@ -106,9 +107,10 @@ export default function ShinyDexModal({ pokemon, onClose, onSelectEntry, onAddPo
                                         <p className="text-lg font-black text-slate-800 uppercase italic leading-none mb-1">{item.name}</p>
                                         <p className={`text-[9px] font-black uppercase tracking-widest mb-1 ${
                                             item.type === 'POGO' ? 'text-emerald-600' :
-                                                item.type === 'PLZA' ? 'text-cyan-600' : 'text-orange-600'
+                                                item.type === 'PLZA' ? 'text-cyan-600' :
+                                                    item.type === 'PLA' ? 'text-amber-700' : 'text-orange-600'
                                         }`}>
-                                            {item.type === 'POGO' ? 'Pokémon GO' : item.type === 'PLZA' ? 'Legends: Z-A' : 'Scarlet & Violet'}
+                                            {item.type === 'POGO' ? 'Pokémon GO' : item.type === 'PLZA' ? 'Legends: Z-A' : item.type === 'PLA' ? 'Legends: Arceus' : 'Scarlet & Violet'}
                                         </p>
                                         <p className="text-[11px] font-bold text-slate-400 italic">
                                             {new Date(item.storedData.timestamp).toLocaleDateString('nl-NL')}

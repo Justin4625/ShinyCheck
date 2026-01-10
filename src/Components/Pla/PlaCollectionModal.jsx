@@ -195,7 +195,7 @@ export default function PlaCollectionModal({ data, onClose, pokemon, shinyIndex,
                                     <span className="block transform skew-x-12">Commit Changes</span>
                                 </button>
                                 <button onClick={() => setIsEditing(false)} className="flex-1 py-3 bg-slate-200 text-slate-500 font-black italic transform -skew-x-12 text-[11px] uppercase tracking-widest hover:bg-slate-300 transition-all">
-                                    <span className="block transform skew-x-12">Discard</span>
+                                    <span className="block transform skew-x-12">Cancel</span>
                                 </button>
                             </>
                         ) : (
