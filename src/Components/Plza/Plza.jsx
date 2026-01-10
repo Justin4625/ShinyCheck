@@ -1,13 +1,53 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import plzaPokemon from "../../data/PlzaData/PlzaData.js";
 import plzaMdPokemon from "../../data/PlzaData/PlzaMdData.js";
 import plzaRegionalPokemon from "../../data/PlzaData/PlzaRegionalData.jsx";
 import usePokemon from "../FetchPokemon.jsx";
 import PlzaModal from "./PlzaModal.jsx";
-import PlzaTabs from "./PlzaTabs.jsx";
 import PlzaActiveHunts from "./PlzaActiveHunts.jsx";
 import PlzaCards from "./PlzaCards.jsx";
 
+// --- INTERNE COMPONENT: PlzaTabs ---
+function PlzaTabs({ activeTab, setActiveTab }) {
+    const tabs = [
+        { id: "active", label: "Active Hunts" },
+        { id: "base", label: "Base Dex" },
+        { id: "mega", label: "Mega Dimension" },
+        { id: "regional", label: "Regional Forms" },
+    ];
+
+    return (
+        <div className="flex flex-nowrap w-full gap-1 sm:gap-2">
+            {tabs.map((tab) => {
+                const isActive = activeTab === tab.id;
+                return (
+                    <button
+                        key={tab.id}
+                        onClick={() => setActiveTab(tab.id)}
+                        className={`
+                            flex-1 px-1 sm:px-4 py-2 sm:py-2.5 
+                            rounded-lg sm:rounded-xl font-black italic 
+                            text-[8px] min-[380px]:text-[10px] sm:text-xs 
+                            tracking-tighter min-[380px]:tracking-widest uppercase 
+                            transition-all duration-300 border-[1.5px] sm:border-2
+                            ${isActive
+                            ? "bg-white border-cyan-500 text-cyan-600 shadow-sm z-10 scale-[1.02]"
+                            : "bg-slate-50 border-transparent text-slate-400 hover:bg-white hover:border-slate-200"
+                        }
+                        `}
+                    >
+                        <span className="relative z-10 block truncate">{tab.label}</span>
+                        {isActive && (
+                            <div className="h-0.5 sm:h-1 w-4 sm:w-6 bg-pink-500 mx-auto mt-0.5 rounded-full animate-pulse" />
+                        )}
+                    </button>
+                );
+            })}
+        </div>
+    );
+}
+
+// --- MAIN EXPORT: Plza ---
 export default function Plza() {
     // Combineer alle Pokémon voor de API fetch en modal navigatie
     const allAvailablePokemon = Array.from(
@@ -67,7 +107,6 @@ export default function Plza() {
 
     const getShinyProgress = () => {
         let uniqueShinyCount = 0;
-        // Progressie wordt berekend over base en mega, exclusief regional (conform SV structuur)
         const progressPokemon = [...plzaPokemon, ...plzaMdPokemon];
         progressPokemon.forEach(p => {
             const count = Number(localStorage.getItem(`plza_shiny_${p.id}`)) || 0;
@@ -105,6 +144,7 @@ export default function Plza() {
                 </p>
             </div>
 
+            {/* Progress Bar */}
             <div className="relative z-10 max-w-lg mx-auto mb-8">
                 <div className="bg-white border border-slate-100 p-3 rounded-2xl shadow-lg shadow-slate-200/30">
                     <div className="flex justify-between items-end mb-2 px-1">
