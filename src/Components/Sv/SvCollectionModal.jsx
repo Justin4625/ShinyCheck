@@ -1,9 +1,40 @@
 import React, { useState } from "react";
-import SvDeleteShiny from "./SvDeleteShiny.jsx";
 
+// --- INTERNE COMPONENT: SvDeleteConfirm (Verwijder-bevestiging) ---
+function SvDeleteConfirm({ onCancel, onConfirm }) {
+    return (
+        <div className="fixed inset-0 flex items-center justify-center z-[70] bg-black/60 backdrop-blur-md">
+            <div
+                className="bg-white border-b-4 border-r-4 border-gray-300 rounded-tr-[30px] rounded-bl-[30px] rounded-tl-lg rounded-br-lg p-8 w-[95%] max-w-[450px] text-center flex flex-col gap-6 shadow-2xl transform transition-all animate-in fade-in zoom-in duration-200"
+                onClick={(e) => e.stopPropagation()}
+            >
+                <p className="text-[#333] font-black italic text-xl uppercase tracking-tighter leading-tight px-4">
+                    Are you sure you want to delete this shiny?
+                </p>
+
+                <div className="flex justify-center gap-4 mt-2">
+                    <button
+                        onClick={onCancel}
+                        className="px-8 py-2.5 bg-white border-b-4 border-gray-200 text-gray-400 font-black italic text-xs uppercase tracking-widest transform -skew-x-12 hover:bg-gray-50 hover:text-gray-600 transition-all active:scale-95 shadow-sm"
+                    >
+                        <span className="block transform skew-x-12">Cancel</span>
+                    </button>
+
+                    <button
+                        onClick={onConfirm}
+                        className="px-8 py-2.5 bg-gradient-to-r from-red-500 to-red-700 text-white font-black italic text-xs uppercase tracking-widest transform -skew-x-12 shadow-lg border-b-4 border-black/20 hover:scale-105 active:scale-95 transition-all"
+                    >
+                        <span className="block transform skew-x-12">Delete</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    );
+}
+
+// --- MAIN EXPORT: SvCollectionModal ---
 export default function SvCollectionModal({ data, onClose, pokemon, shinyIndex, gameName, originalId }) {
     const [showConfirm, setShowConfirm] = useState(false);
-
     const [isEditing, setIsEditing] = useState(false);
     const [editCounter, setEditCounter] = useState(data.counter);
 
@@ -13,13 +44,9 @@ export default function SvCollectionModal({ data, onClose, pokemon, shinyIndex, 
     };
     const [editTimestamp, setEditTimestamp] = useState(formatForInput(data.timestamp));
 
-    const initialHrs = Math.floor(data.timer / 3600);
-    const initialMins = Math.floor((data.timer % 3600) / 60);
-    const initialSecs = data.timer % 60;
-
-    const [editHrs, setEditHrs] = useState(initialHrs);
-    const [editMins, setEditMins] = useState(initialMins);
-    const [editSecs, setEditSecs] = useState(initialSecs);
+    const [editHrs, setEditHrs] = useState(Math.floor(data.timer / 3600));
+    const [editMins, setEditMins] = useState(Math.floor((data.timer % 3600) / 60));
+    const [editSecs, setEditSecs] = useState(data.timer % 60);
 
     if (!data || !pokemon) return null;
 
@@ -45,10 +72,7 @@ export default function SvCollectionModal({ data, onClose, pokemon, shinyIndex, 
             timestamp: new Date(editTimestamp).getTime()
         };
 
-        const storageKey = `sv_shinyData_${originalId}_${shinyIndex}`;
-        localStorage.setItem(storageKey, JSON.stringify(updatedData));
-
-        // Sluit de modal om "een stap terug" te gaan
+        localStorage.setItem(`sv_shinyData_${originalId}_${shinyIndex}`, JSON.stringify(updatedData));
         onClose();
     };
 
@@ -56,6 +80,8 @@ export default function SvCollectionModal({ data, onClose, pokemon, shinyIndex, 
         const prefix = "sv";
         const shinyCount = Number(localStorage.getItem(`${prefix}_shiny_${originalId}`)) || 0;
         localStorage.removeItem(`${prefix}_shinyData_${originalId}_${shinyIndex}`);
+
+        // Re-indexeren van de overgebleven shinies
         for (let i = shinyIndex + 1; i <= shinyCount; i++) {
             const entry = localStorage.getItem(`${prefix}_shinyData_${originalId}_${i}`);
             if (entry) {
@@ -63,21 +89,32 @@ export default function SvCollectionModal({ data, onClose, pokemon, shinyIndex, 
                 localStorage.removeItem(`${prefix}_shinyData_${originalId}_${i}`);
             }
         }
+
         const newCount = shinyCount - 1;
         if (newCount > 0) localStorage.setItem(`${prefix}_shiny_${originalId}`, newCount);
         else localStorage.removeItem(`${prefix}_shiny_${originalId}`);
+
+        onClose();
+        window.location.reload();
     };
 
     return (
-        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-md flex items-center justify-center z-[70] p-4">
+        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-md flex items-center justify-center z-[60] p-4">
             <div onClick={(e) => e.stopPropagation()} className="relative bg-white border-b-4 border-r-4 border-gray-200 rounded-tr-[2.8rem] rounded-bl-[2.8rem] rounded-tl-xl rounded-br-xl shadow-2xl p-8 w-full max-w-xl flex flex-col items-center overflow-hidden">
-                <button onClick={onClose} className="absolute top-5 right-5 w-10 h-10 flex items-center justify-center rounded-full bg-slate-50 text-slate-400 hover:text-orange-500 transition-all z-20"><span className="text-xl font-black">✕</span></button>
+
+                <button onClick={onClose} className="absolute top-5 right-5 w-10 h-10 flex items-center justify-center rounded-full bg-slate-50 text-slate-400 hover:text-orange-500 transition-all z-20">
+                    <span className="text-xl font-black">✕</span>
+                </button>
 
                 <div className="flex flex-col items-center mb-6 text-center">
                     <div className="bg-orange-600 px-4 py-1 transform -skew-x-12 mb-3 shadow-md">
-                        <span className="text-[10px] font-black italic text-white tracking-widest uppercase">{isEditing ? "Editing Entry" : `Registered Entry #${shinyIndex}`}</span>
+                        <span className="text-[10px] font-black italic text-white tracking-widest uppercase">
+                            {isEditing ? "Editing Entry" : `Registered Entry #${shinyIndex}`}
+                        </span>
                     </div>
-                    <h2 className="text-3xl font-black uppercase italic text-slate-800 tracking-tighter">#{String(pokemon.id).padStart(4, "0")} - {pokemon.name}</h2>
+                    <h2 className="text-3xl font-black uppercase italic text-slate-800 tracking-tighter">
+                        #{String(pokemon.id).padStart(4, "0")} - {pokemon.name}
+                    </h2>
                 </div>
 
                 <div className="relative mb-8">
@@ -127,16 +164,25 @@ export default function SvCollectionModal({ data, onClose, pokemon, shinyIndex, 
 
                     <div className="flex flex-col sm:flex-row gap-3 justify-center w-full mt-4">
                         {isEditing ? (
-                            <><button onClick={handleSave} className="px-8 py-2 bg-orange-600 text-white font-black uppercase italic rounded-lg transform -skew-x-6 hover:bg-orange-700">Save</button>
-                                <button onClick={() => setIsEditing(false)} className="px-8 py-2 bg-gray-200 text-gray-600 font-black uppercase italic rounded-lg transform -skew-x-6 hover:bg-gray-300">Cancel</button></>
+                            <>
+                                <button onClick={handleSave} className="px-8 py-2 bg-orange-600 text-white font-black uppercase italic rounded-lg transform -skew-x-6 hover:bg-orange-700">Save</button>
+                                <button onClick={() => setIsEditing(false)} className="px-8 py-2 bg-gray-200 text-gray-600 font-black uppercase italic rounded-lg transform -skew-x-6 hover:bg-gray-300">Cancel</button>
+                            </>
                         ) : (
-                            <><button onClick={() => setIsEditing(true)} className="px-8 py-2 bg-white border-2 border-orange-500 text-orange-600 font-black uppercase italic rounded-lg transform -skew-x-6 hover:bg-orange-50">Edit</button>
-                                <button onClick={() => setShowConfirm(true)} className="px-8 py-2 bg-white border-2 border-slate-200 text-slate-400 font-black uppercase italic rounded-lg transform -skew-x-6 hover:text-red-500">Delete</button></>
+                            <>
+                                <button onClick={() => setIsEditing(true)} className="px-8 py-2 bg-white border-2 border-orange-500 text-orange-600 font-black uppercase italic rounded-lg transform -skew-x-6 hover:bg-orange-50">Edit</button>
+                                <button onClick={() => setShowConfirm(true)} className="px-8 py-2 bg-white border-2 border-slate-200 text-slate-400 font-black uppercase italic rounded-lg transform -skew-x-6 hover:text-red-500">Delete</button>
+                            </>
                         )}
                     </div>
                 </div>
 
-                {showConfirm && <SvDeleteShiny onCancel={() => setShowConfirm(false)} onConfirm={() => { deleteShinyLogic(); onClose(); window.location.reload(); }} />}
+                {showConfirm && (
+                    <SvDeleteConfirm
+                        onCancel={() => setShowConfirm(false)}
+                        onConfirm={deleteShinyLogic}
+                    />
+                )}
             </div>
         </div>
     );
