@@ -1,13 +1,13 @@
-const plzaPokemon = [
+const plaPokemon = [
     { id: 722, name: "Rowlet", game: "Pokémon Legends: Arceus" },
     { id: 723, name: "Dartrix", game: "Pokémon Legends: Arceus" },
-    { id: 10234, name: "Decidueye", game: "Pokémon Legends: Arceus" }, // Hisuian Form
+    { id: 10244, name: "Hisuian Decidueye", game: "Pokémon Legends: Arceus" }, // Hisuian Form
     { id: 155, name: "Cyndaquil", game: "Pokémon Legends: Arceus" },
     { id: 156, name: "Quilava", game: "Pokémon Legends: Arceus" },
-    { id: 10233, name: "Typhlosion", game: "Pokémon Legends: Arceus" }, // Hisuian Form
+    { id: 10233, name: "Hisuian Typhlosion", game: "Pokémon Legends: Arceus" }, // Hisuian Form
     { id: 501, name: "Oshawott", game: "Pokémon Legends: Arceus" },
     { id: 502, name: "Dewott", game: "Pokémon Legends: Arceus" },
-    { id: 10232, name: "Samurott", game: "Pokémon Legends: Arceus" }, // Hisuian Form
+    { id: 10236, name: "Hisuian Samurott", game: "Pokémon Legends: Arceus" }, // Hisuian Form
     { id: 399, name: "Bidoof", game: "Pokémon Legends: Arceus" },
     { id: 400, name: "Bibarel", game: "Pokémon Legends: Arceus" },
     { id: 396, name: "Starly", game: "Pokémon Legends: Arceus" },
@@ -82,7 +82,7 @@ const plzaPokemon = [
     { id: 130, name: "Gyarados", game: "Pokémon Legends: Arceus" },
     { id: 422, name: "Shellos", game: "Pokémon Legends: Arceus" },
     { id: 423, name: "Gastrodon", game: "Pokémon Legends: Arceus" },
-    { id: 10231, name: "Qwilfish", game: "Pokémon Legends: Arceus" }, // Hisuian
+    { id: 10234, name: "Hisuian Qwilfish", game: "Pokémon Legends: Arceus" }, // Hisuian
     { id: 904, name: "Overqwil", game: "Pokémon Legends: Arceus" },
     { id: 440, name: "Happiny", game: "Pokémon Legends: Arceus" },
     { id: 113, name: "Chansey", game: "Pokémon Legends: Arceus" },
@@ -92,7 +92,7 @@ const plzaPokemon = [
     { id: 407, name: "Roserade", game: "Pokémon Legends: Arceus" },
     { id: 357, name: "Carnivine", game: "Pokémon Legends: Arceus" },
     { id: 548, name: "Petilil", game: "Pokémon Legends: Arceus" },
-    { id: 10235, name: "Lilligant", game: "Pokémon Legends: Arceus" }, // Hisuian
+    { id: 10237, name: "Hisuian Lilligant", game: "Pokémon Legends: Arceus" }, // Hisuian
     { id: 114, name: "Tangela", game: "Pokémon Legends: Arceus" },
     { id: 465, name: "Tangrowth", game: "Pokémon Legends: Arceus" },
     { id: 339, name: "Barboach", game: "Pokémon Legends: Arceus" },
@@ -114,8 +114,8 @@ const plzaPokemon = [
     { id: 217, name: "Ursaring", game: "Pokémon Legends: Arceus" },
     { id: 901, name: "Ursaluna", game: "Pokémon Legends: Arceus" },
     { id: 704, name: "Goomy", game: "Pokémon Legends: Arceus" },
-    { id: 10239, name: "Sliggoo", game: "Pokémon Legends: Arceus" }, // Hisuian
-    { id: 10240, name: "Goodra", game: "Pokémon Legends: Arceus" }, // Hisuian
+    { id: 10241, name: "Hisuian Sliggoo", game: "Pokémon Legends: Arceus" }, // Hisuian
+    { id: 10242, name: "Hisuian Goodra", game: "Pokémon Legends: Arceus" }, // Hisuian
     { id: 95, name: "Onix", game: "Pokémon Legends: Arceus" },
     { id: 208, name: "Steelix", game: "Pokémon Legends: Arceus" },
     { id: 111, name: "Rhyhorn", game: "Pokémon Legends: Arceus" },
@@ -148,8 +148,8 @@ const plzaPokemon = [
     { id: 224, name: "Octillery", game: "Pokémon Legends: Arceus" },
     { id: 451, name: "Skorupi", game: "Pokémon Legends: Arceus" },
     { id: 452, name: "Drapion", game: "Pokémon Legends: Arceus" },
-    { id: 10229, name: "Growlithe", game: "Pokémon Legends: Arceus" }, // Hisuian
-    { id: 10230, name: "Arcanine", game: "Pokémon Legends: Arceus" }, // Hisuian
+    { id: 10229, name: "Hisuian Growlithe", game: "Pokémon Legends: Arceus" }, // Hisuian
+    { id: 10230, name: "Hisuian Arcanine", game: "Pokémon Legends: Arceus" }, // Hisuian
     { id: 431, name: "Glameow", game: "Pokémon Legends: Arceus" },
     { id: 432, name: "Purugly", game: "Pokémon Legends: Arceus" },
     { id: 66, name: "Machop", game: "Pokémon Legends: Arceus" },
@@ -164,7 +164,7 @@ const plzaPokemon = [
     { id: 395, name: "Empoleon", game: "Pokémon Legends: Arceus" },
     { id: 458, name: "Mantyke", game: "Pokémon Legends: Arceus" },
     { id: 226, name: "Mantine", game: "Pokémon Legends: Arceus" },
-    { id: 10236, name: "Basculin", game: "Pokémon Legends: Arceus" }, // White-Striped
+    { id: 10247, name: "Hisuian Basculin", game: "Pokémon Legends: Arceus" }, // White-Striped
     { id: 902, name: "Basculegion", game: "Pokémon Legends: Arceus" },
     { id: 37, name: "Vulpix", game: "Pokémon Legends: Arceus" },
     { id: 38, name: "Ninetales", game: "Pokémon Legends: Arceus" },
@@ -190,8 +190,8 @@ const plzaPokemon = [
     { id: 445, name: "Garchomp", game: "Pokémon Legends: Arceus" },
     { id: 299, name: "Nosepass", game: "Pokémon Legends: Arceus" },
     { id: 476, name: "Probopass", game: "Pokémon Legends: Arceus" },
-    { id: 10237, name: "Voltorb", game: "Pokémon Legends: Arceus" }, // Hisuian
-    { id: 10238, name: "Electrode", game: "Pokémon Legends: Arceus" }, // Hisuian
+    { id: 10231, name: "Hisuian Voltorb", game: "Pokémon Legends: Arceus" }, // Hisuian
+    { id: 10232, name: "Hisuian Electrode", game: "Pokémon Legends: Arceus" }, // Hisuian
     { id: 479, name: "Rotom", game: "Pokémon Legends: Arceus" },
     { id: 433, name: "Chingling", game: "Pokémon Legends: Arceus" },
     { id: 358, name: "Chimecho", game: "Pokémon Legends: Arceus" },
@@ -200,7 +200,7 @@ const plzaPokemon = [
     { id: 173, name: "Cleffa", game: "Pokémon Legends: Arceus" },
     { id: 35, name: "Clefairy", game: "Pokémon Legends: Arceus" },
     { id: 36, name: "Clefable", game: "Pokémon Legends: Arceus" },
-    { id: 10231, name: "Sneasel", game: "Pokémon Legends: Arceus" }, // Hisuian
+    { id: 10235, name: "Hisuian Sneasel", game: "Pokémon Legends: Arceus" }, // Hisuian
     { id: 903, name: "Sneasler", game: "Pokémon Legends: Arceus" },
     { id: 461, name: "Weavile", game: "Pokémon Legends: Arceus" },
     { id: 361, name: "Snorunt", game: "Pokémon Legends: Arceus" },
@@ -214,13 +214,13 @@ const plzaPokemon = [
     { id: 221, name: "Piloswine", game: "Pokémon Legends: Arceus" },
     { id: 473, name: "Mamoswine", game: "Pokémon Legends: Arceus" },
     { id: 712, name: "Bergmite", game: "Pokémon Legends: Arceus" },
-    { id: 10241, name: "Avalugg", game: "Pokémon Legends: Arceus" }, // Hisuian
+    { id: 10243, name: "Hisuian Avalugg", game: "Pokémon Legends: Arceus" }, // Hisuian
     { id: 459, name: "Snover", game: "Pokémon Legends: Arceus" },
     { id: 460, name: "Abomasnow", game: "Pokémon Legends: Arceus" },
-    { id: 10242, name: "Zorua", game: "Pokémon Legends: Arceus" }, // Hisuian
-    { id: 10243, name: "Zoroark", game: "Pokémon Legends: Arceus" }, // Hisuian
+    { id: 10238, name: "Hisuian Zorua", game: "Pokémon Legends: Arceus" }, // Hisuian
+    { id: 10239, name: "Hisuian Zoroark", game: "Pokémon Legends: Arceus" }, // Hisuian
     { id: 627, name: "Rufflet", game: "Pokémon Legends: Arceus" },
-    { id: 10244, name: "Braviary", game: "Pokémon Legends: Arceus" }, // Hisuian
+    { id: 10240, name: "Hisuian Braviary", game: "Pokémon Legends: Arceus" }, // Hisuian
     { id: 447, name: "Riolu", game: "Pokémon Legends: Arceus" },
     { id: 448, name: "Lucario", game: "Pokémon Legends: Arceus" },
     { id: 480, name: "Uxie", game: "Pokémon Legends: Arceus" },
@@ -243,4 +243,4 @@ const plzaPokemon = [
     { id: 491, name: "Darkrai", game: "Pokémon Legends: Arceus" }
 ];
 
-export default plzaPokemon;
+export default plaPokemon;

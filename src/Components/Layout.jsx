@@ -9,6 +9,7 @@ function Layout() {
         { to: "/", label: "Shinydex" },
         { to: "/plza", label: "Pokémon Legends: Z-A" },
         { to: "/sv", label: "Pokémon Scarlet & Violet" },
+        { to: "/pla", label: "Pokémon Legends: Arceus" },
         { to: "/collection", label: "Collection" },
     ];
 

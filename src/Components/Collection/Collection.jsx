@@ -2,10 +2,11 @@ import React, { useState } from "react";
 import PlzaCollectionModal from "../Plza/PlzaCollectionModal.jsx";
 import SvCollectionModal from "../Sv/SvCollectionModal.jsx";
 import PogoCollectionModal from "../Pogo/PogoCollectionModal.jsx";
+import PlaCollectionModal from "../Pla/PlaCollectionModal.jsx"; //
 import CollectionFilter from "./CollectionFilter.jsx";
 import CollectionCards from "./CollectionCards.jsx";
 
-export default function Collection({ plzaPokemon = [], svPokemon = [], pokemonList = [] }) {
+export default function Collection({ plzaPokemon = [], svPokemon = [], plaPokemon = [], pokemonList = [] }) { //
     const [selectedEntry, setSelectedEntry] = useState(null);
     const [searchQuery, setSearchQuery] = useState("");
     const [filter, setFilter] = useState("all");
@@ -45,7 +46,17 @@ export default function Collection({ plzaPokemon = [], svPokemon = [], pokemonLi
         return items;
     });
 
-    // Nieuwe logica voor Pokémon GO hunts
+    // Logica voor Pokémon Legends: Arceus hunts
+    const plaHunts = plaPokemon.flatMap((p) => {
+        const count = Number(localStorage.getItem(`pla_shiny_${p.id}`)) || 0;
+        const items = [];
+        for (let i = 1; i <= count; i++) {
+            const data = JSON.parse(localStorage.getItem(`pla_shinyData_${p.id}_${i}`));
+            if (data) items.push({ ...p, storedData: data, shinyIndex: i, type: 'PLA' });
+        }
+        return items;
+    });
+
     const pogoHunts = pokemonList.flatMap((p) => {
         const count = Number(localStorage.getItem(`pogo_shiny_${p.id}`)) || 0;
         const items = [];
@@ -56,9 +67,9 @@ export default function Collection({ plzaPokemon = [], svPokemon = [], pokemonLi
         return items;
     });
 
-    const totalCount = plzaHunts.length + svHunts.length + pogoHunts.length;
+    const totalCount = plzaHunts.length + svHunts.length + pogoHunts.length + plaHunts.length;
 
-    const allShinies = [...plzaHunts, ...svHunts, ...pogoHunts]
+    const allShinies = [...plzaHunts, ...svHunts, ...pogoHunts, ...plaHunts]
         .filter((entry) => {
             const matchesSearch = entry.name.toLowerCase().includes(searchQuery.toLowerCase());
             const matchesFilter = filter === "all" || entry.type === filter;
@@ -89,6 +100,7 @@ export default function Collection({ plzaPokemon = [], svPokemon = [], pokemonLi
                 totalCount={totalCount}
                 plzaCount={plzaHunts.length}
                 svCount={svHunts.length}
+                plaCount={plaHunts.length}
                 pogoCount={pogoHunts.length}
             />
 
@@ -129,6 +141,18 @@ export default function Collection({ plzaPokemon = [], svPokemon = [], pokemonLi
                     formatTime={formatTime}
                     onClose={() => setSelectedEntry(null)}
                     gameName="Pokémon Scarlet & Violet"
+                />
+            )}
+
+            {selectedEntry?.type === 'PLA' && (
+                <PlaCollectionModal
+                    data={selectedEntry.storedData}
+                    pokemon={pokemonList.find(p => p.id === selectedEntry.id)}
+                    originalId={selectedEntry.id}
+                    shinyIndex={selectedEntry.shinyIndex}
+                    formatTime={formatTime}
+                    onClose={() => setSelectedEntry(null)}
+                    gameName="Pokémon Legends: Arceus"
                 />
             )}
 

@@ -15,7 +15,7 @@ export default function ShinyDexCards({ displayedPokemon, onCardClick, loading, 
         const lowerBaseName = baseName.toLowerCase();
         for (let i = 0; i < localStorage.length; i++) {
             const key = localStorage.key(i);
-            if (key.startsWith("plza_shinyData_") || key.startsWith("sv_shinyData_") || key.startsWith("pogo_shinyData_")) {
+            if (key.startsWith("plza_shinyData_") || key.startsWith("sv_shinyData_") || key.startsWith("pogo_shinyData_") || key.startsWith("pla_shinyData_")) {
                 try {
                     const data = JSON.parse(localStorage.getItem(key));
                     if (data?.pokemonName) {

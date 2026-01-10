@@ -12,6 +12,7 @@ import ShinyDexTabs from "./ShinyDexTabs.jsx";
 import ShinyDexModal from "./ShinyDexModal.jsx";
 import PlzaCollectionModal from "../Plza/PlzaCollectionModal.jsx";
 import SvCollectionModal from "../Sv/SvCollectionModal.jsx";
+import PlaCollectionModal from "../Pla/PlaCollectionModal.jsx"; //
 import PogoAddPokemon from "../Pogo/PogoAddPokemon.jsx";
 import PogoCollectionModal from "../Pogo/PogoCollectionModal.jsx";
 
@@ -52,7 +53,8 @@ export default function ShinyDex() {
         const lowerBaseName = baseName.toLowerCase();
         for (let i = 0; i < localStorage.length; i++) {
             const key = localStorage.key(i);
-            if (key.startsWith("plza_shinyData_") || key.startsWith("sv_shinyData_") || key.startsWith("pogo_shinyData_")) {
+            // Toegevoegd: pla_shinyData check
+            if (key.startsWith("plza_shinyData_") || key.startsWith("sv_shinyData_") || key.startsWith("pogo_shinyData_") || key.startsWith("pla_shinyData_")) {
                 try {
                     const data = JSON.parse(localStorage.getItem(key));
                     if (data?.pokemonName) {
@@ -133,7 +135,7 @@ export default function ShinyDex() {
                         </div>
                     </div>
 
-                    {/* MIDDEN: UPDATE BANNER (Zonder hover en niet schuin) */}
+                    {/* MIDDEN: UPDATE BANNER */}
                     <div className="flex-1 flex justify-center">
                         <div className={`px-8 py-3 rounded-2xl border transition-colors duration-500 flex items-center gap-4 ${
                             isPogoTheme
@@ -223,7 +225,6 @@ export default function ShinyDex() {
                 </div>
             </div>
 
-            {/* Modals blijven hetzelfde */}
             {selectedPokemon && (
                 <ShinyDexModal
                     pokemon={selectedPokemon}
@@ -269,6 +270,20 @@ export default function ShinyDex() {
                         setRefreshKey(prev => prev + 1);
                     }}
                     gameName="Pokémon Scarlet & Violet"
+                />
+            )}
+            {/* Toegevoegd: PlaCollectionModal render logica */}
+            {selectedEntry?.type === 'PLA' && (
+                <PlaCollectionModal
+                    data={selectedEntry.storedData}
+                    pokemon={selectedEntry}
+                    originalId={selectedEntry.id}
+                    shinyIndex={selectedEntry.shinyIndex}
+                    onClose={() => {
+                        setSelectedEntry(null);
+                        setRefreshKey(prev => prev + 1);
+                    }}
+                    gameName="Pokémon Legends: Arceus"
                 />
             )}
             {selectedEntry?.type === 'POGO' && (
