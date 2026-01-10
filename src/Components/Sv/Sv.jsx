@@ -4,19 +4,61 @@ import svTmPokemon from "../../data/SvData/SvTmData.js";
 import svIdData from "../../data/SvData/SvIdData.js";
 import usePokemon from "../FetchPokemon.jsx";
 import SvModal from "./SvModal.jsx";
-import SvTabs from "./SvTabs.jsx";
 import SvCards from "./SvCards.jsx";
 import SvActiveHunts from "./SvActiveHunts.jsx";
 import svRegionalPokemon from "../../data/SvData/SvRegionalData.js";
 import svRegionalData from "../../data/SvData/SvRegionalData.js";
 
+// --- INTERNE COMPONENT: SvTabs ---
+function SvTabs({ activeTab, setActiveTab }) {
+    const tabs = [
+        { id: "active", label: "ACTIVE HUNTS" },
+        { id: "base", label: "BASE DEX" },
+        { id: "teal", label: "TEAL MASK" },
+        { id: "indigo", label: "INDIGO DISK" },
+        { id: "regional", label: "REGIONAL FORMS" },
+    ];
+
+    return (
+        <div className="flex flex-nowrap w-full gap-1 sm:gap-2 overflow-hidden">
+            {tabs.map((tab, index) => {
+                const isActive = activeTab === tab.id;
+                const accentColor = index % 2 === 0 ? "from-[#ff4d00] to-[#ff6a00]" : "from-[#8c00ff] to-[#a23dff]";
+
+                return (
+                    <button
+                        key={tab.id}
+                        onClick={() => setActiveTab(tab.id)}
+                        className={`
+                            relative flex-1 h-9 transition-all duration-300 transform skew-x-[-15deg]
+                            border-b-4 
+                            ${isActive
+                            ? `bg-gradient-to-r ${accentColor} text-white border-black/20 shadow-lg scale-105 z-20`
+                            : "bg-white border-gray-300 text-gray-600 hover:bg-gray-50 hover:border-gray-400"
+                        }
+                        `}
+                    >
+                        <span className="relative block text-center font-black italic text-[8px] sm:text-[10px] tracking-tighter sm:tracking-widest transform skew-x-[15deg]">
+                            {tab.label}
+                            {isActive && (
+                                <span className="absolute -top-1 -right-1 w-1.5 h-1.5 bg-white rounded-full animate-ping"></span>
+                            )}
+                        </span>
+                    </button>
+                );
+            })}
+        </div>
+    );
+}
+
+// --- MAIN EXPORT: Sv ---
 export default function Sv() {
-    // Maak een unieke lijst van alle Pokémon op basis van hun ID
+    // Unieke lijst voor API fetch en modal navigatie
     const allAvailablePokemon = Array.from(
         new Map([...svPokemon, ...svTmPokemon, ...svIdData, ...svRegionalPokemon].map(p => [p.id, p])).values()
     );
 
-    // Filter voor de progressiebar: sluit regionale vormen uit
+    // Filter voor de progressiebar (exclusief regional)
     const progressPokemon = Array.from(
         new Map([...svPokemon, ...svTmPokemon, ...svIdData].map(p => [p.id, p])).values()
     );
@@ -43,7 +85,6 @@ export default function Sv() {
         return `${hrs}h ${mins}m ${secs}s`;
     };
 
-    // Bepaal welke lijst getoond moet worden
     const displayedPokemonList =
         activeTab === "base"
             ? svPokemon
@@ -70,10 +111,8 @@ export default function Sv() {
         return nameMatch || typeMatch;
     });
 
-    // Aangepaste progressie logica
     const getShinyProgress = () => {
         let uniqueShinyCount = 0;
-        // Gebruik progressPokemon in plaats van allAvailablePokemon om regional uit te sluiten
         const allIds = new Set(progressPokemon.map(p => p.id));
         allIds.forEach(id => {
             const count = Number(localStorage.getItem(`sv_shiny_${id}`)) || 0;
@@ -89,6 +128,7 @@ export default function Sv() {
 
     return (
         <div className="relative p-3 sm:p-6 min-h-screen bg-[#f8f9fa] overflow-hidden font-sans">
+            {/* Background Accents */}
             <div className="absolute top-0 left-0 w-full h-full pointer-events-none z-0">
                 <div className="absolute top-[-5%] left-[-5%] w-[30%] h-[100%] bg-[#ff4d00] opacity-[0.03] rotate-12"></div>
                 <div className="absolute bottom-[-5%] right-[-5%] w-[30%] h-[100%] bg-[#8c00ff] opacity-[0.03] rotate-12"></div>
@@ -101,13 +141,12 @@ export default function Sv() {
                     </h1>
                 </div>
 
+                {/* Progress Card */}
                 <div className="w-full max-w-lg bg-white p-3 rounded-xl shadow-sm border border-gray-100">
                     <div className="flex justify-between items-end mb-1.5 px-1">
                         <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Shiny Progress</span>
                         <div className="flex items-baseline gap-2">
-                            <span className="text-xs font-bold text-[#ff4d00] tabular-nums">
-                                {shinyPercentage}%
-                            </span>
+                            <span className="text-xs font-bold text-[#ff4d00] tabular-nums">{shinyPercentage}%</span>
                             <span className="text-xl font-black text-[#333] italic">
                                 {shinyProgress.count}
                                 <span className="text-gray-300 mx-0.5 text-lg">/</span>
