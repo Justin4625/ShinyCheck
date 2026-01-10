@@ -1,8 +1,64 @@
 import React, { useEffect, useState } from "react";
-import PlzaHuntTab from "./PlzaHuntTab.jsx";
 import PokemonSpriteModal from "../PokemonSpriteModal.jsx";
 
-// Interne Component: PlzaSettingsTab
+// --- INTERNE COMPONENT: HuntTab ---
+function HuntTab({ timer, counter, increment, isPlaying, setTimer, setIsPlaying, setCounter }) {
+    useEffect(() => {
+        let interval;
+        if (isPlaying) interval = setInterval(() => setTimer((prev) => prev + 1), 1000);
+        return () => clearInterval(interval);
+    }, [isPlaying, setTimer]);
+
+    const formatTime = (seconds) => {
+        const hrs = Math.floor(seconds / 3600);
+        const mins = Math.floor((seconds % 3600) / 60);
+        const secs = seconds % 60;
+        return `${hrs}h ${mins}m ${secs}s`;
+    };
+
+    return (
+        <div className="flex flex-col items-center gap-6 w-full relative z-10">
+            <div className="flex flex-wrap items-center gap-4 justify-center w-full">
+                <div className="relative group">
+                    <div className="bg-slate-50 px-6 py-3 border-b-2 border-pink-500 rounded-2xl min-w-[140px] text-center shadow-sm group-hover:bg-white transition-colors">
+                        <span className="block text-slate-700 font-black italic text-lg tracking-tight">
+                            {formatTime(timer)}
+                        </span>
+                    </div>
+                    <label className="absolute -top-2.5 left-3 text-[8px] font-black text-slate-400 uppercase tracking-[0.2em]">Duration</label>
+                </div>
+
+                <div className="flex items-center gap-3">
+                    <div className="relative group">
+                        <div className="bg-slate-50 px-8 py-3 border-b-2 border-cyan-500 rounded-2xl min-w-[100px] text-center shadow-sm group-hover:bg-white transition-colors">
+                            <span className="block text-2xl font-black italic text-slate-900 tracking-tighter">
+                                {counter}
+                            </span>
+                        </div>
+                        <label className="absolute -top-2.5 left-3 text-[8px] font-black text-slate-400 uppercase tracking-[0.2em]">Encounters</label>
+                    </div>
+                    <button
+                        onClick={() => setCounter((prev) => Math.max(0, prev - Number(increment)))}
+                        className="h-12 w-12 bg-slate-50 text-slate-400 font-black rounded-2xl hover:bg-pink-50 hover:text-pink-500 transition-all border border-slate-100 shadow-sm"
+                    >
+                        -{increment}
+                    </button>
+                </div>
+            </div>
+
+            <button
+                onClick={() => setIsPlaying((p) => !p)}
+                className={`px-12 py-3.5 font-black italic tracking-[0.3em] uppercase text-white shadow-xl rounded-2xl transition-all duration-300 hover:scale-105 active:scale-95 text-xs ${
+                    isPlaying ? "bg-slate-800" : "bg-gradient-to-r from-cyan-500 via-cyan-400 to-indigo-500 shadow-cyan-200"
+                }`}
+            >
+                {isPlaying ? "PAUSE" : timer > 0 ? "CONTINUE" : "START HUNT"}
+            </button>
+        </div>
+    );
+}
+
+// --- INTERNE COMPONENT: SettingsTab ---
 function SettingsTab({ increment, setIncrement, timer, setTimer, counter, setCounter, onShowConfirm, onShowGotcha }) {
     const [hours, setHours] = useState(Math.floor(timer / 3600));
     const [minutes, setMinutes] = useState(Math.floor((timer % 3600) / 60));
@@ -32,12 +88,12 @@ function SettingsTab({ increment, setIncrement, timer, setTimer, counter, setCou
                     </div>
                     <div className="flex gap-2">
                         {["Hrs", "Min", "Sec"].map((label, i) => {
-                            const value = i === 0 ? hours : i === 1 ? minutes : seconds;
-                            const setter = i === 0 ? setHours : i === 1 ? setMinutes : setSeconds;
+                            const val = i === 0 ? hours : i === 1 ? minutes : seconds;
+                            const set = i === 0 ? setHours : i === 1 ? setMinutes : setSeconds;
                             return (
                                 <div key={label} className={inputContainerClass}>
                                     <label className={labelClass}>{label}</label>
-                                    <input type="number" min="0" max={i === 0 ? undefined : 59} value={value} onChange={(e) => setter(Math.max(0, Number(e.target.value)))} className={`${inputClass} border-pink-500 w-16 sm:w-20`} />
+                                    <input type="number" min="0" max={i === 0 ? undefined : 59} value={val} onChange={(e) => set(Math.max(0, Number(e.target.value)))} className={`${inputClass} border-pink-500 w-16 sm:w-20`} />
                                 </div>
                             );
                         })}
@@ -52,7 +108,7 @@ function SettingsTab({ increment, setIncrement, timer, setTimer, counter, setCou
     );
 }
 
-// Interne Component: PlzaGotchaReset (Bevestigingsmodal)
+// --- INTERNE COMPONENT: ConfirmModal ---
 function ConfirmModal({ message, onCancel, onConfirm, confirmColor = "from-cyan-500 to-indigo-600" }) {
     return (
         <div className="fixed inset-0 flex items-center justify-center z-[60] bg-slate-900/60 backdrop-blur-md p-4">
@@ -68,13 +124,13 @@ function ConfirmModal({ message, onCancel, onConfirm, confirmColor = "from-cyan-
     );
 }
 
+// --- MAIN EXPORT: PlzaModal ---
 export default function PlzaModal({ selectedPokemon, onClose }) {
     const [isPlaying, setIsPlaying] = useState(false);
     const [timer, setTimer] = useState(0);
     const [counter, setCounter] = useState(0);
     const [increment, setIncrement] = useState(1);
     const [activeTab, setActiveTab] = useState("hunt");
-
     const [showConfirm, setShowConfirm] = useState(false);
     const [showGotchaConfirm, setShowGotchaConfirm] = useState(false);
 
@@ -171,10 +227,9 @@ export default function PlzaModal({ selectedPokemon, onClose }) {
                 </div>
 
                 {activeTab === "hunt" ? (
-                    <PlzaHuntTab
+                    <HuntTab
                         timer={timer} counter={counter} increment={increment} isPlaying={isPlaying}
                         setTimer={setTimer} setIsPlaying={setIsPlaying} setCounter={setCounter}
-                        onShowConfirm={() => setShowConfirm(true)} onShowGotcha={() => setShowGotchaConfirm(true)}
                     />
                 ) : (
                     <SettingsTab
