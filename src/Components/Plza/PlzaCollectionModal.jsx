@@ -1,20 +1,42 @@
 import React, { useState } from "react";
-import PlzaDeleteShiny from "./PlzaDeleteShiny.jsx";
+
+// Interne Component voor de verwijder-bevestiging
+function DeleteConfirmModal({ onCancel, onConfirm }) {
+    return (
+        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-md flex items-center justify-center z-[70] p-4">
+            <div
+                className="bg-white border-2 border-slate-100 rounded-[2rem] p-8 w-full max-w-[420px] text-center shadow-2xl flex flex-col gap-6 animate-in fade-in zoom-in duration-200"
+                onClick={(e) => e.stopPropagation()}
+            >
+                <p className="text-slate-800 font-black italic text-xl uppercase tracking-tighter leading-tight">
+                    Are you sure you want to delete this shiny?
+                </p>
+
+                <div className="flex justify-center gap-4">
+                    <button
+                        onClick={onCancel}
+                        className="flex-1 px-6 py-2.5 bg-slate-50 border border-slate-200 text-slate-400 font-black italic rounded-xl text-[10px] uppercase tracking-widest hover:bg-white hover:text-slate-600 transition-all active:scale-95 shadow-sm"
+                    >
+                        Cancel
+                    </button>
+                    <button
+                        onClick={onConfirm}
+                        className="flex-1 px-6 py-2.5 bg-gradient-to-r from-pink-500 to-red-600 text-white font-black italic rounded-xl text-[10px] uppercase tracking-widest shadow-lg shadow-pink-200 transition-all hover:scale-105 active:scale-95"
+                    >
+                        Delete
+                    </button>
+                </div>
+            </div>
+        </div>
+    );
+}
 
 export default function PlzaCollectionModal({ data, onClose, pokemon, shinyIndex, gameName, originalId }) {
     const [showConfirm, setShowConfirm] = useState(false);
+    const [isEditing, setIsEditing] = useState(false);
 
     // State voor bewerken
-    const [isEditing, setIsEditing] = useState(false);
     const [editCounter, setEditCounter] = useState(data.counter);
-
-    // Datum formatteren voor de datetime-local input (YYYY-MM-DDTHH:MM)
-    const formatForInput = (ts) => {
-        const d = new Date(ts);
-        return new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
-    };
-    const [editTimestamp, setEditTimestamp] = useState(formatForInput(data.timestamp));
-
     const initialHrs = Math.floor(data.timer / 3600);
     const initialMins = Math.floor((data.timer % 3600) / 60);
     const initialSecs = data.timer % 60;
@@ -22,6 +44,13 @@ export default function PlzaCollectionModal({ data, onClose, pokemon, shinyIndex
     const [editHrs, setEditHrs] = useState(initialHrs);
     const [editMins, setEditMins] = useState(initialMins);
     const [editSecs, setEditSecs] = useState(initialSecs);
+
+    // Datum formatteren voor de datetime-local input
+    const formatForInput = (ts) => {
+        const d = new Date(ts);
+        return new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
+    };
+    const [editTimestamp, setEditTimestamp] = useState(formatForInput(data.timestamp));
 
     if (!data || !pokemon) return null;
 
@@ -40,7 +69,6 @@ export default function PlzaCollectionModal({ data, onClose, pokemon, shinyIndex
 
     const handleSave = () => {
         const totalSeconds = (Number(editHrs) * 3600) + (Number(editMins) * 60) + Number(editSecs);
-
         const updatedData = {
             ...data,
             counter: Number(editCounter),
@@ -48,10 +76,7 @@ export default function PlzaCollectionModal({ data, onClose, pokemon, shinyIndex
             timestamp: new Date(editTimestamp).getTime()
         };
 
-        const storageKey = `plza_shinyData_${originalId}_${shinyIndex}`;
-        localStorage.setItem(storageKey, JSON.stringify(updatedData));
-
-        // Sluit de modal om "een stap terug" te gaan
+        localStorage.setItem(`plza_shinyData_${originalId}_${shinyIndex}`, JSON.stringify(updatedData));
         onClose();
     };
 
@@ -59,6 +84,8 @@ export default function PlzaCollectionModal({ data, onClose, pokemon, shinyIndex
         const prefix = "plza";
         const shinyCount = Number(localStorage.getItem(`${prefix}_shiny_${originalId}`)) || 0;
         localStorage.removeItem(`${prefix}_shinyData_${originalId}_${shinyIndex}`);
+
+        // Re-indexeren van de overgebleven shinies
         for (let i = shinyIndex + 1; i <= shinyCount; i++) {
             const entry = localStorage.getItem(`${prefix}_shinyData_${originalId}_${i}`);
             if (entry) {
@@ -66,9 +93,13 @@ export default function PlzaCollectionModal({ data, onClose, pokemon, shinyIndex
                 localStorage.removeItem(`${prefix}_shinyData_${originalId}_${i}`);
             }
         }
+
         const newCount = shinyCount - 1;
         if (newCount > 0) localStorage.setItem(`${prefix}_shiny_${originalId}`, newCount);
         else localStorage.removeItem(`${prefix}_shiny_${originalId}`);
+
+        onClose();
+        window.location.reload();
     };
 
     return (
@@ -97,6 +128,7 @@ export default function PlzaCollectionModal({ data, onClose, pokemon, shinyIndex
 
                 <div className="w-full bg-slate-50/50 rounded-3xl border border-slate-100 p-4 flex flex-col gap-3 z-10 shadow-inner">
                     <div className="grid grid-cols-2 gap-3">
+                        {/* Encounters */}
                         <div className="flex flex-col items-center bg-white p-3 rounded-2xl border border-slate-100 shadow-sm">
                             <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">Encounters</p>
                             {isEditing ? (
@@ -105,6 +137,8 @@ export default function PlzaCollectionModal({ data, onClose, pokemon, shinyIndex
                                 <p className="text-2xl font-black italic text-slate-900 tracking-tighter">{data.counter}</p>
                             )}
                         </div>
+
+                        {/* Duration */}
                         <div className="flex flex-col items-center bg-white p-3 rounded-2xl border border-slate-100 shadow-sm">
                             <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">Duration</p>
                             {isEditing ? (
@@ -121,6 +155,7 @@ export default function PlzaCollectionModal({ data, onClose, pokemon, shinyIndex
                             )}
                         </div>
 
+                        {/* Date Input */}
                         <div className="flex flex-col items-center bg-white p-2.5 rounded-xl border border-slate-100 shadow-sm col-span-2">
                             <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">Captured On</p>
                             {isEditing ? (
@@ -130,24 +165,36 @@ export default function PlzaCollectionModal({ data, onClose, pokemon, shinyIndex
                             )}
                         </div>
 
+                        {/* Game Label */}
                         <div className="flex flex-col items-center bg-white p-2.5 rounded-xl border border-slate-100 shadow-sm col-span-2">
                             <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">Game</p>
                             <p className="text-sm font-black italic text-cyan-600 uppercase tracking-tighter">{gameName || "Pokémon Legends: Z-A"}</p>
                         </div>
                     </div>
 
+                    {/* Actions */}
                     <div className="flex flex-col sm:flex-row gap-3 mt-3">
                         {isEditing ? (
-                            <><button onClick={handleSave} className="flex-1 py-2.5 bg-cyan-500 text-white font-black italic rounded-2xl text-[10px] uppercase tracking-widest hover:bg-cyan-600 shadow-lg active:scale-95 transition-all">Save Changes</button>
-                                <button onClick={() => setIsEditing(false)} className="flex-1 py-2.5 bg-slate-200 text-slate-500 font-black italic rounded-2xl text-[10px] uppercase tracking-widest hover:bg-slate-300 active:scale-95 transition-all">Cancel</button></>
+                            <>
+                                <button onClick={handleSave} className="flex-1 py-2.5 bg-cyan-500 text-white font-black italic rounded-2xl text-[10px] uppercase tracking-widest hover:bg-cyan-600 shadow-lg active:scale-95 transition-all">Save Changes</button>
+                                <button onClick={() => setIsEditing(false)} className="flex-1 py-2.5 bg-slate-200 text-slate-500 font-black italic rounded-2xl text-[10px] uppercase tracking-widest hover:bg-slate-300 active:scale-95 transition-all">Cancel</button>
+                            </>
                         ) : (
-                            <><button onClick={() => setIsEditing(true)} className="flex-1 py-2.5 bg-white border-2 border-cyan-500 text-cyan-500 font-black italic rounded-2xl text-[10px] uppercase tracking-widest hover:bg-cyan-50 active:scale-95 transition-all">Edit Entry</button>
-                                <button onClick={() => setShowConfirm(true)} className="px-8 py-2.5 bg-white border-2 border-slate-200 text-slate-400 font-black italic rounded-2xl text-[10px] uppercase hover:text-red-500 active:scale-95 transition-all">Delete</button></>
+                            <>
+                                <button onClick={() => setIsEditing(true)} className="flex-1 py-2.5 bg-white border-2 border-cyan-500 text-cyan-500 font-black italic rounded-2xl text-[10px] uppercase tracking-widest hover:bg-cyan-50 active:scale-95 transition-all">Edit Entry</button>
+                                <button onClick={() => setShowConfirm(true)} className="px-8 py-2.5 bg-white border-2 border-slate-200 text-slate-400 font-black italic rounded-2xl text-[10px] uppercase hover:text-red-500 active:scale-95 transition-all">Delete</button>
+                            </>
                         )}
                     </div>
                 </div>
 
-                {showConfirm && <PlzaDeleteShiny onCancel={() => setShowConfirm(false)} onConfirm={() => { deleteShinyLogic(); onClose(); window.location.reload(); }} />}
+                {/* Bevestigingsmodal */}
+                {showConfirm && (
+                    <DeleteConfirmModal
+                        onCancel={() => setShowConfirm(false)}
+                        onConfirm={deleteShinyLogic}
+                    />
+                )}
             </div>
         </div>
     );
