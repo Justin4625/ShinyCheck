@@ -58,19 +58,14 @@ export default function PlaActiveHunts({plaPokemon, pokemonList, formatTime, ope
                             {/* Hunt Statistieken stroken */}
                             <div className="space-y-1.5 relative z-10">
                                 <div className="flex justify-between items-center bg-[#f4f1ea]/60 px-2 py-1 rounded-sm border-l-2 border-amber-800">
-                                    <span className="text-[9px] font-black uppercase text-amber-900/70 tracking-tighter">Sightings</span>
+                                    <span className="text-[9px] font-black uppercase text-amber-900/70 tracking-tighter">Encounters</span>
                                     <span className="text-sm font-black italic text-slate-900">{entry.storedData.counter}</span>
                                 </div>
 
                                 <div className="flex justify-between items-center bg-[#f4f1ea]/60 px-2 py-1 rounded-sm border-l-2 border-slate-800">
-                                    <span className="text-[9px] font-black uppercase text-amber-900/70 tracking-tighter">Elapsed</span>
+                                    <span className="text-[9px] font-black uppercase text-amber-900/70 tracking-tighter">Duration</span>
                                     <span className="text-[11px] font-black italic text-slate-700">{formatTime(entry.storedData.timer)}</span>
                                 </div>
-                            </div>
-
-                            {/* Handgezette stempel look onderin */}
-                            <div className="mt-3 opacity-10 flex justify-center transform -rotate-12">
-                                <span className="border-2 border-amber-900 rounded-md px-2 text-[10px] font-black uppercase text-amber-900">Survey Corps</span>
                             </div>
                         </div>
                     );

@@ -1,7 +1,26 @@
 import React, { useEffect, useState } from "react";
 import PokemonSpriteModal from "../PokemonSpriteModal.jsx";
 
-// --- INTERNE COMPONENT: HuntTab (Arceus Stijl) ---
+// --- NIEUW: VOEG DEZE COMPONENT TOE (Deze ontbrak in je code) ---
+function ConfirmModal({ message, onCancel, onConfirm, confirmColor = "from-amber-600 to-amber-800" }) {
+    return (
+        <div className="fixed inset-0 flex items-center justify-center z-[60] bg-slate-900/80 backdrop-blur-sm p-4">
+            <div className="bg-[#f4f1ea] border-b-8 border-r-8 border-amber-900/20 p-8 w-full max-w-[440px] text-center flex flex-col gap-6 relative overflow-hidden shadow-2xl">
+                <p className="relative z-10 text-slate-800 font-black italic text-xl uppercase tracking-tighter leading-tight">{message}</p>
+                <div className="relative z-10 flex justify-center gap-4 mt-2">
+                    <button onClick={onCancel} className="flex-1 px-6 py-3 bg-white border-b-4 border-slate-200 text-slate-400 font-black italic transform -skew-x-12 text-[10px] uppercase tracking-widest hover:text-slate-600 transition-all shadow-sm">
+                        <span className="block transform skew-x-12">Cancel</span>
+                    </button>
+                    <button onClick={onConfirm} className={`flex-1 px-6 py-3 bg-gradient-to-r ${confirmColor} text-white font-black italic transform -skew-x-12 text-[10px] uppercase tracking-widest shadow-lg border-b-4 border-black/20 transition-all hover:scale-105`}>
+                        <span className="block transform skew-x-12">Confirm</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    );
+}
+
+// --- INTERNE COMPONENT: HuntTab ---
 function HuntTab({ timer, counter, increment, isPlaying, setTimer, setIsPlaying, setCounter }) {
     useEffect(() => {
         let interval;
@@ -60,7 +79,7 @@ function HuntTab({ timer, counter, increment, isPlaying, setTimer, setIsPlaying,
     );
 }
 
-// --- INTERNE COMPONENT: SettingsTab (Arceus Stijl) ---
+// --- INTERNE COMPONENT: SettingsTab ---
 function SettingsTab({ increment, setIncrement, timer, setTimer, counter, setCounter, onShowConfirm, onShowGotcha }) {
     const [hours, setHours] = useState(Math.floor(timer / 3600));
     const [minutes, setMinutes] = useState(Math.floor((timer % 3600) / 60));
@@ -125,10 +144,11 @@ export default function PlaModal({ selectedPokemon, onClose }) {
         if (storedData) {
             try {
                 const parsed = JSON.parse(storedData);
+                // eslint-disable-next-line react-hooks/set-state-in-effect
                 setTimer(parsed.timer || 0);
                 setCounter(parsed.counter || 0);
                 setIsPlaying(parsed.isPlaying || false);
-            } catch { /* Error handling */ }
+            } catch { /* empty */ }
         } else {
             setTimer(0); setCounter(0); setIsPlaying(false);
         }
@@ -153,6 +173,16 @@ export default function PlaModal({ selectedPokemon, onClose }) {
         const currentCount = Number(localStorage.getItem(`pla_shiny_${selectedPokemon.id}`)) || 0;
         const newCount = currentCount + 1;
         localStorage.setItem(`pla_shiny_${selectedPokemon.id}`, newCount);
+
+        const shinyData = {
+            pokemonName: selectedPokemon.name,
+            counter: counter,
+            timer: timer,
+            timestamp: Date.now(),
+            game: "Pokémon Legends: Arceus"
+        };
+        localStorage.setItem(`pla_shinyData_${selectedPokemon.id}_${newCount}`, JSON.stringify(shinyData));
+
         resetHunt();
         setShowGotchaConfirm(false);
         onClose();
@@ -160,18 +190,13 @@ export default function PlaModal({ selectedPokemon, onClose }) {
 
     return (
         <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-md flex items-center justify-center z-50 p-4">
-            {/* Modal Container: Zelfde max-w en structuur als SvModal */}
             <div onClick={(e) => e.stopPropagation()} className="relative bg-[#f4f1ea] border-b-[12px] border-r-[12px] border-amber-900/10 w-full max-w-2xl flex flex-col items-center overflow-hidden shadow-2xl">
-
-                {/* Paper Texture Overlay */}
                 <div className="absolute inset-0 pointer-events-none opacity-[0.05] bg-[url('https://www.transparenttextures.com/patterns/paper-fibers.png')]"></div>
 
-                {/* Close Button: Zelfde positie als SvModal */}
                 <button onClick={() => { setIsPlaying(false); onClose(); }} className="absolute top-4 right-4 w-10 h-10 flex items-center justify-center bg-white/50 text-slate-400 hover:text-amber-800 transition-all z-20 group border border-amber-900/10">
                     <span className="text-2xl font-black group-hover:scale-110 transition-transform">✕</span>
                 </button>
 
-                {/* Header: Zelfde padding als SvModal */}
                 <div className="w-full pt-8 px-8 flex flex-col items-center">
                     <div className="px-4 py-1 bg-amber-700 transform -skew-x-12 mb-2 shadow-sm">
                         <span className="text-xs font-black italic text-white tracking-widest uppercase">No. {String(selectedPokemon.id).padStart(3, "0")}</span>
@@ -179,7 +204,6 @@ export default function PlaModal({ selectedPokemon, onClose }) {
                     <h2 className="text-3xl font-black uppercase italic text-slate-800 tracking-tighter text-center">{selectedPokemon.name}</h2>
                 </div>
 
-                {/* Tabs: Zelfde gap en margin als SvModal */}
                 <div className="flex justify-center my-6 gap-2 z-10">
                     {["HUNT", "SETTINGS"].map((label) => (
                         <button
@@ -196,7 +220,6 @@ export default function PlaModal({ selectedPokemon, onClose }) {
                     ))}
                 </div>
 
-                {/* Body: Zelfde padding en sprite-schaling als SvModal */}
                 <div className="w-full px-8 pb-8 flex flex-col items-center">
                     <div className="transform scale-75 -my-6 transition-transform relative">
                         <div className="absolute inset-0 bg-amber-400/10 blur-2xl rounded-full"></div>
@@ -210,8 +233,7 @@ export default function PlaModal({ selectedPokemon, onClose }) {
                     )}
                 </div>
 
-                {/* Confirm Modals */}
-                {showConfirm && <ConfirmModal message="RESET HUNT DATA?" onCancel={() => setShowConfirm(false)} onConfirm={resetHunt} confirmColor="from-red-700 to-red-950" />}
+                {showConfirm && <ConfirmModal message="RESET SURVEY DATA?" onCancel={() => setShowConfirm(false)} onConfirm={resetHunt} confirmColor="from-red-700 to-red-950" />}
                 {showGotchaConfirm && <ConfirmModal message="SHINY FOUND?" onCancel={() => setShowGotchaConfirm(false)} onConfirm={gotchaHunt} confirmColor="from-amber-600 to-amber-700" />}
             </div>
         </div>
