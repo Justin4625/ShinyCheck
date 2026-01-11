@@ -84,7 +84,7 @@ function SettingsTab({ increment, setIncrement, timer, setTimer, counter, setCou
                     {/* Logistieke Groep: Inc & Count */}
                     <div className="flex gap-3 sm:gap-5">
                         <div className="flex flex-col items-center">
-                            <label className={labelClass}>Inc.</label>
+                            <label className={labelClass}>Increment</label>
                             <input type="number" min="1" value={increment} onChange={(e) => setIncrement(Math.max(1, Number(e.target.value)))} className={inputClass} />
                         </div>
                         <div className="flex flex-col items-center">
