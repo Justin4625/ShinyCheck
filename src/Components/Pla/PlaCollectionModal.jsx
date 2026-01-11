@@ -74,7 +74,7 @@ export default function PlaCollectionModal({ data, onClose, pokemon, shinyIndex,
 
         localStorage.setItem(`pla_shinyData_${originalId}_${shinyIndex}`, JSON.stringify(updatedData));
         setIsEditing(false);
-        window.location.reload();
+        onClose();
     };
 
     const deleteShinyLogic = () => {
@@ -95,7 +95,6 @@ export default function PlaCollectionModal({ data, onClose, pokemon, shinyIndex,
         else localStorage.removeItem(`${prefix}_shiny_${originalId}`);
 
         onClose();
-        window.location.reload();
     };
 
     return (
