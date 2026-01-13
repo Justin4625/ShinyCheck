@@ -1,8 +1,8 @@
 import React from "react";
 
-export default function CollectionFilter({filter, setFilter, searchQuery, setSearchQuery, totalCount, plzaCount, svCount, pogoCount}) {
+export default function CollectionFilter({filter, setFilter, searchQuery, setSearchQuery, totalCount, plzaCount, svCount, pogoCount, plaCount}) {
     return (
-        <div className="relative z-10 max-w-6xl mx-auto mb-12 flex flex-col md:flex-row items-center justify-center gap-4">
+        <div className="relative z-10 max-w-7xl mx-auto mb-12 flex flex-col lg:flex-row items-center justify-center gap-6">
 
             {/* Filters - Pill stijl */}
             <div className="flex flex-wrap justify-center gap-2">
@@ -10,6 +10,7 @@ export default function CollectionFilter({filter, setFilter, searchQuery, setSea
                     { id: "all", label: "All Games", count: totalCount, activeClass: "border-slate-500 text-slate-700" },
                     { id: "PLZA", label: "Legends: Z-A", count: plzaCount, activeClass: "border-cyan-500 text-cyan-600" },
                     { id: "SV", label: "Scarlet & Violet", count: svCount, activeClass: "border-orange-500 text-orange-600" },
+                    { id: "PLA", label: "Legends: Arceus", count: plaCount, activeClass: "border-purple-500 text-purple-600" },
                     { id: "POGO", label: "Pokémon GO", count: pogoCount, activeClass: "border-emerald-500 text-emerald-600" }
                 ].map((tab) => {
                     const isActive = filter === tab.id;
@@ -29,14 +30,14 @@ export default function CollectionFilter({filter, setFilter, searchQuery, setSea
             </div>
 
             {/* Search Bar */}
-            <div className="w-full md:w-72 bg-white/5 backdrop-blur-md p-2 rounded-3xl border border-white/10 shadow-2xl">
+            <div className="w-full md:w-72 bg-white/5 backdrop-blur-md p-1.5 rounded-3xl border border-white/10 shadow-2xl">
                 <div className="relative">
                     <input
                         type="text"
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
                         placeholder="SEARCH COLLECTION..."
-                        className="w-full pl-9 pr-4 py-2 bg-white border border-slate-100 rounded-2xl text-[10px] font-bold text-slate-700 focus:border-cyan-400 outline-none transition-all placeholder:text-slate-300 shadow-inner"
+                        className="w-full pl-9 pr-4 py-2.5 bg-white border border-slate-100 rounded-2xl text-[10px] font-bold text-slate-700 focus:border-cyan-400 outline-none transition-all placeholder:text-slate-300 shadow-inner"
                     />
                     <div className="absolute left-3 top-1/2 -translate-y-1/2 text-cyan-500">
                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
