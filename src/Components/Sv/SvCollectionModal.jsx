@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
-// Data imports for Scarlet & Violet
+// Data imports for Scarlet & Violet including Regional Forms
 import svPokemon from "../../data/SvData/SvData";
 import svTmPokemon from "../../data/SvData/SvTmData";
 import svIdPokemon from "../../data/SvData/SvIdData";
+import svRegionalPokemon from "../../data/SvData/SvRegionalData"; // Added import
 
 // Internal Component for delete confirmation
 function DeleteConfirmModal({ onCancel, onConfirm }) {
@@ -36,8 +37,8 @@ export default function SvCollectionModal({ data, onClose, pokemon, shinyIndex, 
         };
     }, []);
 
-    // Combine all available SV data
-    const allAvailable = [...svPokemon, ...svTmPokemon, ...svIdPokemon];
+    // Combine all available SV data including Regional Forms
+    const allAvailable = [...svPokemon, ...svTmPokemon, ...svIdPokemon, ...svRegionalPokemon];
 
     // Edit states
     const [editCounter, setEditCounter] = useState(data.counter);
@@ -68,6 +69,7 @@ export default function SvCollectionModal({ data, onClose, pokemon, shinyIndex, 
         const prefix = "sv";
         const totalSeconds = (Number(editHrs) * 3600) + (Number(editMins) * 60) + Number(editSecs);
 
+        // Prepare updated data, making sure pokemonName is synced with selected species
         const updatedData = {
             ...data,
             pokemonName: selectedSpecies.name,
@@ -152,9 +154,9 @@ export default function SvCollectionModal({ data, onClose, pokemon, shinyIndex, 
                             />
                             <div className="overflow-y-auto max-h-[200px] pr-1 custom-scrollbar">
                                 <div className="grid grid-cols-3 gap-2">
-                                    {filteredPokemon.map(p => (
+                                    {filteredPokemon.map((p, idx) => (
                                         <button
-                                            key={p.id}
+                                            key={`${p.id}-${idx}`}
                                             onClick={() => { setSelectedSpecies(p); setIsChangingPokemon(false); }}
                                             className={`flex flex-col items-center gap-1 p-2 rounded-xl border transition-all ${selectedSpecies.id === p.id ? 'border-orange-500 bg-orange-50 shadow-sm' : 'bg-white border-slate-100'}`}
                                         >
@@ -211,7 +213,7 @@ export default function SvCollectionModal({ data, onClose, pokemon, shinyIndex, 
                         <div className="flex flex-col items-center bg-white p-2.5 rounded-xl border border-slate-100 shadow-sm col-span-2">
                             <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">Captured On</p>
                             {isEditing ? (
-                                <input type="datetime-local" value={editTimestamp} onChange={(e) => setEditTimestamp(e.target.value)} className="w-full text-center text-sm font-black bg-orange-50 rounded-lg border-none focus:ring-2 focus:ring-orange-500" />
+                                <input type="datetime-local" value={editTimestamp} onChange={(e) => setEditTimestamp(e.target.value)} className="w-full text-center text-sm font-black bg-cyan-50 rounded-lg border-none focus:ring-2 focus:ring-orange-500" />
                             ) : (
                                 <p className="text-sm font-black italic text-slate-700">{new Date(data.timestamp).toLocaleString("en-GB")}</p>
                             )}
