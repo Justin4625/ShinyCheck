@@ -150,7 +150,7 @@ export default function ShinyDex() {
 
                             <div className="flex flex-col leading-tight min-w-[200px]">
                                 <span className={`text-[8px] font-black uppercase tracking-[0.25em] ${isPogoTheme ? "text-emerald-600" : "text-[#ff4d29]"}`}>
-                                    Update • 09/01/2026
+                                    Update • 13/01/2026
                                 </span>
                                 <span className={`text-[12px] font-black uppercase tracking-widest ${isPogoTheme ? "text-emerald-800" : "text-slate-800"}`}>
                                     Pokémon Legends: Arceus added & editing Pokémon
