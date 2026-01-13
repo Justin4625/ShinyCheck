@@ -3,7 +3,7 @@ import regionalPokemon from "../../data/ShinyDexData/RegionalData.js";
 
 export default function ShinyDexCards({ displayedPokemon, onCardClick, loading, searchQuery }) {
 
-    // --- POKÉMON GO THEME LOGIC ---
+    // --- POKÉMON GO THEME LOGICA ---
     const isPogoTheme = useMemo(() => {
         const now = new Date();
         const expiryDate = new Date(2026, 0, 16, 0, 0, 0);
@@ -15,18 +15,22 @@ export default function ShinyDexCards({ displayedPokemon, onCardClick, loading, 
         const lowerBaseName = baseName.toLowerCase();
         for (let i = 0; i < localStorage.length; i++) {
             const key = localStorage.key(i);
-            // Check all relevant game prefixes in localStorage
-            if (key.startsWith("plza_shinyData_") || key.startsWith("sv_shinyData_") ||
-                key.startsWith("pogo_shinyData_") || key.startsWith("pla_shinyData_")) {
+            if (key.startsWith("plza_shinyData_") || key.startsWith("sv_shinyData_") || key.startsWith("pogo_shinyData_") || key.startsWith("pla_shinyData_")) {
                 try {
                     const data = JSON.parse(localStorage.getItem(key));
                     if (data?.pokemonName) {
                         const caughtName = data.pokemonName.toLowerCase();
-                        // Match exactly by name to reflect species changes
-                        if (caughtName === lowerBaseName) count++;
+                        const matchesName = caughtName === lowerBaseName ||
+                            new RegExp(`\\b${lowerBaseName}\\b`).test(caughtName);
+                        let isException = false;
+                        if (lowerBaseName === "porygon") {
+                            if (caughtName === "porygon2" || caughtName === "porygon-z") {
+                                isException = true;
+                            }
+                        }
+                        if (matchesName && !isException) count++;
                     }
-                    // eslint-disable-next-line no-unused-vars
-                } catch (e) { /* ignore */ }
+                } catch (e) { /* eslint-disable-line no-unused-vars */ }
             }
         }
         return count;

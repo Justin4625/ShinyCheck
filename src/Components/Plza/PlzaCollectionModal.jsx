@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 // Data imports to choose from
 import plzaPokemon from "../../data/PlzaData/PlzaData";
 import plzaMdPokemon from "../../data/PlzaData/PlzaMdData";
+import plzaRegionalPokemon from "../../data/PlzaData/PlzaRegionalData"; // Added import
 
 // Internal Component for delete confirmation
 function DeleteConfirmModal({ onCancel, onConfirm }) {
@@ -35,7 +36,8 @@ export default function PlzaCollectionModal({ data, onClose, pokemon, shinyIndex
         };
     }, []);
 
-    const allAvailable = [...plzaPokemon, ...plzaMdPokemon];
+    // Combine all available Pokemon, now including Regional Variants
+    const allAvailable = [...plzaPokemon, ...plzaMdPokemon, ...plzaRegionalPokemon];
 
     // Edit states
     const [editCounter, setEditCounter] = useState(data.counter);
@@ -80,11 +82,10 @@ export default function PlzaCollectionModal({ data, onClose, pokemon, shinyIndex
             const newCountForSpecies = currentNewCount + 1;
             localStorage.setItem(`${prefix}_shiny_${selectedSpecies.id}`, newCountForSpecies);
             localStorage.setItem(`${prefix}_shinyData_${selectedSpecies.id}_${newCountForSpecies}`, JSON.stringify(updatedData));
-            window.location.reload();
+            onClose();
         } else {
             localStorage.setItem(`${prefix}_shinyData_${originalId}_${shinyIndex}`, JSON.stringify(updatedData));
             onClose();
-            window.location.reload();
         }
     };
 
@@ -149,9 +150,9 @@ export default function PlzaCollectionModal({ data, onClose, pokemon, shinyIndex
                             />
                             <div className="overflow-y-auto max-h-[200px] pr-1 custom-scrollbar">
                                 <div className="grid grid-cols-3 gap-2">
-                                    {filteredPokemon.map(p => (
+                                    {filteredPokemon.map((p, idx) => (
                                         <button
-                                            key={p.id}
+                                            key={`${p.id}-${idx}`}
                                             onClick={() => { setSelectedSpecies(p); setIsChangingPokemon(false); }}
                                             className={`flex flex-col items-center gap-1 p-2 rounded-xl border transition-all ${selectedSpecies.id === p.id ? 'border-cyan-500 bg-cyan-50 shadow-sm' : 'bg-white border-slate-100'}`}
                                         >
