@@ -11,13 +11,18 @@ export default function ShinyDexModal({ pokemon, onClose, onSelectEntry, onAddPo
         return `${hrs}h ${mins}m ${secs}s`;
     };
 
-    // Haalt de basisvorm en alle regionale varianten op
+    // Haalt de basisvorm en alle regionale varianten op (inclusief flexibele Basculin fix)
     // eslint-disable-next-line react-hooks/rules-of-hooks
     const allForms = useMemo(() => {
-        const variants = regionalPokemon.filter(p =>
-            new RegExp(`\\b${pokemon.name.toLowerCase()}\\b`, 'i').test(p.name.toLowerCase()) && p.id !== pokemon.id
-        );
-        return [pokemon, ...variants];
+        const baseName = pokemon.name.toLowerCase();
+        const variants = regionalPokemon.filter(p => {
+            const variantName = p.name.toLowerCase();
+            const isBasculinMatch = baseName.includes("basculin") && variantName.includes("basculin");
+            return (variantName.includes(baseName) || isBasculinMatch) && p.id !== pokemon.id;
+        });
+
+        const combined = [pokemon, ...variants];
+        return Array.from(new Map(combined.map(item => [item.id, item])).values());
     }, [pokemon]);
 
     // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -27,43 +32,70 @@ export default function ShinyDexModal({ pokemon, onClose, onSelectEntry, onAddPo
 
         for (let i = 0; i < localStorage.length; i++) {
             const key = localStorage.key(i);
+
             if (key.startsWith("plza_shinyData_") || key.startsWith("sv_shinyData_") || key.startsWith("pogo_shinyData_") || key.startsWith("pla_shinyData_")) {
                 try {
                     const data = JSON.parse(localStorage.getItem(key));
                     if (data?.pokemonName) {
                         const caughtName = data.pokemonName.toLowerCase();
-                        const matchesName = caughtName === lowerBaseName || new RegExp(`\\b${lowerBaseName}\\b`).test(caughtName);
+                        const isBasculinCase = lowerBaseName.includes("basculin") && caughtName.includes("basculin");
+                        const matchesName = caughtName === lowerBaseName || caughtName.includes(lowerBaseName) || isBasculinCase;
 
                         let isException = false;
                         if (lowerBaseName === "porygon" && (caughtName === "porygon2" || caughtName === "porygon-z")) isException = true;
 
                         if (matchesName && !isException) {
-                            const gamePrefix = key.split("_")[0];
-                            const gameType = gamePrefix.toUpperCase();
                             const keyParts = key.split("_");
+                            const gamePrefix = keyParts[0].toUpperCase();
                             const shinyIndex = parseInt(keyParts[keyParts.length - 1]);
                             const originalId = keyParts[2];
-                            const variantData = regionalPokemon.find(v => v.name.toLowerCase() === caughtName) || pokemon;
+
+                            // VERBETERDE LOGICA: Zoek de variant op.
+                            // Als de variant niet in RegionalData staat, gebruiken we de basis pokemon
+                            // MAAR we overschrijven de naam met de naam uit de localStorage (data.pokemonName)
+                            // zodat "Hisuian Basculin" niet terug verandert in "Basculin".
+                            const foundVariant = regionalPokemon.find(v => v.name.toLowerCase() === caughtName);
+
+                            const displayData = foundVariant ? { ...foundVariant } : { ...pokemon };
+                            // Forceer de correcte naam uit de opgeslagen data
+                            displayData.name = data.pokemonName;
 
                             items.push({
-                                ...variantData,
+                                ...displayData,
                                 id: originalId,
                                 storedData: data,
-                                type: gameType,
+                                type: gamePrefix,
                                 shinyIndex: shinyIndex
                             });
                         }
                     }
-                    // eslint-disable-next-line no-unused-vars
-                } catch (e) { /* empty */ }
+                } catch (e) { /* eslint-disable-line no-unused-vars */ }
             }
         }
+
         return items.sort((a, b) => (b.storedData.timestamp || 0) - (a.storedData.timestamp || 0));
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [allForms, pokemon.name, refreshKey]);
 
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const totalCount = useMemo(() => {
+        let count = capturedItems.length;
+
+        allForms.forEach(form => {
+            const pogoBulkCount = localStorage.getItem(`pogo_shiny_${form.id}`);
+            if (pogoBulkCount) {
+                const bulkVal = parseInt(pogoBulkCount);
+                const pogoInList = capturedItems.filter(item => item.type === 'POGO' && String(item.id) === String(form.id)).length;
+                if (bulkVal > pogoInList) {
+                    count += (bulkVal - pogoInList);
+                }
+            }
+        });
+
+        return count;
+    }, [capturedItems, allForms]);
+
     return (
-        /* onClick={onClose} is hier verwijderd zodat klikken op de achtergrond de modal niet sluit */
         <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-md flex items-center justify-center z-50 p-4">
             <div onClick={(e) => e.stopPropagation()} className="bg-white border-2 border-slate-100 rounded-[2.5rem] shadow-2xl w-full max-w-xl max-h-[80vh] flex flex-col overflow-hidden">
 
@@ -71,10 +103,9 @@ export default function ShinyDexModal({ pokemon, onClose, onSelectEntry, onAddPo
                     <div className="flex flex-col">
                         <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-0.5">National Dex Entry</p>
                         <h2 className="text-2xl font-black uppercase italic text-slate-800 leading-tight">
-                            {pokemon.name} <span className="text-[#ff4d29] ml-1">x{capturedItems.length}</span>
+                            {pokemon.name} <span className="text-[#ff4d29] ml-1">x{totalCount}</span>
                         </h2>
                     </div>
-                    {/* Alleen deze knop sluit nu de modal */}
                     <button onClick={onClose} className="w-10 h-10 flex items-center justify-center rounded-full bg-slate-50 text-slate-400 hover:text-[#ff4d29] transition-colors">
                         <span className="text-xl font-black">✕</span>
                     </button>

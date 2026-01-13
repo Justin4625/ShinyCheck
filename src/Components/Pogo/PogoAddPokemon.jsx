@@ -6,10 +6,25 @@ export default function PogoAddPokemon({ pokemon, onClose, onSave }) {
     const totalSeconds = 0;
 
     const availableForms = useMemo(() => {
-        const variants = regionalPokemon.filter(p =>
-            new RegExp(`\\b${pokemon.name.toLowerCase()}\\b`, 'i').test(p.name.toLowerCase()) && p.id !== pokemon.id
-        );
-        return [pokemon, ...variants];
+        const baseName = pokemon.name.toLowerCase();
+
+        const variants = regionalPokemon.filter(p => {
+            const variantName = p.name.toLowerCase();
+
+            // Standaard check: bevat de naam van de variant de basisnaam? (bijv. "Alolan Raichu" bevat "Raichu")
+            const genericMatch = variantName.includes(baseName) && p.id !== pokemon.id;
+
+            // Speciale check voor Basculin / White-Striped / Hisuian
+            const isBasculinSearch = baseName.includes("basculin");
+            const isBasculinVariant = variantName.includes("basculin");
+            const basculinMatch = isBasculinSearch && isBasculinVariant && p.id !== pokemon.id;
+
+            return genericMatch || basculinMatch;
+        });
+
+        // Unieke lijst maken op basis van ID (voorkomt dubbelingen als beide checks matchen)
+        const combined = [pokemon, ...variants];
+        return Array.from(new Map(combined.map(item => [item.id, item])).values());
     }, [pokemon]);
 
     const [selectedForm, setSelectedForm] = useState(pokemon);
