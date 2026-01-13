@@ -68,13 +68,12 @@ export default function PogoCollectionModal({ data, onClose, pokemon, shinyIndex
             localStorage.setItem(`${prefix}_shiny_${selectedSpecies.id}`, newCountForSpecies);
             localStorage.setItem(`${prefix}_shinyData_${selectedSpecies.id}_${newCountForSpecies}`, JSON.stringify(updatedData));
 
-            window.location.reload();
+            onClose();
         } else {
             // Just update current entry
             const storageKey = `${prefix}_shinyData_${originalId}_${shinyIndex}`;
             localStorage.setItem(storageKey, JSON.stringify(updatedData));
             onClose();
-            window.location.reload();
         }
     };
 
