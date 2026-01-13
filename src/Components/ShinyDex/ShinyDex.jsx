@@ -153,7 +153,7 @@ export default function ShinyDex() {
                                     Update • 09/01/2026
                                 </span>
                                 <span className={`text-[12px] font-black uppercase tracking-widest ${isPogoTheme ? "text-emerald-800" : "text-slate-800"}`}>
-                                    Pokémon Legends: Arceus & editing Pokémon added
+                                    Pokémon Legends: Arceus added & editing Pokémon
                                 </span>
                             </div>
                         </div>
