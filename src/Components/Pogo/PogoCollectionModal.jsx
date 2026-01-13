@@ -96,7 +96,6 @@ export default function PogoCollectionModal({ data, onClose, pokemon, shinyIndex
 
         if (shouldReload) {
             onClose();
-            window.location.reload();
         }
     };
 
