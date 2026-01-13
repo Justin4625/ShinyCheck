@@ -32,7 +32,7 @@ export default function ShinyDex() {
     // --- POKÉMON GO THEME LOGICA (Tot 16 jan 2026) ---
     const isPogoTheme = useMemo(() => {
         const now = new Date();
-        const expiryDate = new Date(2026, 0, 16, 0, 0, 0); // 16 Januari 2026
+        const expiryDate = new Date(2025, 0, 16, 0, 0, 0); // 16 Januari 2026
         return now < expiryDate;
     }, []);
 
