@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-// Data imports to find the species
+// Data imports to choose from
 import plzaPokemon from "../../data/PlzaData/PlzaData";
 import plzaMdPokemon from "../../data/PlzaData/PlzaMdData";
 
@@ -24,10 +24,10 @@ export default function PlzaCollectionModal({ data, onClose, pokemon, shinyIndex
     const [isChangingPokemon, setIsChangingPokemon] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
 
-    // Temporary state for species change
+    // Temporary state for the selected species (only saved on Save Changes)
     const [selectedSpecies, setSelectedSpecies] = useState(pokemon);
 
-    // Disable body scroll when modal is open
+    // Disable background scroll when modal is open
     useEffect(() => {
         document.body.style.overflow = 'hidden';
         return () => {
@@ -37,6 +37,7 @@ export default function PlzaCollectionModal({ data, onClose, pokemon, shinyIndex
 
     const allAvailable = [...plzaPokemon, ...plzaMdPokemon];
 
+    // Edit states
     const [editCounter, setEditCounter] = useState(data.counter);
     const initialHrs = Math.floor(data.timer / 3600);
     const initialMins = Math.floor((data.timer % 3600) / 60);
@@ -54,33 +55,37 @@ export default function PlzaCollectionModal({ data, onClose, pokemon, shinyIndex
 
     if (!data || !pokemon) return null;
 
+    const formatTime = (seconds) => {
+        const hrs = Math.floor(seconds / 3600);
+        const mins = Math.floor((seconds % 3600) / 60);
+        const secs = seconds % 60;
+        return `${hrs}h ${mins}m ${secs}s`;
+    };
+
     const handleSave = () => {
         const prefix = "plza";
         const totalSeconds = (Number(editHrs) * 3600) + (Number(editMins) * 60) + Number(editSecs);
+
         const updatedData = {
             ...data,
+            pokemonName: selectedSpecies.name,
             counter: Number(editCounter),
             timer: totalSeconds,
             timestamp: new Date(editTimestamp).getTime()
         };
 
-        // Only move data if species actually changed
         if (selectedSpecies.id !== pokemon.id) {
             deleteShinyLogic(false);
-
             const currentNewCount = Number(localStorage.getItem(`${prefix}_shiny_${selectedSpecies.id}`)) || 0;
             const newCountForSpecies = currentNewCount + 1;
-
             localStorage.setItem(`${prefix}_shiny_${selectedSpecies.id}`, newCountForSpecies);
             localStorage.setItem(`${prefix}_shinyData_${selectedSpecies.id}_${newCountForSpecies}`, JSON.stringify(updatedData));
-
             window.location.reload();
         } else {
             localStorage.setItem(`${prefix}_shinyData_${originalId}_${shinyIndex}`, JSON.stringify(updatedData));
+            onClose();
+            window.location.reload();
         }
-
-        setIsEditing(false);
-        onClose();
     };
 
     const deleteShinyLogic = (shouldReload = true) => {
@@ -131,7 +136,6 @@ export default function PlzaCollectionModal({ data, onClose, pokemon, shinyIndex
                     </h2>
                 </div>
 
-                {/* Species Selector */}
                 <div className="w-full flex flex-col items-center mb-8 relative z-10">
                     {isChangingPokemon ? (
                         <div className="w-full bg-slate-50 border border-slate-200 rounded-3xl p-4 shadow-inner flex flex-col gap-3 animate-in fade-in slide-in-from-top-4 duration-300">
@@ -179,7 +183,7 @@ export default function PlzaCollectionModal({ data, onClose, pokemon, shinyIndex
                         <div className="flex flex-col items-center bg-white p-3 rounded-2xl border border-slate-100 shadow-sm">
                             <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">Encounters</p>
                             {isEditing ? (
-                                <input type="number" value={editCounter} onChange={(e) => setEditCounter(e.target.value)} className="w-full text-center text-xl font-black bg-cyan-50 rounded-lg border-none" />
+                                <input type="number" value={editCounter} onChange={(e) => setEditCounter(e.target.value)} className="w-full text-center text-xl font-black bg-cyan-50 rounded-lg border-none focus:ring-2 focus:ring-cyan-500" />
                             ) : (
                                 <p className="text-2xl font-black italic text-slate-900 tracking-tighter">{data.counter}</p>
                             )}
@@ -190,11 +194,14 @@ export default function PlzaCollectionModal({ data, onClose, pokemon, shinyIndex
                             {isEditing ? (
                                 <div className="flex gap-1 items-center">
                                     <input type="number" value={editHrs} onChange={(e) => setEditHrs(e.target.value)} className="w-9 text-center font-black bg-cyan-50 rounded text-sm" />
+                                    <span className="text-[8px] font-bold text-cyan-600">h</span>
                                     <input type="number" value={editMins} onChange={(e) => setEditMins(e.target.value)} className="w-9 text-center font-black bg-cyan-50 rounded text-sm" />
+                                    <span className="text-[8px] font-bold text-cyan-600">m</span>
                                     <input type="number" value={editSecs} onChange={(e) => setEditSecs(e.target.value)} className="w-9 text-center font-black bg-cyan-50 rounded text-sm" />
+                                    <span className="text-[8px] font-bold text-cyan-600">s</span>
                                 </div>
                             ) : (
-                                <p className="text-lg font-black italic text-slate-900 tracking-tight">{Math.floor(data.timer / 3600)}h {Math.floor((data.timer % 3600) / 60)}m</p>
+                                <p className="text-lg font-black italic text-slate-900 tracking-tight">{formatTime(data.timer)}</p>
                             )}
                         </div>
 
