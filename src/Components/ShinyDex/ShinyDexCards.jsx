@@ -13,12 +13,8 @@ export default function ShinyDexCards({ displayedPokemon, onCardClick, loading, 
     const getCollectionCount = (pokemon) => {
         let count = 0;
         const lowerBaseName = pokemon.name.toLowerCase();
-
-        // We houden bij welke Pokémon GO IDs we al geteld hebben via shinyData
-        // om dubbeltellingen met de bulk-teller te voorkomen.
         const pogoIdsInData = new Set();
 
-        // 1. Controleer gedetailleerde data-entries (_shinyData_)
         for (let i = 0; i < localStorage.length; i++) {
             const key = localStorage.key(i);
 
@@ -38,10 +34,9 @@ export default function ShinyDexCards({ displayedPokemon, onCardClick, loading, 
 
                         if (isMatch && !isException) {
                             count++;
-                            // Als dit een POGO entry is, onthoud het originele ID uit de key
                             if (key.startsWith("pogo_")) {
                                 const keyParts = key.split("_");
-                                pogoIdsInData.add(keyParts[2]); // Het ID gedeelte van de key
+                                pogoIdsInData.add(keyParts[2]);
                             }
                         }
                     }
@@ -50,14 +45,11 @@ export default function ShinyDexCards({ displayedPokemon, onCardClick, loading, 
             }
         }
 
-        // 2. Controleer directe Pokémon GO bulk-tellers (pogo_shiny_{id})
-        // Tel deze alleen op als we voor dit ID nog GEEN shinyData entries hebben gevonden
         const pogoCount = localStorage.getItem(`pogo_shiny_${pokemon.id}`);
         if (pogoCount && !pogoIdsInData.has(String(pokemon.id))) {
             count += parseInt(pogoCount, 10);
         }
 
-        // 3. PoGo varianten bulk-tellers
         regionalPokemon.forEach(variant => {
             if (variant.name.toLowerCase().includes(lowerBaseName)) {
                 const variantPogoCount = localStorage.getItem(`pogo_shiny_${variant.id}`);
@@ -99,7 +91,14 @@ export default function ShinyDexCards({ displayedPokemon, onCardClick, loading, 
             {displayedPokemon.map((pokemon) => {
                 const amountOwned = getCollectionCount(pokemon);
                 const isOwned = amountOwned > 0;
-                const hasVariants = regionalPokemon.some(p => p.name.toLowerCase().includes(pokemon.name.toLowerCase()));
+
+                // VERBETERDE FORMS CHECK (Inclusief Basculin fix)
+                const hasVariants = regionalPokemon.some(p => {
+                    const variantName = p.name.toLowerCase();
+                    const baseName = pokemon.name.toLowerCase();
+                    // Check of het een normale regional is OF dat beide namen 'basculin' bevatten
+                    return variantName.includes(baseName) || (baseName.includes("basculin") && variantName.includes("basculin"));
+                });
 
                 return (
                     <div
@@ -120,9 +119,14 @@ export default function ShinyDexCards({ displayedPokemon, onCardClick, loading, 
                                 isPogoTheme ? "bg-emerald-500 text-white border-emerald-50" : "bg-amber-500 text-white border-white"
                             }`}>x{amountOwned}</div>
                         )}
+
+                        {/* Label verschijnt nu ook voor Basculin varianten als je er een bezit */}
                         {hasVariants && isOwned && (
-                            <div className="absolute -top-2 -left-2 text-[8px] font-black px-1.5 py-0.5 rounded-md shadow-sm z-10 border transition-colors bg-cyan-500 text-white border-white">FORMS</div>
+                            <div className="absolute -top-2 -left-2 text-[8px] font-black px-1.5 py-0.5 rounded-md shadow-sm z-10 border transition-colors bg-cyan-500 text-white border-white">
+                                FORMS
+                            </div>
                         )}
+
                         <div className="text-center mb-2">
                             <p className={`text-[10px] font-black tracking-tighter uppercase transition-colors ${isOwned ? (isPogoTheme ? "text-emerald-600" : "text-amber-600") : "text-slate-500"}`}>No. {String(pokemon.id).padStart(4, "0")}</p>
                             <h3 className={`text-xs font-black uppercase italic truncate w-24 transition-colors ${isOwned ? (isPogoTheme ? "text-emerald-900" : "text-amber-900") : "text-slate-700"}`}>{pokemon.name}</h3>
