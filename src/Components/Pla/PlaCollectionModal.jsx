@@ -1,6 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+// Data imports for Legends: Arceus
+import plaPokemon from "../../data/PlaData/PlaData";
+import regionalPokemon from "../../data/ShinyDexData/RegionalData";
 
-// --- INTERNE COMPONENT: PlaDeleteConfirm (Verwijder-bevestiging) ---
+// --- INTERNAL COMPONENT: PlaDeleteConfirm (Delete Confirmation) ---
 function PlaDeleteConfirm({ onCancel, onConfirm }) {
     return (
         <div className="fixed inset-0 flex items-center justify-center z-[70] bg-[#3e3b38]/80 backdrop-blur-sm">
@@ -36,17 +39,39 @@ function PlaDeleteConfirm({ onCancel, onConfirm }) {
 export default function PlaCollectionModal({ data, onClose, pokemon, shinyIndex, gameName, originalId }) {
     const [showConfirm, setShowConfirm] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
+    const [isChangingPokemon, setIsChangingPokemon] = useState(false);
+    const [searchQuery, setSearchQuery] = useState("");
+
+    // Temporary state for the selected species (only saved on Save Changes)
+    const [selectedSpecies, setSelectedSpecies] = useState(pokemon);
+
+    // Disable background scroll when modal is open
+    useEffect(() => {
+        document.body.style.overflow = 'hidden';
+        return () => {
+            document.body.style.overflow = 'unset';
+        };
+    }, []);
+
+    // Filter regional variants to only include Hisuian forms for PLA list
+    const hisuianVariants = regionalPokemon.filter(p => p.name.toLowerCase().includes("-hisuian") || p.name.toLowerCase().includes("-hisui"));
+    const allAvailable = [...plaPokemon, ...hisuianVariants];
+
+    // Edit states
     const [editCounter, setEditCounter] = useState(data.counter);
+    const initialHrs = Math.floor(data.timer / 3600);
+    const initialMins = Math.floor((data.timer % 3600) / 60);
+    const initialSecs = data.timer % 60;
+
+    const [editHrs, setEditHrs] = useState(initialHrs);
+    const [editMins, setEditMins] = useState(initialMins);
+    const [editSecs, setEditSecs] = useState(initialSecs);
 
     const formatForInput = (ts) => {
         const d = new Date(ts);
         return new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
     };
     const [editTimestamp, setEditTimestamp] = useState(formatForInput(data.timestamp));
-
-    const [editHrs, setEditHrs] = useState(Math.floor(data.timer / 3600));
-    const [editMins, setEditMins] = useState(Math.floor((data.timer % 3600) / 60));
-    const [editSecs, setEditSecs] = useState(data.timer % 60);
 
     if (!data || !pokemon) return null;
 
@@ -58,26 +83,40 @@ export default function PlaCollectionModal({ data, onClose, pokemon, shinyIndex,
     };
 
     const formatDate = (timestamp) => {
-        return new Date(timestamp).toLocaleString("nl-NL", {
+        return new Date(timestamp).toLocaleString("en-GB", {
             day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit",
         });
     };
 
     const handleSave = () => {
+        const prefix = "pla";
         const totalSeconds = (Number(editHrs) * 3600) + (Number(editMins) * 60) + Number(editSecs);
+
+        // Prepare updated data, syncing pokemonName for ShinyDex visibility
         const updatedData = {
             ...data,
+            pokemonName: selectedSpecies.name,
             counter: Number(editCounter),
             timer: totalSeconds,
             timestamp: new Date(editTimestamp).getTime()
         };
 
-        localStorage.setItem(`pla_shinyData_${originalId}_${shinyIndex}`, JSON.stringify(updatedData));
-        setIsEditing(false);
-        onClose();
+        if (selectedSpecies.id !== pokemon.id) {
+            // Species changed: delete old entry and move to new ID
+            deleteShinyLogic(false);
+            const currentNewCount = Number(localStorage.getItem(`${prefix}_shiny_${selectedSpecies.id}`)) || 0;
+            const newCountForSpecies = currentNewCount + 1;
+
+            localStorage.setItem(`${prefix}_shiny_${selectedSpecies.id}`, newCountForSpecies);
+            localStorage.setItem(`${prefix}_shinyData_${selectedSpecies.id}_${newCountForSpecies}`, JSON.stringify(updatedData));
+            onClose();
+        } else {
+            localStorage.setItem(`${prefix}_shinyData_${originalId}_${shinyIndex}`, JSON.stringify(updatedData));
+            onClose();
+        }
     };
 
-    const deleteShinyLogic = () => {
+    const deleteShinyLogic = (shouldReload = true) => {
         const prefix = "pla";
         const shinyCount = Number(localStorage.getItem(`${prefix}_shiny_${originalId}`)) || 0;
         localStorage.removeItem(`${prefix}_shinyData_${originalId}_${shinyIndex}`);
@@ -94,16 +133,22 @@ export default function PlaCollectionModal({ data, onClose, pokemon, shinyIndex,
         if (newCount > 0) localStorage.setItem(`${prefix}_shiny_${originalId}`, newCount);
         else localStorage.removeItem(`${prefix}_shiny_${originalId}`);
 
-        onClose();
+        if (shouldReload) {
+            onClose();
+            window.location.reload();
+        }
     };
 
+    const filteredPokemon = allAvailable.filter(p =>
+        p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        p.id.toString().includes(searchQuery)
+    );
+
     return (
-        <div className="fixed inset-0 bg-[#3e3b38]/80 backdrop-blur-md flex items-center justify-center z-[60] p-4 font-serif">
-            {/* Modal Container: Legends Arceus Stijl (Scherpe hoeken, houten offset) */}
-            <div onClick={(e) => e.stopPropagation()} className="relative bg-[#f4f1ea] border-2 border-[#3e3b38] shadow-[12px_12px_0px_0px_rgba(0,0,0,0.15)] p-8 w-full max-w-xl flex flex-col items-center overflow-hidden">
+        <div className="fixed inset-0 bg-[#3e3b38]/80 backdrop-blur-md flex items-center justify-center z-[60] p-4 font-serif overflow-hidden">
+            <div onClick={(e) => e.stopPropagation()} className="relative bg-[#f4f1ea] border-2 border-[#3e3b38] shadow-[12px_12px_0px_0px_rgba(0,0,0,0.15)] p-8 w-full max-w-xl flex flex-col items-center overflow-hidden transition-all">
                 <div className="absolute inset-0 pointer-events-none opacity-[0.1] bg-[url('https://www.transparenttextures.com/patterns/handmade-paper.png')]"></div>
 
-                {/* Close Button: Arceus Stijl */}
                 <button onClick={onClose} className="absolute top-5 right-5 w-9 h-9 flex items-center justify-center border-2 border-[#3e3b38] text-[#3e3b38] hover:bg-[#3e3b38] hover:text-[#eaddca] transition-all z-20 font-bold shadow-sm">
                     <span className="text-xl">✕</span>
                 </button>
@@ -115,18 +160,58 @@ export default function PlaCollectionModal({ data, onClose, pokemon, shinyIndex,
                         </span>
                     </div>
                     <h2 className="text-3xl font-black uppercase italic text-[#3e3b38] tracking-tighter border-b-2 border-[#3e3b38]/10 pb-1 px-4">
-                        #{String(pokemon.id).padStart(4, "0")} - {pokemon.name}
+                        #{String(selectedSpecies.id).padStart(4, "0")} - {selectedSpecies.name}
                     </h2>
                 </div>
 
-                <div className="relative mb-8 transform transition-transform hover:scale-105">
-                    <div className="absolute inset-0 bg-[#bfa16d]/20 blur-[60px] rounded-full scale-125"></div>
-                    <img src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/shiny/${pokemon.id}.png`} alt={pokemon.name} className="w-40 h-40 drop-shadow-[0_15px_20px_rgba(0,0,0,0.25)] relative z-10" />
+                {/* Species Selector Area */}
+                <div className="w-full flex flex-col items-center mb-8 relative z-10">
+                    {isChangingPokemon ? (
+                        <div className="w-full bg-[#eaddca]/40 border border-[#3e3b38]/20 rounded-xl p-4 shadow-inner flex flex-col gap-3 animate-in fade-in slide-in-from-top-4 duration-300">
+                            <input
+                                autoFocus
+                                type="text"
+                                placeholder="Search survey results..."
+                                className="w-full p-2.5 bg-[#f4f1ea] border-2 border-[#3e3b38]/20 rounded-md font-bold text-xs outline-none focus:border-[#bfa16d] transition-all"
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                            />
+                            <div className="overflow-y-auto max-h-[200px] pr-1 custom-scrollbar">
+                                <div className="grid grid-cols-3 gap-2">
+                                    {filteredPokemon.map((p, idx) => (
+                                        <button
+                                            key={`${p.id}-${idx}`}
+                                            onClick={() => { setSelectedSpecies(p); setIsChangingPokemon(false); }}
+                                            className={`flex flex-col items-center gap-1 p-2 border transition-all ${selectedSpecies.id === p.id ? 'border-[#bfa16d] bg-[#f4f1ea] shadow-sm' : 'bg-transparent border-[#3e3b38]/10 hover:border-[#3e3b38]/40'}`}
+                                        >
+                                            <img src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/shiny/${p.id}.png`} className="w-10 h-10" alt={p.name} />
+                                            <span className="text-[8px] font-black uppercase italic text-[#3e3b38] truncate w-full text-center">{p.name}</span>
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+                            <button onClick={() => setIsChangingPokemon(false)} className="text-[9px] font-bold text-[#3e3b38]/60 uppercase hover:text-[#3e3b38]">Back</button>
+                        </div>
+                    ) : (
+                        <div className="flex flex-col items-center gap-4">
+                            <div className="relative">
+                                <div className="absolute inset-0 bg-[#bfa16d]/20 blur-[40px] rounded-full scale-125"></div>
+                                <img src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/shiny/${selectedSpecies.id}.png`} alt={selectedSpecies.name} className="w-40 h-40 drop-shadow-[0_15px_20px_rgba(0,0,0,0.25)] relative z-10" />
+                            </div>
+                            {isEditing && (
+                                <button
+                                    onClick={() => setIsChangingPokemon(true)}
+                                    className="bg-[#3e3b38] text-[#eaddca] text-[9px] font-black px-4 py-2 uppercase tracking-widest hover:scale-105 transition-all transform -skew-x-12 shadow-md"
+                                >
+                                    <span className="block transform skew-x-12">Change Species</span>
+                                </button>
+                            )}
+                        </div>
+                    )}
                 </div>
 
                 <div className="w-full space-y-4 z-10">
                     <div className="grid grid-cols-2 gap-4">
-                        {/* Encounters */}
                         <div className="bg-[#eaddca]/50 border-2 border-[#3e3b38]/10 p-4 transform -skew-x-3 shadow-inner flex flex-col items-center">
                             <p className="text-[8px] font-black text-[#3e3b38]/50 uppercase mb-1 italic">Encounters</p>
                             {isEditing ? (
@@ -135,21 +220,20 @@ export default function PlaCollectionModal({ data, onClose, pokemon, shinyIndex,
                                 <p className="text-2xl font-black italic text-[#3e3b38] tracking-widest">{data.counter}</p>
                             )}
                         </div>
-                        {/* Duration */}
                         <div className="bg-[#eaddca]/50 border-2 border-[#3e3b38]/10 p-4 transform -skew-x-3 shadow-inner flex flex-col items-center">
                             <p className="text-[8px] font-black text-[#3e3b38]/50 uppercase mb-1 italic">Duration</p>
                             {isEditing ? (
                                 <div className="flex gap-1 items-end">
                                     <div className="flex flex-col items-center">
-                                        <input type="number" value={editHrs} onChange={(e) => setEditHrs(e.target.value)} className="w-8 text-center font-black bg-transparent border-b border-[#3e3b38] text-xs" />
+                                        <input type="number" value={editHrs} onChange={(e) => setEditHrs(e.target.value)} className="w-7 text-center font-black bg-transparent border-b border-[#3e3b38] text-xs" />
                                         <span className="text-[7px] font-bold text-[#bfa16d]">h</span>
                                     </div>
                                     <div className="flex flex-col items-center">
-                                        <input type="number" value={editMins} onChange={(e) => setEditMins(e.target.value)} className="w-8 text-center font-black bg-transparent border-b border-[#3e3b38] text-xs" />
+                                        <input type="number" value={editMins} onChange={(e) => setEditMins(e.target.value)} className="w-7 text-center font-black bg-transparent border-b border-[#3e3b38] text-xs" />
                                         <span className="text-[7px] font-bold text-[#bfa16d]">m</span>
                                     </div>
                                     <div className="flex flex-col items-center">
-                                        <input type="number" value={editSecs} onChange={(e) => setEditSecs(e.target.value)} className="w-8 text-center font-black bg-transparent border-b border-[#3e3b38] text-xs" />
+                                        <input type="number" value={editSecs} onChange={(e) => setEditSecs(e.target.value)} className="w-7 text-center font-black bg-transparent border-b border-[#3e3b38] text-xs" />
                                         <span className="text-[7px] font-bold text-[#bfa16d]">s</span>
                                     </div>
                                 </div>
@@ -164,7 +248,7 @@ export default function PlaCollectionModal({ data, onClose, pokemon, shinyIndex,
                         {isEditing ? (
                             <input type="datetime-local" value={editTimestamp} onChange={(e) => setEditTimestamp(e.target.value)} className="text-[10px] font-black bg-[#f4f1ea] border-none p-1 outline-none text-[#3e3b38]" />
                         ) : (
-                            <span className="text-[15px] font-black italic text-[#3e3b38]/80 uppercase">{formatDate(data.timestamp)}</span>
+                            <span className="text-[14px] font-black italic text-[#3e3b38]/80 uppercase">{formatDate(data.timestamp)}</span>
                         )}
                     </div>
 
@@ -173,14 +257,13 @@ export default function PlaCollectionModal({ data, onClose, pokemon, shinyIndex,
                         <span className="text-[12px] font-black italic text-[#bfa16d] uppercase tracking-wider">{gameName || "Legends: Arceus"}</span>
                     </div>
 
-                    {/* Actions */}
                     <div className="flex flex-col sm:flex-row gap-3 justify-center w-full mt-4">
                         {isEditing ? (
                             <>
                                 <button onClick={handleSave} className="flex-1 py-2 bg-[#3e3b38] text-[#eaddca] font-black uppercase italic transform -skew-x-12 hover:scale-105 transition-all shadow-md">
-                                    <span className="block transform skew-x-12">Confirm</span>
+                                    <span className="block transform skew-x-12">Save Changes</span>
                                 </button>
-                                <button onClick={() => setIsEditing(false)} className="flex-1 py-2 bg-[#d9ceba] text-[#3e3b38] font-black uppercase italic transform -skew-x-12 hover:bg-[#c5b8a5] transition-all">
+                                <button onClick={() => { setIsEditing(false); setSelectedSpecies(pokemon); setIsChangingPokemon(false); }} className="flex-1 py-2 bg-[#d9ceba] text-[#3e3b38] font-black uppercase italic transform -skew-x-12 hover:bg-[#c5b8a5] transition-all">
                                     <span className="block transform skew-x-12">Cancel</span>
                                 </button>
                             </>
@@ -200,7 +283,7 @@ export default function PlaCollectionModal({ data, onClose, pokemon, shinyIndex,
                 {showConfirm && (
                     <PlaDeleteConfirm
                         onCancel={() => setShowConfirm(false)}
-                        onConfirm={deleteShinyLogic}
+                        onConfirm={() => deleteShinyLogic(true)}
                     />
                 )}
             </div>
