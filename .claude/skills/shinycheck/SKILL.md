@@ -7,7 +7,7 @@ argument-hint: [what to do next]
 We're continuing work on **ShinyCheck V3**, the owner's shiny Pokémon tracker (live on https://shinycheck.nl). Work from the repo root (locally ~/Documents/Prg/ShinyCheck-v3; in a cloud/phone session the checked-out repo).
 
 Before doing anything:
-0. `git pull` on main, so work done on the other device (laptop or phone) is in.
+0. Sync with the other device (laptop or phone): run `git fetch` and compare with `origin/main`. Only if main is behind, say so first in one line (in Dutch), e.g. "Er staan 3 nieuwe commits van je andere apparaat klaar (…), ik pull eerst.", naming the commit subjects in short, then `git pull`. If local uncommitted changes would clash with the pull, stop and ask before pulling. If it's already up to date, don't mention it.
 1. Read `.claude/skills/shinycheck/notes.md` (rules, the owner's decisions, gotchas, open ideas). It is the one source of project memory on every device; the laptop memory files only point here.
 2. Check `git status` and `git log --oneline -15` for where we left off, and skim README.md.
 3. Reply in Dutch; keep the app's UI in English.
