@@ -94,7 +94,9 @@ service cloud.firestore {
     // collections/{uid}: every logged shiny, shown on a public profile.
     match /collections/{uid} {
       allow read: if signedIn() && (me() == uid || get(/databases/$(database)/documents/profiles/$(uid)).data.public == true);
+      // Only a public profile keeps its collection here (social-sync deletes it when one goes private).
       allow create, update: if signedIn() && me() == uid
+        && get(/databases/$(database)/documents/profiles/$(uid)).data.public == true
         && request.resource.data.keys().hasOnly(['list', 'updatedAt'])
         && request.resource.data.list is list && request.resource.data.list.size() <= 5000
         && request.resource.data.updatedAt == request.time;
@@ -117,15 +119,18 @@ service cloud.firestore {
           && num(d.likes);
       }
       function likeRef() { return /databases/$(database)/documents/likes/$(me() + '_' + postId); }
+      // Only a public profile can post or edit its posts.
+      function iAmPublic() { return get(/databases/$(database)/documents/profiles/$(me())).data.public == true; }
       // Posts only exist for public profiles (social-sync deletes them when one goes private), so
       // anyone may read them: the landing page shows the feed before signing in.
       allow read: if true;
       allow create: if signedIn() && request.resource.data.uid == me()
         && postId.matches(me() + '_[A-Za-z0-9]{6,24}')
-        && validPost(request.resource.data) && request.resource.data.likes == 0;
+        && validPost(request.resource.data) && request.resource.data.likes == 0
+        && iAmPublic();
       allow update: if signedIn() && (
         // The owner edits the catch (not its likes, owner or date).
-        (resource.data.uid == me() && validPost(request.resource.data)
+        (resource.data.uid == me() && validPost(request.resource.data) && iAmPublic()
           && request.resource.data.diff(resource.data).affectedKeys().hasAny(['uid', 'likes', 'createdAt']) == false)
         // Anyone likes or unlikes it: likes ±1 together with their own like document.
         || (request.resource.data.diff(resource.data).affectedKeys().hasOnly(['likes']) && (
