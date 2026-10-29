@@ -14,7 +14,7 @@ window.UPDATES = [
     id: "phase-timeline-2026-10",
     date: "2026-10-29",
     title: "Phase timeline",
-    text: "Found other shinies before your target? ShinyCheck now keeps every phase of the hunt: which Pokémon was shiny, how many encounters and how long it took, right up to your target.",
+    text: "When you log phases during a hunt, ShinyCheck now saves each one: which Pokémon was shiny, how many encounters it took and how long. Open your target's shiny to see them all.",
     steps: [
       "In the **Hunt Deck**, tap **Log phase** when a different shiny shows up, and keep hunting.",
       "Tap **Gotcha!** when your target is shiny. Its phases are saved with it.",
@@ -28,7 +28,7 @@ window.UPDATES = [
     id: "marks-nicknames-2026-10",
     date: "2026-10-01",
     title: "Marks & nicknames",
-    text: "Caught a shiny with a mark in Sword & Shield or Scarlet & Violet? Add it to your shiny and it shows on your card in the feed, your profile and the share card. You can give every shiny its nickname too: only you see that.",
+    text: "You can now add the mark your shiny had in Sword & Shield or Scarlet & Violet. It shows on your post in the feed, on your profile and on the share card. You can also give each shiny a nickname, which only you can see.",
     steps: [
       "Open a Pokémon's **Dex Entry** and tap a shiny in the log (or **Add a shiny manually**).",
       "Pick its **Mark**. The list shows the marks of that game, with their titles like “the Recluse”.",
@@ -40,7 +40,7 @@ window.UPDATES = [
     id: "filter-sort-2026-10",
     date: "2026-10-01",
     title: "Filter & sort",
-    text: "Find the shiny you're after faster. Filter the Shiny Dex and every game by type or by what you've caught, are missing or are hunting, and sort by dex number, name, recently caught or most encounters.",
+    text: "You can now filter the Shiny Dex and every game page by type, or by what you've caught, are missing or are hunting. You can also sort by dex number, name, recently caught or most encounters.",
     steps: [
       "Tap **Filter & sort** next to the search bar, on the Shiny Dex or any game page.",
       "Pick **Missing**, **Caught** or **Hunting**, and one or two types (two = a dual type, like Fire/Flying).",
@@ -53,7 +53,7 @@ window.UPDATES = [
     id: "find-trainers-2026-10",
     date: "2026-10-01",
     title: "Find trainers & a new collection view",
-    text: "Look up other trainers by name or @username, and browse anyone's collection as big cards with all the facts. The feed is now also on the ShinyCheck home page, so friends can have a look before they sign up.",
+    text: "You can now search for other trainers by name or @username. A trainer's collection now shows as big cards with all the details. The feed is also on the home page, so friends can look at it before they make an account.",
     steps: [
       "On the **Feed**, tap **Find trainers** and type a name or @username. Follow them right from the list.",
       "On a profile, open **Collection**: search by name or dex number, sort by **Newest**, **Dex #** or **A–Z**, and filter by game. **Mini** switches to small tiles.",
@@ -66,7 +66,7 @@ window.UPDATES = [
     id: "community-2026-09",
     date: "2026-09-30",
     title: "Community: feed, profiles & follows",
-    text: "ShinyCheck is social now. Every new shiny you log shows up in the feed and on your profile by itself, so you can see what other trainers are catching, like their shinies and follow them.",
+    text: "ShinyCheck now has a feed. Every new shiny you log is posted to the feed and to your profile. You can see what other trainers catch, like their shinies and follow them.",
     steps: [
       "Open **Feed** in the menu: **For you** shows everyone's newest catches, **Following** only the trainers you follow.",
       "Tap the heart (or double-tap the Pokémon) to like a shiny. Tap a trainer to see their profile and whole collection.",
@@ -79,7 +79,7 @@ window.UPDATES = [
     id: "fish-dexnav-chains-2026-09",
     date: "2026-09-30",
     title: "Chain fishing & DexNav chains",
-    text: "The Hunt Deck now counts your chain for chain fishing in X & Y and Omega Ruby & Alpha Sapphire, and for DexNav chains in Omega Ruby & Alpha Sapphire, just like the Poké Radar. Every encounter adds one and the odds follow your chain.",
+    text: "The Hunt Deck now keeps track of your chain when you chain fish in X & Y and Omega Ruby & Alpha Sapphire, and for DexNav chains in Omega Ruby & Alpha Sapphire. It works like the Poké Radar: every encounter adds one and the odds change with your chain.",
     steps: [
       "Open a hunt in **X & Y** or **Omega Ruby & Alpha Sapphire** and pick **Chain fishing** or **DexNav**.",
       "Every **+1** adds one to your chain; fishing tops out at a chain of 20 (1 in 100).",
@@ -92,7 +92,7 @@ window.UPDATES = [
     id: "rby-2026-09",
     date: "2026-09-30",
     title: "Red, Blue & Yellow",
-    text: "Where it all began: Red, Blue & Yellow now have their own page with the Kanto dex. Shiny Pokémon didn't exist yet in those games (they arrived in Gold & Silver), so there's nothing to hunt or log there. It doesn't count toward your totals.",
+    text: "Red, Blue & Yellow now have a page with the Kanto dex. Shinies didn't exist yet in these games (they came in Gold & Silver), so you can't hunt or log anything there, and the page doesn't count toward your totals.",
     steps: [
       "Open **Red, Blue & Yellow** at the bottom of the games in the menu.",
       "Browse the Kanto dex; tap a Pokémon to open its Dex Entry.",
@@ -104,7 +104,7 @@ window.UPDATES = [
     id: "gs-2026-09",
     date: "2026-09-30",
     title: "Gold & Silver",
-    text: "Gold & Silver are in: the Johto dex with all 251, where shinies started. Hunts use 1 in 8,192, or 1 in 64 when you breed with a shiny parent.",
+    text: "Gold & Silver now have a page with the Johto dex of 251 Pokémon. These are the games where shinies started. Hunts use 1 in 8,192, or 1 in 64 when you breed with a shiny parent.",
     steps: [
       "Open **Gold & Silver** in the menu.",
       "Start a hunt and pick **Shiny parent** if you breed from a shiny.",
@@ -117,7 +117,7 @@ window.UPDATES = [
     id: "crystal-2026-09",
     date: "2026-09-30",
     title: "Crystal",
-    text: "Crystal is in: the Johto dex with all 251, Celebi via the GS Ball on Virtual Console, and Gen 2's shiny tricks: breed with a shiny parent for 1 in 64, or hatch the Odd Egg at 1 in 10.",
+    text: "Crystal now has a page with the Johto dex of 251, including Celebi from the GS Ball on Virtual Console. You can hunt with Gen 2's shiny methods: breeding with a shiny parent (1 in 64) or the Odd Egg (1 in 10).",
     steps: [
       "Open **Crystal** in the menu.",
       "Start a hunt and pick **Shiny parent** or **Odd Egg** for the better odds.",
@@ -130,7 +130,7 @@ window.UPDATES = [
     id: "rs-2026-09",
     date: "2026-09-30",
     title: "Ruby & Sapphire",
-    text: "The original Hoenn is in: the Hoenn dex of Ruby & Sapphire, with Latios and Latias roaming after the Elite Four and Kyogre, Groudon and Rayquaza. Hunts use Gen 3's odds of 1 in 8,192.",
+    text: "Ruby & Sapphire now have a page with the Hoenn dex, including Latios and Latias (roaming after the Elite Four), Kyogre, Groudon and Rayquaza. Hunts use Gen 3's odds of 1 in 8,192.",
     steps: [
       "Open **Ruby & Sapphire** in the menu.",
       "Start a hunt: **Wild** or **Breeding**.",
@@ -143,7 +143,7 @@ window.UPDATES = [
     id: "frlg-2026-09",
     date: "2026-09-30",
     title: "FireRed & LeafGreen",
-    text: "Kanto is back: the Kanto dex and every Pokémon you can get beyond it on the Sevii Islands (Johto Pokémon, the legendary beasts, Togepi's egg), plus Lugia, Ho-Oh and Deoxys: the Switch version gives their tickets after the Hall of Fame. Hunts use Gen 3's odds of 1 in 8,192.",
+    text: "FireRed & LeafGreen now have a page with the Kanto dex. Outside the dex has the Sevii Islands Pokémon (Johto Pokémon, the legendary beasts, Togepi's egg) and Lugia, Ho-Oh and Deoxys, whose tickets the Switch version gives you after the Hall of Fame. Hunts use Gen 3's odds of 1 in 8,192.",
     steps: [
       "Open **FireRed & LeafGreen** in the menu.",
       "Start a hunt: **Wild** or **Breeding**.",
@@ -156,7 +156,7 @@ window.UPDATES = [
     id: "emerald-2026-09",
     date: "2026-09-30",
     title: "Emerald",
-    text: "Emerald is in: the Hoenn dex and every Pokémon you can get beyond it (the Safari Zone extension, the Johto starters from Professor Birch, the Battle Frontier). Hunts use Gen 3's odds of 1 in 8,192.",
+    text: "Emerald now has a page with the Hoenn dex. Outside the dex has the other Pokémon you can get, from the Safari Zone extension, Professor Birch's Johto starters and the Battle Frontier. Hunts use Gen 3's odds of 1 in 8,192.",
     steps: [
       "Open **Emerald** in the menu.",
       "Start a hunt: **Wild** or **Breeding**.",
@@ -169,7 +169,7 @@ window.UPDATES = [
     id: "pt-2026-09",
     date: "2026-09-30",
     title: "Platinum",
-    text: "Platinum is in with its bigger Sinnoh dex of 210, every Pokémon you can get beyond it (the Distortion World, the Kanto birds, the Regis) and Poké Radar hunts that count your chain.",
+    text: "Platinum now has a page with its Sinnoh dex of 210. Outside the dex has the other Pokémon you can get, like those from the Distortion World, the Kanto birds and the Regis. Poké Radar hunts count your chain.",
     steps: [
       "Open **Platinum** in the menu.",
       "Start a hunt and pick **Poké Radar**; every **+1** grows your chain.",
@@ -182,11 +182,11 @@ window.UPDATES = [
     id: "dp-2026-09",
     date: "2026-09-30",
     title: "Diamond & Pearl",
-    text: "Sinnoh is in: the Sinnoh dex, every Pokémon you can get beyond it (Trophy Garden, the Great Marsh, swarms, the Poké Radar) and Poké Radar hunts that count your chain, from 1 in 8,192 up to 1 in 200 at a chain of 40.",
+    text: "Diamond & Pearl now have a page with the Sinnoh dex. Outside the dex has the other Pokémon you can get, from Trophy Garden, the Great Marsh, swarms and the Poké Radar. Poké Radar hunts count your chain, from 1 in 8,192 up to 1 in 200 at a chain of 40.",
     steps: [
       "Open **Diamond & Pearl** in the menu.",
       "Start a hunt and pick **Poké Radar**; every **+1** grows your chain.",
-      "Chain broke? Tap **Chain broke** and keep going.",
+      "If your chain breaks, tap **Chain broke**.",
     ],
     shot: "shots/updates/dp.webp",
     action: { label: "Open Diamond & Pearl", go: "dp" },
@@ -195,7 +195,7 @@ window.UPDATES = [
     id: "radar-chain-2026-09",
     date: "2026-09-30",
     title: "Poké Radar chains",
-    text: "Hunting with the Poké Radar in X & Y or BD & SP? The Hunt Deck now counts your chain with every encounter and the odds follow it. Chain broke? One tap sets it back to 0, your encounters stay.",
+    text: "If you hunt with the Poké Radar in X & Y or BD & SP, the Hunt Deck now counts your chain with every encounter and changes the odds to match. When the chain breaks, one tap sets it back to 0. Your encounters stay.",
     steps: [
       "Open a hunt in **X & Y** or **BD & SP** and pick **Poké Radar**.",
       "Every **+1** adds one to your chain; the odds go up as it grows.",
@@ -207,7 +207,7 @@ window.UPDATES = [
     id: "hgss-2026-09",
     date: "2026-09-30",
     title: "HeartGold & SoulSilver",
-    text: "Johto is in: the Johto dex, plus every Pokémon you can get beyond it (Kanto, the Safari Zone, the Hoenn and Sinnoh Sound on the radio, the Pokéwalker, Steven's Hoenn starters). Hunts use Gen 4's odds of 1 in 8,192, with the Masuda Method at 1 in 1,639.",
+    text: "HeartGold & SoulSilver now have a page with the Johto dex. Outside the dex has the other Pokémon you can get, from Kanto, the Safari Zone, the Hoenn and Sinnoh Sound on the radio, the Pokéwalker and Steven's Hoenn starters. Hunts use Gen 4's odds of 1 in 8,192, or 1 in 1,639 with the Masuda Method.",
     steps: [
       "Open **HeartGold & SoulSilver** in the menu.",
       "Start a hunt: **Wild**, **Breeding** or **Masuda**.",
@@ -220,7 +220,7 @@ window.UPDATES = [
     id: "bw2-2026-09",
     date: "2026-09-30",
     title: "Black 2 & White 2",
-    text: "The new Unova dex of Black 2 & White 2 is in, plus every Pokémon you can get beyond it (swarms, Hidden Grottos, the Nature Preserve, legends like the Regis and Latios & Latias). The Shiny Charm is here too: 1 in 2,731 in the wild, 1 in 1,024 with the Masuda Method.",
+    text: "Black 2 & White 2 now have a page with the new Unova dex. Outside the dex has the other Pokémon you can get, from swarms, Hidden Grottos and the Nature Preserve, plus legends like the Regis and Latios & Latias. These games also have the Shiny Charm: 1 in 2,731 in the wild and 1 in 1,024 with the Masuda Method.",
     steps: [
       "Open **Black 2 & White 2** in the menu.",
       "Start a hunt and turn on the **Shiny Charm** if you have it.",
@@ -233,7 +233,7 @@ window.UPDATES = [
     id: "bw-2026-09",
     date: "2026-09-30",
     title: "Black & White",
-    text: "Unova is in: the Unova dex and every Pokémon you can get beyond it after the story (White Forest, swarms, fossils). Hunts use Gen 5's odds of 1 in 8,192, with the Masuda Method at 1 in 1,366.",
+    text: "Black & White now have a page with the Unova dex. Outside the dex has the Pokémon you can get after the story, from White Forest, swarms and fossils. Hunts use Gen 5's odds of 1 in 8,192, or 1 in 1,366 with the Masuda Method.",
     steps: [
       "Open **Black & White** in the menu.",
       "Start a hunt: **Wild**, **Breeding** or **Masuda**.",
@@ -246,7 +246,7 @@ window.UPDATES = [
     id: "xy-2026-09",
     date: "2026-09-30",
     title: "X & Y",
-    text: "Kalos is in: the whole Kalos dex (Central, Coastal and Mountain as one), the Pokémon you can get beyond it (Friend Safari, fossils) and hunts with the Poké Radar, the Friend Safari, chain fishing and hordes.",
+    text: "X & Y now have a page with the whole Kalos dex (Central, Coastal and Mountain together). Outside the dex has the Friend Safari Pokémon and fossils. You can hunt with the Poké Radar, the Friend Safari, chain fishing and hordes.",
     steps: [
       "Open **X & Y** in the menu.",
       "Start a hunt and pick **Poké Radar**, **Friend Safari** or **Chain fishing**, then set your chain.",
@@ -259,7 +259,7 @@ window.UPDATES = [
     id: "oras-2026-09",
     date: "2026-09-30",
     title: "Omega Ruby & Alpha Sapphire",
-    text: "Hoenn is in: the Hoenn dex, every Pokémon you can get beyond it (Mirage spots, Soaring, the other starters) and hunts with the DexNav, chain fishing and hordes.",
+    text: "Omega Ruby & Alpha Sapphire now have a page with the Hoenn dex. Outside the dex has the Mirage spot and Soaring Pokémon and the other starters. You can hunt with the DexNav, chain fishing and hordes.",
     steps: [
       "Open **Omega Ruby & Alpha Sapphire** in the menu.",
       "Start a hunt and pick **DexNav**, then set your search level and where you are in the chain.",
@@ -272,7 +272,7 @@ window.UPDATES = [
     id: "hunt-methods-2026-09",
     date: "2026-09-30",
     title: "More hunt methods",
-    text: "Ultra Wormholes in Ultra Sun & Ultra Moon, Brilliant Aura with the Number battled bonus and Max Raids in Sword & Shield, every Poké Radar chain step in BD & SP, and Breeding and Tera Raids in Scarlet & Violet.",
+    text: "New hunt methods: Ultra Wormholes in Ultra Sun & Ultra Moon, Brilliant Aura (with the Number battled bonus) and Max Raids in Sword & Shield, every Poké Radar chain step in BD & SP, and Breeding and Tera Raids in Scarlet & Violet.",
     steps: [
       "Open a hunt and pick the method under **Hunt method**.",
       "Set the details, like the wormhole's rings and light-years or your radar chain.",
@@ -285,7 +285,7 @@ window.UPDATES = [
     id: "hunt-pace-2026-09",
     date: "2026-09-30",
     title: "Hunt pace and ETA",
-    text: "The Hunt Deck now shows your encounters per hour, how many more hours of hunting until you hit odds at that pace, and the average hunting time per shiny.",
+    text: "The Hunt Deck now shows how many encounters you do per hour, how many hours you have left until you hit odds at that pace, and your average hunting time per shiny.",
     steps: [
       "Open a hunt and scroll to **Pace**, under the luck meter.",
       "It appears after a minute and a few encounters, and follows your timer.",
@@ -297,8 +297,8 @@ window.UPDATES = [
   {
     id: "forms-2026-09",
     date: "2026-09-30",
-    title: "Forms: collect every look",
-    text: "Vivillon patterns, Furfrou trims, Flabébé flowers, Rotom appliances, gender differences and more: 142 Pokémon now have a forms checklist. Any form still counts the Pokémon, the rest is extra.",
+    title: "Forms",
+    text: "142 Pokémon now have a forms checklist, like Vivillon patterns, Furfrou trims, Flabébé flowers, Rotom appliances and gender differences. A shiny of any form counts for the Pokémon. The other forms are extra.",
     steps: [
       "Open a Pokémon in the **Shiny Dex**, like Vivillon. **Forms** shows which ones you have.",
       "**Tap a form** to see its shiny and your shinies of it.",
@@ -311,7 +311,7 @@ window.UPDATES = [
     id: "stats-2026-09",
     date: "2026-09-30",
     title: "Stats: your Shiny Wrapped",
-    text: "Highlights, charts per game and month, your luckiest and longest hunts, and a card to share. Per year or all time.",
+    text: "The Stats page shows your highlights, charts per game and month, your luckiest and longest hunts, and a card you can share. You can see it per year or for all time.",
     steps: ["Open **Stats** in the menu.", "Pick a year at the top.", "Tap **Share your Wrapped** for the card."],
     shot: "shots/stats.webp",
     action: { label: "Open Stats", go: "stats" },
@@ -320,7 +320,7 @@ window.UPDATES = [
     id: "share-card-2026-09",
     date: "2026-09-30",
     title: "Share cards",
-    text: "Every logged shiny gets a card with its sprite, encounters, hunt time and odds, ready for your socials.",
+    text: "Every shiny you log gets a card with its sprite, encounters, hunt time and odds that you can share.",
     steps: ["Hit **Gotcha!** and tap **Share card** in the message, or", "open a shiny in the log and tap **Share**."],
     shot: "shots/share-card.webp",
   },
@@ -328,7 +328,7 @@ window.UPDATES = [
     id: "notifications-2026-09",
     date: "2026-09-29",
     title: "Notifications",
-    text: "Get a notification on your phone or computer when ShinyCheck adds a game or feature. Only real updates.",
+    text: "Get a notification on your phone or computer when ShinyCheck adds a new game or feature.",
     steps: ["Open the menu and tap **Notifications**.", "Tap **Turn on**. On iPhone, add ShinyCheck to your Home Screen first."],
   },
   {
@@ -341,15 +341,15 @@ window.UPDATES = [
   {
     id: "phone-2026-09",
     date: "2026-09-29",
-    title: "Made for phones",
-    text: "Big +1 and Gotcha! buttons in reach of your thumb, a timer that keeps running, and a layout that fits every screen.",
+    title: "Better on phones",
+    text: "On a phone, the +1 and Gotcha! buttons sit at the bottom where your thumb can reach them, the timer keeps running when you close a hunt, and every page fits the screen.",
     shot: "shots/hunt.webp",
   },
   {
     id: "sm-2026-09",
     date: "2026-09-29",
     title: "Sun & Moon and Ultra Sun & Ultra Moon",
-    text: "Both Alola games are in, with their island dexes, SOS chains and Island Scan locations.",
+    text: "Sun & Moon and Ultra Sun & Ultra Moon now have their own pages, with their island dexes, SOS chains and Island Scan locations.",
     action: { label: "Open Sun & Moon", go: "sm" },
   },
   {
@@ -362,7 +362,7 @@ window.UPDATES = [
     id: "phases-2026-09",
     date: "2026-09-29",
     title: "Phases",
-    text: "Found a different shiny mid-hunt? Log it as a phase and keep going. The hunt remembers every phase.",
+    text: "If you find a different shiny during a hunt, you can log it as a phase and keep hunting. The hunt saves every phase.",
     steps: ["In the Hunt Deck, tap **Log phase** and pick the Pokémon."],
   },
   {

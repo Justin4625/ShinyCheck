@@ -40,6 +40,7 @@ How features work lives in the code, README and git log. This file keeps only wh
 - When unsure, say so and name what was assumed.
 
 **What's new + push:** every big feature gets a What's new entry (data/updates.js) and a push notification after it's live: `gh workflow run notify.yml -f title=… -f body=… -f url=/…` (English, short; url = the feature's page; `-f dry_run=true` only counts). Show the proposed title/body in the reply; check with `gh run list --workflow notify.yml`. Small fixes don't get one. Without `gh` (cloud session), give the owner the command to run.
+- **Write them like a person, not like AI** (the owner found the old ones too AI-sounding; rewritten 2026-10-29). Plain sentences that say what changed and where: "You can now…", "X now has a page with…". No ✦ or emoji, no "New:", "is here", "is in!", "Where it all began", "ShinyCheck is social now", no rhetorical questions ("Found one? …"), no slogans or "X, Y, and more", no "only real updates", no colon-chains. Push title = the feature's name; body = one plain sentence.
 
 ## Owner's decisions (don't undo without asking)
 - RBY is a dex-only page (no shinies existed there). HGSS, BW, B2W2, DP and Pt are separate games.
