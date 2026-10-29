@@ -91,7 +91,7 @@ def fetch(entry, it):
       u = ((d.get("sprites") or {}).get("other") or {}).get("home", {}).get("front_shiny")
       if not u: continue
     if subprocess.run(["curl", "-sfL", "-o", full, u]).returncode == 0:
-      subprocess.run(["sips", "-Z", "128", full], capture_output=True)  # macOS; same size as sprites/
+      subprocess.run(["sips", "-Z", "256", full], capture_output=True)  # macOS; same size as sprites/
       it["s"] = dst
       return None
   return f"no sprite: {entry} {it['id']}"

@@ -60,7 +60,7 @@ js/                     the app, as ES modules
   services/cloud.js       Firebase: sign-in, Firestore sync, backups, push tokens (separate module)
   services/social.js      community data: profiles, usernames, posts, likes, follows (through cloud.js's connection)
   services/admin.js       admin dashboard data: counts, who's online, the free plan's limits
-scripts/                bump-version (asset versions), gen-forms.py, send-push.mjs (notifications)
+scripts/                bump-version (asset versions), gen-forms.py, gen-sprites.py, send-push.mjs (notifications)
 tests/smoke.mjs         end-to-end smoke test in headless Chrome
 sprites/ types/ logos/ icons/ shots/   images
 ```
@@ -91,7 +91,7 @@ sprites/ types/ logos/ icons/ shots/   images
 - **A game**: `js/model/games.js` (GAMES in `core/config.js`, GAME_INFO), dex numbers in `data/pokedex.js`,
   hunt methods in `js/model/hunt-setup.js`, locks in `js/model/availability.js`.
 - **An update in What's new**: an entry at the top of `data/updates.js` (optionally a screenshot in `shots/updates/`).
-- **Forms**: run `python3 scripts/gen-forms.py`.
+- **Forms**: run `python3 scripts/gen-forms.py`. **Sprites**: `python3 scripts/gen-sprites.py`.
 
 ## Testing
 
@@ -195,3 +195,5 @@ Chrome (dark theme; desktop at 1280×800 @2x, phones at 390×844 @3x) and saved 
   Serebii's per-species pages (a trade with X & Y, transfer or event doesn't count).
 - Evolution chains: [PokeAPI](https://pokeapi.co) (`data/evolutions.js`).
 - Forms and their shiny HOME sprites: [PokeAPI](https://pokeapi.co) via `scripts/gen-forms.py` (`data/forms.js`, `sprites/forms/`).
+- Sprites: shiny Pokémon HOME renders from [PokeAPI](https://pokeapi.co) at 256px via `scripts/gen-sprites.py`
+  (fetched over each entry's own file in `sprites/`, so `data/pokedex.js` stays the same).
