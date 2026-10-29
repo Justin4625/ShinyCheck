@@ -1,4 +1,4 @@
-# ShinyCheck V3
+# ShinyCheck
 
 Shiny Dex and shiny-hunt tracker for Pokémon. Plain HTML, CSS and JavaScript (ES modules) — no build step,
 no dependencies. Live at [shinycheck.nl](https://shinycheck.nl).
