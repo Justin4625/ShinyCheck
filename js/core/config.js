@@ -1,5 +1,5 @@
 // App-wide constants: where the app lives, storage keys and the list of games.
-// Where the app lives: "/" on shinycheck.nl, "/ShinyCheck-v3/" on github.io.
+// Where the app lives: "/" on shinycheck.nl, "/ShinyCheck/" on github.io.
 export const BASE = new URL("../../", import.meta.url).pathname;
 export const STORE = "livingdex-za-v1";
 export const THEME = "livingdex-theme";

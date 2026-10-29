@@ -12,7 +12,7 @@ How features work lives in the code, README and git log. This file keeps only wh
 - Uses the app on laptop and phone; cares a lot about mobile.
 
 ## Project
-- Repo → github.com/Justin4625/ShinyCheck-v3, live on https://shinycheck.nl (GitHub Pages from main, root).
+- Repo → github.com/Justin4625/ShinyCheck (renamed from ShinyCheck-v3 on 2026-10-29; the first version is now ShinyCheck-old; localStorage keys keep the `shinycheck-v3-` prefix on purpose: renaming them would lose local data), live on https://shinycheck.nl (GitHub Pages from main, root).
 - Plain HTML/CSS/JS ES modules, no build, no deps. README has the structure and "Adding things".
 - Every commit: pre-commit hook runs scripts/bump-version.sh (stamps ?v=, regenerates CSS links, import map and the sw.js offline list — new CSS/JS files need no manual wiring). The hook lives only in the laptop's .git/hooks: in a fresh clone / cloud session, when js/css/html/sprites/types/logos change, run `./scripts/bump-version.sh && git add index.html sw.js` before committing.
 - Commit + push directly to main once the smoke test passes.
