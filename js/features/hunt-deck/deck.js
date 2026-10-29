@@ -239,7 +239,9 @@ function gotcha() {
   const k = curKey();
   const method = h.setup ? evalSetup(curGame, h.setup).label : "";
   const phases = (h.phases || []).length, alt = huntAlt(), mark = huntMark();
-  (shinies[k] = shinies[k] || []).push(markPost({ count: h.count, time: elapsed(h), odds: h.odds, ...(method ? { method } : {}), ...(phases ? { phases } : {}), ...(alt ? { alt } : {}), ...(mark ? { mark } : {}), ts: Date.now() }));
+  // The phases' Pokémon, encounters and time stay on the shiny for Dex Entry's phase timeline.
+  const phaseLog = (h.phases || []).map(({ id, count, time }) => ({ id, count, time }));
+  (shinies[k] = shinies[k] || []).push(markPost({ count: h.count, time: elapsed(h), odds: h.odds, ...(method ? { method } : {}), ...(phases ? { phases, phaseLog } : {}), ...(alt ? { alt } : {}), ...(mark ? { mark } : {}), ts: Date.now() }));
   saveShinies();
   delete hunts[k];
   delete altPick[k];

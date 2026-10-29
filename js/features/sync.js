@@ -11,9 +11,15 @@ import { render } from "../pages/router.js";
 // keyword ("raichu-1") so data survives a data update that renumbers entries.
 const keyById = new Map(mons.map(m => [m.id, m.key]));
 const idByKey = new Map(mons.map(m => [m.key, m.id]));
-const outEntry = s => s.evolvedFrom ? { ...s, evolvedFrom: s.evolvedFrom.map(id => keyById.get(id)) } : s;
 // Version-2 backups stored evolvedFrom as ids, newer data as keywords.
-const inEntry = s => s.evolvedFrom ? { ...s, evolvedFrom: s.evolvedFrom.map(k => typeof k === "number" ? k : idByKey.get(k)).filter(Boolean) } : s;
+const toId = k => typeof k === "number" ? k : idByKey.get(k);
+// A phase's Pokémon (hunts' `phases`, a shiny's `phaseLog`) goes the same way.
+const outPhases = list => list.map(p => ({ ...p, id: keyById.get(p.id) || p.id }));
+const inPhases = list => list.map(p => ({ ...p, id: toId(p.id) })).filter(p => p.id);
+const outEntry = s => ({ ...s, ...(s.evolvedFrom ? { evolvedFrom: s.evolvedFrom.map(id => keyById.get(id)) } : {}), ...(s.phaseLog ? { phaseLog: outPhases(s.phaseLog) } : {}) });
+const inEntry = s => ({ ...s, ...(s.evolvedFrom ? { evolvedFrom: s.evolvedFrom.map(toId).filter(Boolean) } : {}), ...(s.phaseLog ? { phaseLog: inPhases(s.phaseLog) } : {}) });
+const outHunt = h => h.phases ? { ...h, phases: outPhases(h.phases) } : h;
+const inHunt = h => h.phases ? { ...h, phases: inPhases(h.phases) } : h;
 const outMap = (obj, f = x => x) => Object.fromEntries(Object.entries(obj).map(([k, v]) => {
   const i = k.indexOf(":");
   return [`${k.slice(0, i)}:${keyById.get(+k.slice(i + 1))}`, f(v)];
@@ -27,7 +33,7 @@ export function snapshot() {
   return {
     version: 3,
     caught: [...caught].map(id => keyById.get(id)).filter(Boolean),
-    hunts: outMap(hunts),
+    hunts: outMap(hunts, outHunt),
     shinies: outMap(shinies, list => list.map(outEntry)),
     prefs: { ...prefs },
   };
@@ -37,7 +43,7 @@ export function snapshot() {
 export function applyData(data, { quiet = false } = {}) {
   setProgress(
     new Set((data.caught || []).map(k => idByKey.get(k)).filter(Boolean)),
-    inMap(data.hunts),
+    inMap(data.hunts, inHunt),
     inMap(data.shinies, list => list.map(inEntry)),
   );
   for (const k of Object.keys(prefs)) delete prefs[k];

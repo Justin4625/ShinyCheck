@@ -52,4 +52,4 @@ How features work lives in the code, README and git log. This file keeps only wh
 - More shiny details: ball, gender, nature (mark + nickname done).
 - Goals, badges, two hunts at once, Play Store (TWA), Stadium?
 - Moved-in species a game can't catch (Mew in SV) don't show on that game's page yet.
-- Not yet announced in What's new/push: Hunt Deck mark picker, Hisui region, Change Pokémon, Move to game routes.
+- Not yet announced in What's new/push: Hunt Deck mark picker, Hisui region, Change Pokémon, Move to game routes, phase timeline in Dex Entry (only for hunts finished after 2026-10-29: older shinies kept just the phase count).

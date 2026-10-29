@@ -3,6 +3,7 @@ import { burst } from "../components/burst.js";
 import { card } from "../components/card.js";
 import { formPicker } from "../components/form-picker.js";
 import { markPicker } from "../components/mark-picker.js";
+import { phaseTimeline } from "../components/phase-timeline.js";
 import { gamePicker } from "../components/game-picker.js";
 import { setupHtml, setupPatch } from "../components/hunt-setup.js";
 import { statusNote } from "../components/status.js";
@@ -154,6 +155,7 @@ export function paintEntry() {
           <span class="en-nums"><b>${l.count ? nf(l.count) : "—"}</b><small>${l.time ? fmtShort(l.time) : "No time"}</small></span>
         </button>
         ${open ? `<div class="en-edit" data-key="${key}">
+          ${phaseTimeline(l, l.m)}
           ${trackedFields(l.count || 0, l.time || 0, true)}
           <label class="wide">Caught on<input type="datetime-local" name="ts" value="${local}"></label>
           ${altsOf(l.m).length ? `<div class="wide en-fp"><span>Form</span>${formPicker(l.m, l.alt)}</div>` : ""}

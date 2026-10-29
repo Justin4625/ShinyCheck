@@ -503,6 +503,28 @@ step("hunt deck: forms, phases, prev/next, reset, cancel", async () => {
   await capture("hunt deck restored");
   await key("Escape");
 });
+step("phase timeline after Gotcha", async () => {
+  await nav("sv", 400);
+  await type("#gq", "pawmi");
+  await click(`#gameCards .pcard`, 400);
+  for (let i = 0; i < 3; i++) await click("#drPlus");
+  await click("#drPhase"); await type("#drPhaseQ", "pikachu"); await click("#drPhaseList [data-phase]", 400);
+  await click("#drPlus"); await click("#drPlus");
+  await click("#drGotcha"); await click("#drGotcha", 600);
+  await key("Escape");
+  await openEntry("pawmi");
+  await click(".en-row", 300);
+  const rows = await js(`[...document.querySelectorAll(".en-edit .pt-list li")].map(li => li.textContent.replace(/\\s+/g, " ").trim())`);
+  // Earlier steps may change the +1 step, so check the parts add up rather than fixed numbers.
+  const n = r => +(r.match(/([\d,]+) enc/) || [, "0"])[1].replace(/,/g, "");
+  expect(rows.length === 3 && /Phase 1.*Pikachu/.test(rows[0]) && /Target.*Pawmi/.test(rows[1]) && /Total/.test(rows[2])
+    && n(rows[0]) > 0 && n(rows[1]) > 0 && n(rows[0]) + n(rows[1]) === n(rows[2]), `timeline rows, got ${JSON.stringify(rows)}`);
+  expect(await js(`document.querySelectorAll(".en-edit .pt-bar i").length`) === 2, "the bar has a part per phase and the target");
+  const out = await js(`JSON.stringify(Object.entries(ShinyApp.snapshot().shinies).find(([k]) => k.startsWith("sv:pawmi"))[1].at(-1).phaseLog)`);
+  expect(/"id":"pikachu/.test(out), `phaseLog is saved by keyword, got ${out}`);
+  await capture("phase timeline");
+  await key("Escape");
+});
 step("active hunts", async () => {
   await nav("hunts", 500);
   expect(await js(`document.querySelectorAll("#huntCards .pcard").length`) >= 2, "Active hunts lists the hunts");
@@ -759,6 +781,19 @@ step("phone layout", async () => {
     expect((await js(`document.querySelector("#drMark .fp-btn").getBoundingClientRect().height`)) >= 40, `mark picker is a 40px+ tap target at ${w}px`);
     await capture(`phone hunt deck mark ${w}`);
     await click("#drMark .fp-btn", 200);
+  }
+  await size(360, 800, true);
+  await key("Escape");
+  // The phase timeline from "phase timeline after Gotcha" (Pawmi in Scarlet & Violet).
+  await openEntry("pawmi");
+  await click(".en-row", 300);
+  for (const w of [414, 390, 360]) {
+    await size(w, 800, true);
+    await js(`document.querySelector(".en-edit .pt").scrollIntoView({ block: "center" })`, 200);
+    const widePt = await js(`[...document.querySelectorAll(".en-edit .pt *")].filter(e => { const r = e.getBoundingClientRect(); return r.width && r.right > innerWidth + 1; }).length`);
+    const cutPt = await js(`[...document.querySelectorAll(".pt-nums b")].filter(b => b.scrollWidth > b.clientWidth).length`);
+    expect(widePt === 0 && cutPt === 0, `phase timeline fits a ${w}px phone (${widePt} wide, ${cutPt} cut off)`);
+    await capture(`phone phase timeline ${w}`);
   }
   await size(360, 800, true);
   await key("Escape");

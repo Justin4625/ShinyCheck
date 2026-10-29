@@ -1,0 +1,20 @@
+/* Phase timeline in Dex Entry's edit panel (js/components/phase-timeline.js): a bar split by encounters, then the list. */
+.pt { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.pt-head { font: 700 9px/1 var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--faint); }
+.pt-bar { display: flex; gap: 2px; height: 10px; border-radius: 999px; overflow: hidden; background: var(--surface-2); }
+.pt-bar i { flex-basis: 0; min-width: 4px; background: var(--border-2); }
+.pt-bar i:nth-child(even):not(.pt-goal) { background: var(--faint); opacity: .55; }
+.pt-bar i.pt-goal { background: linear-gradient(100deg, var(--accent), var(--accent2)); }
+.pt-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 4px; }
+.pt-list li { display: flex; align-items: center; gap: 8px; min-height: 40px; padding: 4px 10px 4px 4px; border-radius: 10px; background: var(--surface-2); font-size: 13px; }
+.pt-list img, .pt-img { flex: none; width: 32px; height: 32px; object-fit: contain; }
+.pt-list li.pt-goal { box-shadow: inset 3px 0 0 var(--accent); }
+.pt-name { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; overflow-wrap: anywhere; }
+.pt-name b { font: 700 9px/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--faint); }
+.pt-goal .pt-name b { color: var(--accent); }
+.pt-name em { font-style: normal; color: var(--muted); font-size: 12px; }
+.pt-nums { flex: none; display: flex; flex-direction: column; align-items: flex-end; gap: 2px; text-align: right; }
+.pt-nums b { font: 700 12.5px/1 var(--mono); }
+.pt-nums small { font: 600 10px/1 var(--mono); color: var(--faint); }
+.pt-nums small:empty { display: none; }
+.pt-list li.pt-total { background: none; min-height: 32px; padding-left: 44px; border-top: 1px solid var(--border); border-radius: 0; }
