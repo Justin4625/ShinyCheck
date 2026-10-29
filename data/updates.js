@@ -11,6 +11,20 @@
 //           or "filter" (the Shiny Dex with Filter & sort open)
 window.UPDATES = [
   {
+    id: "phase-timeline-2026-10",
+    date: "2026-10-29",
+    title: "Phase timeline",
+    text: "Found other shinies before your target? ShinyCheck now keeps every phase of the hunt: which Pokémon was shiny, how many encounters and how long it took, right up to your target.",
+    steps: [
+      "In the **Hunt Deck**, tap **Log phase** when a different shiny shows up, and keep hunting.",
+      "Tap **Gotcha!** when your target is shiny. Its phases are saved with it.",
+      "Open the Pokémon's **Dex Entry** and tap the shiny: the bar and list show each phase, the target and the total.",
+      "Only hunts you finish from now on get a timeline. Older shinies keep their phase count.",
+    ],
+    shot: "shots/updates/phases.webp",
+    action: { label: "Open Active hunts", go: "hunts" },
+  },
+  {
     id: "marks-nicknames-2026-10",
     date: "2026-10-01",
     title: "Marks & nicknames",
