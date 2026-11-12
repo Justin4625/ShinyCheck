@@ -66,27 +66,33 @@ const GAME_LOCKS = {
     638, 639, 640, 643, 644, 646, 791, 792, 800],
   lza: [150, 716, 717, 718, 382, 383, 384, 485, 491, 647, 648, 649, 720, 721, 801, 802, 807, 808, 809],
 };
-// Locked in the wild of one game, but a shiny of it was handed out there as an event: not
-// locked in that game (it counts), shown as event only there and never picked to hunt.
-// `from` (YYYY-MM-DD) keeps it locked until the distribution starts.
+// Shiny locked in one game, but a shiny of it is (or was) handed out there as an event. It stays
+// in GAME_LOCKS, so it doesn't count toward that game's total (like Mew in FireRed & LeafGreen),
+// but that game shows it as event only with the dates, worded by today's date.
+// Dates are YYYY-MM-DD; `until` is the last day, left out while the end isn't known.
 const GAME_EVENTS = {
   lza: {
     // Serebii serial-code page: code CELEBRATE30TH, Nov 12 2026 – Jan 7 2027.
-    716: { note: "Only via Mystery Gift (code CELEBRATE30TH, Nov 12, 2026 – Jan 7, 2027)." },
-    // The Pokémon Company's announcement (Nov 12, 2026): from December 10.
-    717: { note: "Only via Mystery Gift (from Dec 10, 2026).", from: "2026-12-10" },
+    716: { how: "Mystery Gift with the code CELEBRATE30TH", from: "2026-11-12", until: "2027-01-07" },
+    // The Pokémon Company's announcement and Serebii's news (Nov 12, 2026): Dec 10 2026 – Feb 4 2027;
+    // no code published yet.
+    717: { how: "Mystery Gift", from: "2026-12-10", until: "2027-02-04" },
   },
 };
+const day = d => new Date(`${d}T12:00:00Z`).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric", timeZone: "UTC" });
 const today = () => new Date().toISOString().slice(0, 10);
-const gameEvent = (m, gid) => {
-  const e = GAME_EVENTS[gid]?.[+m.dex];
-  return e && (!e.from || today() >= e.from) ? e : null;
+const eventNote = ({ how, from, until }) => {
+  const t = today();
+  if (t < from) return `Coming via ${how} on ${day(from)}.`;
+  if (until && t > until) return `Was only via ${how} (${day(from)} – ${day(until)}).`;
+  return `Only via ${how}${until ? `, until ${day(until)}` : ` since ${day(from)}`}.`;
 };
 export const lockedIn = (m, gid) => !!gid && (SHINY_LOCKED.has(+m.dex)
-  || (!gameEvent(m, gid) && (GAME_LOCKS[gid] || []).some(k => k === +m.dex || k === `${+m.dex}:${m.form}`)));
+  || (GAME_LOCKS[gid] || []).some(k => k === +m.dex || k === `${+m.dex}:${m.form}`));
+const gameEvent = (m, gid) => GAME_EVENTS[gid]?.[+m.dex];
 export const shinyStatus = (m, gid) => SHINY_LOCKED.has(+m.dex)
   ? { kind: "locked", label: "Shiny locked", note: "No shiny has ever been released through legitimate means." }
+  : gameEvent(m, gid) ? { kind: "event", label: "Event only", note: `Shiny can't be hunted in ${GAME_INFO[gid].name}. ${eventNote(gameEvent(m, gid))} Doesn't count toward this game's total.` }
   : lockedIn(m, gid) ? { kind: "locked", label: "Shiny locked", note: `Can't be shiny in ${GAME_INFO[gid].name}. Doesn't count toward this game's total.` }
-  : EVENT_ONLY[+m.dex] ? { kind: "event", label: "Event only", note: `Shiny can't be hunted. ${EVENT_ONLY[+m.dex]}` }
-  : gameEvent(m, gid) ? { kind: "event", label: "Event only", note: `Shiny can't be hunted in ${GAME_INFO[gid].name}. ${gameEvent(m, gid).note}` } : null;
-export const huntable = (m, gid) => !shinyStatus(m) && !(gid && gameEvent(m, gid)) && GAMES.some(g => m.games[g]) && m.sprite;
+  : EVENT_ONLY[+m.dex] ? { kind: "event", label: "Event only", note: `Shiny can't be hunted. ${EVENT_ONLY[+m.dex]}` } : null;
+export const huntable = m => !shinyStatus(m) && GAMES.some(g => m.games[g]) && m.sprite;
