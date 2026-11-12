@@ -17,7 +17,7 @@ const rl = { root: $("#roulette"), strip: $("#rlStrip"), pick: null, gid: "" };
 const ITEM = 104; // tile width + gap, keep in sync with .rl-tile
 function spin() {
   const gid = state.page, g = GAME_INFO[gid];
-  const pool = mons.filter(m => m.games[gid] && inGamePool(m, gid) && !gHas(gid)(m) && huntable(m) && !isActive(hunts[hk(gid, m.id)]));
+  const pool = mons.filter(m => m.games[gid] && inGamePool(m, gid) && !gHas(gid)(m) && huntable(m, gid) && !isActive(hunts[hk(gid, m.id)]));
   if (!pool.length) return toast("Nothing left to hunt in this game ✦");
   const pickFrom = () => pool[Math.floor(Math.random() * pool.length)];
   rl.gid = gid;

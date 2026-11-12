@@ -66,10 +66,27 @@ const GAME_LOCKS = {
     638, 639, 640, 643, 644, 646, 791, 792, 800],
   lza: [150, 716, 717, 718, 382, 383, 384, 485, 491, 647, 648, 649, 720, 721, 801, 802, 807, 808, 809],
 };
+// Locked in the wild of one game, but a shiny of it was handed out there as an event: not
+// locked in that game (it counts), shown as event only there and never picked to hunt.
+// `from` (YYYY-MM-DD) keeps it locked until the distribution starts.
+const GAME_EVENTS = {
+  lza: {
+    // Serebii serial-code page: code CELEBRATE30TH, Nov 12 2026 – Jan 7 2027.
+    716: { note: "Only via Mystery Gift (code CELEBRATE30TH, Nov 12, 2026 – Jan 7, 2027)." },
+    // The Pokémon Company's announcement (Nov 12, 2026): from December 10.
+    717: { note: "Only via Mystery Gift (from Dec 10, 2026).", from: "2026-12-10" },
+  },
+};
+const today = () => new Date().toISOString().slice(0, 10);
+const gameEvent = (m, gid) => {
+  const e = GAME_EVENTS[gid]?.[+m.dex];
+  return e && (!e.from || today() >= e.from) ? e : null;
+};
 export const lockedIn = (m, gid) => !!gid && (SHINY_LOCKED.has(+m.dex)
-  || (GAME_LOCKS[gid] || []).some(k => k === +m.dex || k === `${+m.dex}:${m.form}`));
+  || (!gameEvent(m, gid) && (GAME_LOCKS[gid] || []).some(k => k === +m.dex || k === `${+m.dex}:${m.form}`)));
 export const shinyStatus = (m, gid) => SHINY_LOCKED.has(+m.dex)
   ? { kind: "locked", label: "Shiny locked", note: "No shiny has ever been released through legitimate means." }
   : lockedIn(m, gid) ? { kind: "locked", label: "Shiny locked", note: `Can't be shiny in ${GAME_INFO[gid].name}. Doesn't count toward this game's total.` }
-  : EVENT_ONLY[+m.dex] ? { kind: "event", label: "Event only", note: `Shiny can't be hunted. ${EVENT_ONLY[+m.dex]}` } : null;
-export const huntable = m => !shinyStatus(m) && GAMES.some(g => m.games[g]) && m.sprite;
+  : EVENT_ONLY[+m.dex] ? { kind: "event", label: "Event only", note: `Shiny can't be hunted. ${EVENT_ONLY[+m.dex]}` }
+  : gameEvent(m, gid) ? { kind: "event", label: "Event only", note: `Shiny can't be hunted in ${GAME_INFO[gid].name}. ${gameEvent(m, gid).note}` } : null;
+export const huntable = (m, gid) => !shinyStatus(m) && !(gid && gameEvent(m, gid)) && GAMES.some(g => m.games[g]) && m.sprite;
