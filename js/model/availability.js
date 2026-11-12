@@ -87,12 +87,14 @@ const eventNote = ({ how, from, until }) => {
   if (until && t > until) return `Was only via ${how} (${day(from)} – ${day(until)}).`;
   return `Only via ${how}${until ? `, until ${day(until)}` : ` since ${day(from)}`}.`;
 };
-export const lockedIn = (m, gid) => !!gid && (SHINY_LOCKED.has(+m.dex)
+// Event-only shinies (EVENT_ONLY, GAME_EVENTS) never count toward a game's total, like locks.
+export const lockedIn = (m, gid) => !!gid && (SHINY_LOCKED.has(+m.dex) || !!EVENT_ONLY[+m.dex]
   || (GAME_LOCKS[gid] || []).some(k => k === +m.dex || k === `${+m.dex}:${m.form}`));
 const gameEvent = (m, gid) => GAME_EVENTS[gid]?.[+m.dex];
+const NO_COUNT = " Doesn't count toward this game's total.";
 export const shinyStatus = (m, gid) => SHINY_LOCKED.has(+m.dex)
   ? { kind: "locked", label: "Shiny locked", note: "No shiny has ever been released through legitimate means." }
-  : gameEvent(m, gid) ? { kind: "event", label: "Event only", note: `Shiny can't be hunted in ${GAME_INFO[gid].name}. ${eventNote(gameEvent(m, gid))} Doesn't count toward this game's total.` }
-  : lockedIn(m, gid) ? { kind: "locked", label: "Shiny locked", note: `Can't be shiny in ${GAME_INFO[gid].name}. Doesn't count toward this game's total.` }
-  : EVENT_ONLY[+m.dex] ? { kind: "event", label: "Event only", note: `Shiny can't be hunted. ${EVENT_ONLY[+m.dex]}` } : null;
+  : gameEvent(m, gid) ? { kind: "event", label: "Event only", note: `Shiny can't be hunted in ${GAME_INFO[gid].name}. ${eventNote(gameEvent(m, gid))}${NO_COUNT}` }
+  : EVENT_ONLY[+m.dex] ? { kind: "event", label: "Event only", note: `Shiny can't be hunted. ${EVENT_ONLY[+m.dex]}${gid ? NO_COUNT : ""}` }
+  : lockedIn(m, gid) ? { kind: "locked", label: "Shiny locked", note: `Can't be shiny in ${GAME_INFO[gid].name}.${NO_COUNT}` } : null;
 export const huntable = m => !shinyStatus(m) && GAMES.some(g => m.games[g]) && m.sprite;
