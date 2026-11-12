@@ -54,5 +54,5 @@ How features work lives in the code, README and git log. This file keeps only wh
 - More shiny details: ball, gender, nature (mark + nickname done).
 - Goals, badges, two hunts at once, Play Store (TWA), Stadium?
 - Moved-in species a game can't catch (Mew in SV) don't show on that game's page yet.
-- Around Dec 10, 2026: check Serebii's Z-A serial-code page for the Shiny Yveltal code and add it to `GAME_EVENTS` in js/model/availability.js.
+- Around Dec 10, 2026: check Serebii's Z-A serial-code page for the Shiny Yveltal code and add it to `GAME_EVENTS` in js/model/availability.js. A scheduled cloud routine ("ShinyCheck: Shiny Yveltal Z-A code", hourly Dec 9–15, 2026) tries this by itself; after Dec 15 the owner turns it off at claude.ai/code/routines, or it fires again in Dec 2027.
 - Not yet announced in What's new/push: Hunt Deck mark picker, Hisui region, Change Pokémon, Move to game routes.
