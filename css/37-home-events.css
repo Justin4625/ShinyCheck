@@ -86,7 +86,14 @@
 
 /* A new game's release countdown: logos (or the name), then the days to go. */
 .ev-release { flex-direction: column; align-items: flex-start; gap: 6px; padding: 8px 0 6px; }
-.rel-logos { display: flex; align-items: center; gap: 10px; min-height: 40px; }
+.rel-logos { position: relative; display: flex; align-items: center; gap: 10px; min-height: 40px; }
+/* Twinkling stars around the logos (same animation as the event sprites). */
+.rel-logos i { position: absolute; font-style: normal; line-height: 1; color: #fff; text-shadow: 0 0 8px #fff; pointer-events: none; animation: ev-twinkle 2.4s ease-in-out infinite; }
+.rel-logos i:nth-of-type(1) { left: -6px; top: -4px; font-size: 15px; }
+.rel-logos i:nth-of-type(2) { right: -4px; top: 6px; font-size: 11px; animation-delay: .6s; }
+.rel-logos i:nth-of-type(3) { left: 46%; bottom: -6px; font-size: 10px; animation-delay: 1.2s; }
+.rel-logos i:nth-of-type(4) { right: 22%; top: -10px; font-size: 8px; animation-delay: 1.8s; }
+@media (prefers-reduced-motion: reduce) { .rel-logos i { animation: none; } }
 .rel-logos img { height: 64px; max-width: 132px; object-fit: contain; filter: drop-shadow(0 8px 16px rgba(0, 0, 0, .5)); }
 .rel-word {
   font-size: 22px; font-weight: 800; letter-spacing: -.03em; line-height: 1.05;

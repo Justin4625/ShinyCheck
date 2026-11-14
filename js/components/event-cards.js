@@ -36,7 +36,7 @@ const card = e => {
 const releaseCard = r => {
   const out = r.days <= 0;
   return `<div class="ev-card ev-release ${out ? "live" : "soon"}" style="--accent:${r.accent};--accent2:${r.accent2}">
-    <div class="rel-logos">${r.logos.length ? r.logos.map(l => `<img src="${l}" alt="">`).join("") : ""}<span class="${r.logos.length ? "sr-only" : "rel-word"}">${esc(r.name)}</span></div>
+    <div class="rel-logos">${r.logos.length ? r.logos.map(l => `<img src="${l}" alt="">`).join("") : ""}<span class="${r.logos.length ? "sr-only" : "rel-word"}">${esc(r.name)}</span><i aria-hidden="true">✦</i><i aria-hidden="true">✦</i><i aria-hidden="true">✦</i><i aria-hidden="true">✦</i></div>
     <div class="rel-count">
       ${out ? `<b class="rel-out">Out now</b>` : `<span class="rel-pre">Out in</span><b>${r.days}</b><span class="rel-unit">day${r.days === 1 ? "" : "s"}</span>`}
     </div>

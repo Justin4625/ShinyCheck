@@ -2,25 +2,31 @@
    while a release counts down and no shiny event is on.
    Files in css/ load in name order (index.html); later files win on equal selectors. */
 
-/* Pokémon Winds & Waves: a green, windy sky above a blue sea, with wind swirls and waves. */
+/* Pokémon Winds & Waves: a dark green, windy night sky above a deep blue sea, with wind swirls,
+   a few stars and waves. */
 .hero.ev-themed[data-look="winds-waves"] {
-  border-color: rgba(125, 211, 252, .35);
+  border-color: rgba(125, 211, 252, .28);
   background:
-    radial-gradient(55% 70% at 8% 0%, rgba(52, 211, 153, .55), transparent 70%),
-    radial-gradient(50% 60% at 100% 35%, rgba(59, 130, 246, .45), transparent 70%),
-    linear-gradient(180deg, #0c3b3c 0%, #0b3150 48%, #0a2350 100%);
+    radial-gradient(55% 70% at 8% 0%, rgba(52, 211, 153, .34), transparent 70%),
+    radial-gradient(50% 60% at 100% 35%, rgba(59, 130, 246, .3), transparent 70%),
+    linear-gradient(180deg, #072224 0%, #071d33 48%, #06143a 100%);
 }
-/* Wind: soft white swirls drifting across the top. */
+/* Wind: soft white swirls drifting across the top, with small stars between them. */
 .hero.ev-themed[data-look="winds-waves"]::before {
-  opacity: .5; inset: 0 0 auto; height: 70%;
-  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 300' preserveAspectRatio='none' fill='none' stroke='%23ffffff' stroke-linecap='round'%3E%3Cpath d='M-20 70 C180 30 330 110 520 70 S800 30 860 70 c30 22 70 6 64 -22 c-6 -26 -44 -24 -46 0' stroke-opacity='.35' stroke-width='3'/%3E%3Cpath d='M300 150 C480 110 640 190 820 150 S1100 110 1220 140' stroke-opacity='.22' stroke-width='2.5'/%3E%3Cpath d='M-20 210 C140 180 260 240 420 205 c40 -10 60 30 30 46 c-22 12 -42 -10 -26 -24' stroke-opacity='.25' stroke-width='2.5'/%3E%3Cpath d='M760 240 C880 215 980 260 1100 232' stroke-opacity='.18' stroke-width='2'/%3E%3C/svg%3E") top / 100% 100% no-repeat;
+  opacity: .6; inset: 0 0 auto; height: 70%;
+  background:
+    radial-gradient(1.5px 1.5px at 12% 18%, #fff, transparent), radial-gradient(1px 1px at 30% 52%, #fff, transparent),
+    radial-gradient(2px 2px at 46% 10%, #fff, transparent), radial-gradient(1px 1px at 58% 38%, #fff, transparent),
+    radial-gradient(1.5px 1.5px at 72% 22%, #fff, transparent), radial-gradient(1px 1px at 86% 48%, #fff, transparent),
+    radial-gradient(1.5px 1.5px at 94% 12%, #fff, transparent), radial-gradient(1px 1px at 22% 80%, #fff, transparent),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 300' preserveAspectRatio='none' fill='none' stroke='%23ffffff' stroke-linecap='round'%3E%3Cpath d='M-20 70 C180 30 330 110 520 70 S800 30 860 70 c30 22 70 6 64 -22 c-6 -26 -44 -24 -46 0' stroke-opacity='.35' stroke-width='3'/%3E%3Cpath d='M300 150 C480 110 640 190 820 150 S1100 110 1220 140' stroke-opacity='.22' stroke-width='2.5'/%3E%3Cpath d='M-20 210 C140 180 260 240 420 205 c40 -10 60 30 30 46 c-22 12 -42 -10 -26 -24' stroke-opacity='.25' stroke-width='2.5'/%3E%3Cpath d='M760 240 C880 215 980 260 1100 232' stroke-opacity='.18' stroke-width='2'/%3E%3C/svg%3E") top / 100% 100% no-repeat;
   mask-image: none; -webkit-mask-image: none;
 }
 /* Waves: three layers of sea along the bottom edge. */
 .hero.ev-themed[data-look="winds-waves"]::after {
-  content: ""; position: absolute; inset: auto 0 0; height: 26%; pointer-events: none; opacity: .85;
+  content: ""; position: absolute; inset: auto 0 0; height: 26%; pointer-events: none; opacity: .75;
   background:
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 120' preserveAspectRatio='none'%3E%3Cpath d='M0 70 C150 40 300 100 450 70 S750 40 900 70 S1100 95 1200 70 V120 H0Z' fill='%231d4ed8' fill-opacity='.42'/%3E%3C/svg%3E") bottom / 100% 100% no-repeat,
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 120' preserveAspectRatio='none'%3E%3Cpath d='M0 70 C150 40 300 100 450 70 S750 40 900 70 S1100 95 1200 70 V120 H0Z' fill='%231e3a8a' fill-opacity='.55'/%3E%3C/svg%3E") bottom / 100% 100% no-repeat,
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 120' preserveAspectRatio='none'%3E%3Cpath d='M0 50 C200 85 350 20 600 55 S1000 85 1200 45 V120 H0Z' fill='%233b82f6' fill-opacity='.35'/%3E%3Cpath d='M0 50 C200 85 350 20 600 55 S1000 85 1200 45' fill='none' stroke='%23e0f2fe' stroke-opacity='.45' stroke-width='2'/%3E%3C/svg%3E") bottom 10px left 0 / 100% 80% no-repeat,
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 120' preserveAspectRatio='none'%3E%3Cpath d='M0 40 C250 10 400 80 650 45 S1050 15 1200 50 V120 H0Z' fill='%2334d399' fill-opacity='.18'/%3E%3C/svg%3E") bottom 24px left 0 / 100% 70% no-repeat;
 }
@@ -31,13 +37,16 @@
 .hero[data-look] .up-next.events { width: 290px; }
 .hero[data-look] .ev-release { align-items: center; text-align: center; gap: 4px; }
 .hero[data-look] .rel-logos { gap: 4px; justify-content: center; }
-.hero[data-look] .rel-logos img { height: 92px; max-width: 142px; filter: drop-shadow(0 10px 22px rgba(0, 0, 0, .45)); }
+.hero[data-look] .rel-logos img { height: 92px; max-width: 142px; filter: drop-shadow(0 0 18px rgba(167, 243, 208, .28)) drop-shadow(0 10px 22px rgba(0, 0, 0, .5)); }
 .hero[data-look] .rel-count b { font-size: 64px; text-shadow: 0 0 30px rgba(125, 211, 252, .55); }
+/* The number shines: a light sweep slides across it now and then. */
 .hero[data-look="winds-waves"] .rel-count b {
-  background: linear-gradient(180deg, #ffffff 30%, #a7f3d0 60%, #93c5fd);
+  background: linear-gradient(110deg, #a7f3d0 0%, #ffffff 30%, #ffffff 40%, #f0fdfa 46%, #93c5fd 50%, #ffffff 56%, #ffffff 70%, #93c5fd 100%) 0 0 / 250% 100%;
   -webkit-background-clip: text; background-clip: text; color: transparent; text-shadow: none;
-  filter: drop-shadow(0 0 18px rgba(125, 211, 252, .45));
+  filter: drop-shadow(0 0 16px rgba(125, 211, 252, .5)); animation: rel-shine 4.5s ease-in-out infinite;
 }
+@keyframes rel-shine { 0%, 35% { background-position: 100% 0; } 75%, 100% { background-position: 0 0; } }
+@media (prefers-reduced-motion: reduce) { .hero[data-look="winds-waves"] .rel-count b { animation: none; background-position: 60% 0; } }
 .hero[data-look] .ev-how { color: rgba(224, 242, 254, .85); }
 @media (max-width: 560px) {
   .hero.ev-themed[data-look="winds-waves"]::before { height: 38%; }
