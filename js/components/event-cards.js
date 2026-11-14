@@ -53,9 +53,9 @@ export function eventSlides() {
   for (const [gid, evs] of byGame) {
     const { accent, accent2 } = GAME_INFO[gid];
     for (let i = 0; i < evs.length; i += EVENTS_PER_SLIDE)
-      slides.push({ key: `${gid}:${i}`, label: "Shiny events", accent, accent2, html: evs.slice(i, i + EVENTS_PER_SLIDE).map(card).join("") });
+      slides.push({ key: `${gid}:${i}`, accent, accent2, html: evs.slice(i, i + EVENTS_PER_SLIDE).map(card).join("") });
   }
   for (const r of upcomingReleases())
-    slides.push({ key: `release:${r.name}`, label: "", accent: r.accent, accent2: r.accent2, look: r.look, html: releaseCard(r) });
+    slides.push({ key: `release:${r.name}`, accent: r.accent, accent2: r.accent2, look: r.look, html: releaseCard(r) });
   return slides;
 }

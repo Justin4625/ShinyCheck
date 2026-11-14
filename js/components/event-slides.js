@@ -40,8 +40,7 @@ export function renderEventSlides(box, hero) {
     hero.style.removeProperty("--accent2");
     return false;
   }
-  box.innerHTML = `<div class="ev-slides">${slides.map(s => `<div class="ev-slide" data-key="${esc(s.key)}" data-accent="${s.accent}" data-accent2="${s.accent2}"${s.look ? ` data-look="${s.look}"` : ""}>
-      ${s.label ? `<p class="mini-label ev-label"><span class="ev-live-dot"></span>${esc(s.label)}</p>` : ""}${s.html}
+  box.innerHTML = `<div class="ev-slides">${slides.map(s => `<div class="ev-slide" data-key="${esc(s.key)}" data-accent="${s.accent}" data-accent2="${s.accent2}"${s.look ? ` data-look="${s.look}"` : ""}>${s.html}
     </div>`).join("")}</div>${slides.length > 1 ? `<div class="ev-dots">${slides.map((s, i) =>
       `<button data-slide="${esc(s.key)}" aria-label="Show slide ${i + 1} of ${slides.length}"></button>`).join("")}</div>` : ""}`;
   show(box, hero, current);
