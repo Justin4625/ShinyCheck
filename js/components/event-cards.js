@@ -46,7 +46,7 @@ const releaseCard = r => {
 
 // Returns the cards' HTML, or "" when no event or release is coming up.
 export const eventCards = () => activeEvents().map(card).join("") + upcomingReleases().map(releaseCard).join("");
-// The hero's label: shiny events come first; with only a new game coming it says so.
-export const eventLabel = () => activeEvents().length ? "Shiny events" : "Coming soon";
+// The hero's label: shiny events come first; with only a new game it's coming soon or just out.
+export const eventLabel = () => activeEvents().length ? "Shiny events" : upcomingReleases()[0]?.days <= 0 ? "New release" : "Coming soon";
 // The colours the hero takes on: the first event's game (live ones come first), else the first release's.
 export const eventTheme = () => GAME_INFO[activeEvents()[0]?.gid] || upcomingReleases()[0];

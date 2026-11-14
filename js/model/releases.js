@@ -4,8 +4,8 @@
 // until a logo is there, the name is shown as text.
 export const UPCOMING_GAMES = [
   // Announced Feb 27, 2026 for Nintendo Switch 2, "2027" (pokemon.com / Serebii, checked Nov 2026);
-  // no date yet. Colours are our own pick until the games' look is known.
-  { name: "Pokémon Winds & Waves", platform: "Nintendo Switch 2", logos: [], date: null, accent: "#38bdf8", accent2: "#34d399" },
+  // no date yet. Logos: English ones from eternia.fr; colours picked from them (Winds green, Waves blue).
+  { name: "Pokémon Winds & Waves", platform: "Nintendo Switch 2", logos: ["logos/windsLogo.png", "logos/wavesLogo.png"], date: null, accent: "#34d399", accent2: "#3b82f6" },
 ];
 const OUT_NOW_DAYS = 14;
 const day = d => new Date(`${d}T12:00:00Z`).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric", timeZone: "UTC" });
