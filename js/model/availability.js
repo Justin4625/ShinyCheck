@@ -66,9 +66,11 @@ const GAME_LOCKS = {
     638, 639, 640, 643, 644, 646, 791, 792, 800],
   lza: [150, 716, 717, 718, 382, 383, 384, 485, 491, 647, 648, 649, 720, 721, 801, 802, 807, 808, 809],
 };
-// Shiny locked in one game, but a shiny of it is (or was) handed out there as an event. It stays
-// in GAME_LOCKS, so it doesn't count toward that game's total (like Mew in FireRed & LeafGreen),
-// but that game shows it as event only with the dates, worded by today's date.
+// Shiny events per game, shown at the top of the Shiny Dex while on or coming soon. When the
+// Pokémon is shiny locked in that game (GAME_LOCKS), it stays locked, so it doesn't count toward
+// that game's total (like Mew in FireRed & LeafGreen), and the game shows it as event only with
+// the dates, worded by today's date. An event for a Pokémon that can also be hunted there only
+// shows at the top of the Shiny Dex.
 // Dates are YYYY-MM-DD; `until` is the last day, left out while the end isn't known.
 const GAME_EVENTS = {
   lza: {
@@ -97,7 +99,7 @@ export const activeEvents = () => Object.entries(GAME_EVENTS).flatMap(([gid, evs
 // Event-only shinies (EVENT_ONLY, GAME_EVENTS) never count toward a game's total, like locks.
 export const lockedIn = (m, gid) => !!gid && (SHINY_LOCKED.has(+m.dex) || !!EVENT_ONLY[+m.dex]
   || (GAME_LOCKS[gid] || []).some(k => k === +m.dex || k === `${+m.dex}:${m.form}`));
-const gameEvent = (m, gid) => GAME_EVENTS[gid]?.[+m.dex];
+const gameEvent = (m, gid) => (GAME_LOCKS[gid] || []).includes(+m.dex) && GAME_EVENTS[gid]?.[+m.dex];
 const NO_COUNT = " Doesn't count toward this game's total.";
 export const shinyStatus = (m, gid) => SHINY_LOCKED.has(+m.dex)
   ? { kind: "locked", label: "Shiny locked", note: "No shiny has ever been released through legitimate means." }
