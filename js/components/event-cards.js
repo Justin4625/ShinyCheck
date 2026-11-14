@@ -6,6 +6,7 @@ import { esc } from "../core/util.js";
 import { activeEvents } from "../model/availability.js";
 import { mons } from "../model/dex.js";
 import { GAME_INFO } from "../model/games.js";
+import { upcomingReleases } from "../model/releases.js";
 
 const monFor = dex => mons.find(m => +m.dex === dex && !m.variant) || mons.find(m => +m.dex === dex);
 const when = e => e.live
@@ -31,7 +32,21 @@ const card = e => {
   </div>`;
 };
 
-// Returns the cards' HTML, or "" when no event is running or coming soon.
-export const eventCards = () => activeEvents().map(card).join("");
-// The game whose colours the hero takes on: the first event's (live ones come first).
-export const eventTheme = () => GAME_INFO[activeEvents()[0]?.gid];
+// A new game with an announced release date: its logo (or name) and a countdown in days.
+const releaseCard = r => {
+  const out = r.days <= 0;
+  return `<div class="ev-card ev-release ${out ? "live" : "soon"}" style="--accent:${r.accent};--accent2:${r.accent2}">
+    <div class="rel-logos">${r.logos.length ? r.logos.map(l => `<img src="${l}" alt="">`).join("") : ""}<span class="${r.logos.length ? "sr-only" : "rel-word"}">${esc(r.name)}</span></div>
+    <div class="rel-count">
+      ${out ? `<b class="rel-out">Out now</b>` : `<span class="rel-pre">Out in</span><b>${r.days}</b><span class="rel-unit">day${r.days === 1 ? "" : "s"}</span>`}
+    </div>
+    <span class="ev-how">${esc(r.platform)} · ${r.dateLabel}</span>
+  </div>`;
+};
+
+// Returns the cards' HTML, or "" when no event or release is coming up.
+export const eventCards = () => activeEvents().map(card).join("") + upcomingReleases().map(releaseCard).join("");
+// The hero's label: shiny events come first; with only a new game coming it says so.
+export const eventLabel = () => activeEvents().length ? "Shiny events" : "Coming soon";
+// The colours the hero takes on: the first event's game (live ones come first), else the first release's.
+export const eventTheme = () => GAME_INFO[activeEvents()[0]?.gid] || upcomingReleases()[0];

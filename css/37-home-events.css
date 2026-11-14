@@ -83,3 +83,19 @@
   .ev-art { width: 100px; height: 100px; }
 }
 @media (hover: none) { .ev-card:hover .ev-art { transform: none; } }
+
+/* A new game's release countdown: logos (or the name), then the days to go. */
+.ev-release { flex-direction: column; align-items: flex-start; gap: 6px; padding: 8px 0 6px; }
+.rel-logos { display: flex; align-items: center; gap: 10px; min-height: 40px; }
+.rel-logos img { height: 64px; max-width: 132px; object-fit: contain; filter: drop-shadow(0 8px 16px rgba(0, 0, 0, .5)); }
+.rel-word {
+  font-size: 22px; font-weight: 800; letter-spacing: -.03em; line-height: 1.05;
+  background: linear-gradient(90deg, color-mix(in srgb, var(--accent) 65%, #fff), color-mix(in srgb, var(--accent2) 65%, #fff));
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+.rel-count { display: flex; align-items: baseline; gap: 8px; }
+.rel-count b { font-size: 46px; font-weight: 800; letter-spacing: -.05em; line-height: .95; text-shadow: 0 0 24px color-mix(in srgb, var(--accent) 55%, transparent); }
+.rel-pre, .rel-unit { font: 700 10px/1 var(--mono); letter-spacing: .12em; text-transform: uppercase; color: rgba(255, 255, 255, .75); }
+.rel-count .rel-out { font-size: 30px; }
+.ev-release + .ev-release, .ev-card + .ev-release { margin-top: 10px; padding-top: 14px; border-top: 1px solid rgba(255, 255, 255, .12); }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }

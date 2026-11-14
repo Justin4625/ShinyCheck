@@ -14,7 +14,7 @@ import { huntable, shinyStatus } from "../model/availability.js";
 import { SORTS, activeCount, matches, sorter } from "../model/dex-filter.js";
 import { REGIONS, mons, regionOf } from "../model/dex.js";
 import { GAME_INFO } from "../model/games.js";
-import { eventCards, eventTheme } from "../components/event-cards.js";
+import { eventCards, eventLabel, eventTheme } from "../components/event-cards.js";
 import { render } from "./router.js";
 
 // Recommended: missing shinies you can actually hunt — not shiny locked or event only,
@@ -86,13 +86,14 @@ export function renderHomeStats() {
         <span class="r-bar" style="width:${pct(l)}%"></span>
       </button>`).join("");
 
-  // Shiny events running now or coming soon take the place of the recommendations.
+  // Shiny events running now or coming soon, and new games with a release date, take the place
+  // of the recommendations.
   const events = eventCards(), next = events ? [] : recommended(pool.filter(homeScope));
   $("#upNextBox").classList.toggle("events", !!events);
   const hero = $("#homeView .hero"), g = events && eventTheme();
   hero.classList.toggle("ev-themed", !!g);
   for (const [k, v] of [["--accent", g?.accent], ["--accent2", g?.accent2]]) v ? hero.style.setProperty(k, v) : hero.style.removeProperty(k);
-  $("#upNextLabel").innerHTML = events ? `<span class="ev-live-dot"></span>Shiny events` : "Recommended";
+  $("#upNextLabel").innerHTML = events ? `<span class="ev-live-dot"></span>${eventLabel()}` : "Recommended";
   $("#recShuffle").hidden = !!events;
   el.upNext.classList.toggle("ev-list", !!events);
   el.upNext.classList.toggle("up-next-row", !events);
