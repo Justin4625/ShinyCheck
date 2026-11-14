@@ -1,6 +1,6 @@
-// Shiny events in the Shiny Dex hero: events running now or coming soon (activeEvents in
-// model/availability.js) with sprite, game, dates and serial code. The hero turns into a starry
-// sky with a horizon in the colours of the first event's game (eventTheme).
+// The Shiny Dex hero's slides: shiny events running now or coming soon (activeEvents in
+// model/availability.js) with sprite, game, dates and serial code, grouped per game, and new games
+// counting down to their release (model/releases.js). js/components/event-slides.js shows them.
 import { has } from "../core/collection.js";
 import { esc } from "../core/util.js";
 import { activeEvents } from "../model/availability.js";
@@ -44,9 +44,18 @@ const releaseCard = r => {
   </div>`;
 };
 
-// Returns the cards' HTML, or "" when no event or release is coming up.
-export const eventCards = () => activeEvents().map(card).join("") + upcomingReleases().map(releaseCard).join("");
-// The hero's label: shiny events come first; with only a new game it's coming soon or just out.
-export const eventLabel = () => activeEvents().length ? "Shiny events" : upcomingReleases()[0]?.days <= 0 ? "New release" : "Coming soon";
-// The colours the hero takes on: the first event's game (live ones come first), else the first release's.
-export const eventTheme = () => GAME_INFO[activeEvents()[0]?.gid] || upcomingReleases()[0];
+// One slide per game's shiny events (at most EVENTS_PER_SLIDE each) and one per new game, in
+// that order; each carries the colours (and for a new game its own `look`) the hero takes on.
+const EVENTS_PER_SLIDE = 2;
+export function eventSlides() {
+  const slides = [], byGame = new Map();
+  for (const e of activeEvents()) byGame.set(e.gid, [...(byGame.get(e.gid) || []), e]);
+  for (const [gid, evs] of byGame) {
+    const { accent, accent2 } = GAME_INFO[gid];
+    for (let i = 0; i < evs.length; i += EVENTS_PER_SLIDE)
+      slides.push({ key: `${gid}:${i}`, label: "Shiny events", accent, accent2, html: evs.slice(i, i + EVENTS_PER_SLIDE).map(card).join("") });
+  }
+  for (const r of upcomingReleases())
+    slides.push({ key: `release:${r.name}`, label: "", accent: r.accent, accent2: r.accent2, look: r.look, html: releaseCard(r) });
+  return slides;
+}

@@ -32,7 +32,18 @@
 .up-next.events { width: 280px; }
 .ev-live-dot { display: inline-block; width: 7px; height: 7px; margin-right: 7px; border-radius: 50%; background: #2bd67b; box-shadow: 0 0 0 0 #2bd67b88; animation: ev-pulse 2s infinite; vertical-align: 1px; }
 @keyframes ev-pulse { 70% { box-shadow: 0 0 0 7px transparent; } 100% { box-shadow: 0 0 0 0 transparent; } }
-.ev-list { display: grid; gap: 4px; }
+.ev-list { display: block; }
+.rec-head[hidden] { display: none; }
+/* Slides share one grid cell: the block is as tall as the tallest slide, so switching never jumps. */
+.ev-slides { display: grid; }
+.ev-slide { grid-area: 1 / 1; display: grid; gap: 4px; align-content: center; opacity: 0; visibility: hidden; transition: opacity .6s, visibility .6s; }
+.ev-slide.on { opacity: 1; visibility: visible; }
+.ev-label { grid-column: 1 / -1; margin: 0 0 6px; }
+.ev-dots { display: flex; justify-content: center; gap: 2px; margin-top: 10px; }
+.ev-dots button { width: 28px; height: 28px; display: grid; place-items: center; border: 0; padding: 0; background: none; cursor: pointer; }
+.ev-dots button::before { content: ""; width: 7px; height: 7px; border-radius: 99px; background: rgba(255, 255, 255, .35); transition: width .3s, background .3s; }
+.ev-dots button[aria-current="true"]::before { width: 20px; background: #fff; }
+@media (prefers-reduced-motion: reduce) { .ev-slide { transition: none; } }
 
 /* One event: no frame, the sprite with a few twinkling stars, then the text. */
 .ev-card { position: relative; display: flex; align-items: center; gap: 6px; padding: 4px 0; color: #fff; }
@@ -69,17 +80,17 @@
 }
 .ev-code svg { flex: none; width: 13px; height: 13px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 .ev-got { border-style: solid; border-color: rgba(43, 214, 123, .6); color: #b8f5d2; letter-spacing: .02em; font-family: inherit; }
-.rec-shuffle[hidden] { display: none; }
 
 @media (max-width: 900px) {
   .up-next.events { width: 100%; flex: 1; }
-  .ev-list { grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+  .ev-slide { grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
 }
 @media (max-width: 560px) {
   /* Phones: the events get their own full-width row under the ring. */
   .hero-side:has(.up-next.events) { flex-wrap: wrap; justify-content: center; }
   .up-next.events { flex: 1 1 100%; }
-  .ev-list { grid-template-columns: 1fr; }
+  .ev-slide { grid-template-columns: 1fr; }
+  .ev-dots button { width: 34px; height: 34px; }
   .ev-art { width: 100px; height: 100px; }
 }
 @media (hover: none) { .ev-card:hover .ev-art { transform: none; } }
@@ -104,5 +115,4 @@
 .rel-count b { font-size: 46px; font-weight: 800; letter-spacing: -.05em; line-height: .95; text-shadow: 0 0 24px color-mix(in srgb, var(--accent) 55%, transparent); }
 .rel-pre, .rel-unit { font: 700 10px/1 var(--mono); letter-spacing: .12em; text-transform: uppercase; color: rgba(255, 255, 255, .75); }
 .rel-count .rel-out { font-size: 30px; }
-.ev-release + .ev-release, .ev-card + .ev-release { margin-top: 10px; padding-top: 14px; border-top: 1px solid rgba(255, 255, 255, .12); }
 .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }

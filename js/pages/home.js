@@ -14,7 +14,7 @@ import { huntable, shinyStatus } from "../model/availability.js";
 import { SORTS, activeCount, matches, sorter } from "../model/dex-filter.js";
 import { REGIONS, mons, regionOf } from "../model/dex.js";
 import { GAME_INFO } from "../model/games.js";
-import { eventCards, eventLabel, eventTheme } from "../components/event-cards.js";
+import { initEventSlides, renderEventSlides } from "../components/event-slides.js";
 import { render } from "./router.js";
 
 // Recommended: missing shinies you can actually hunt — not shiny locked or event only,
@@ -87,20 +87,18 @@ export function renderHomeStats() {
       </button>`).join("");
 
   // Shiny events running now or coming soon, and new games with a release date, take the place
-  // of the recommendations.
-  const events = eventCards(), next = events ? [] : recommended(pool.filter(homeScope));
-  $("#upNextBox").classList.toggle("events", !!events);
-  const hero = $("#homeView .hero"), g = events && eventTheme();
-  hero.classList.toggle("ev-themed", !!g);
-  if (g?.look) hero.dataset.look = g.look; else delete hero.dataset.look;
-  for (const [k, v] of [["--accent", g?.accent], ["--accent2", g?.accent2]]) v ? hero.style.setProperty(k, v) : hero.style.removeProperty(k);
-  $("#upNextLabel").innerHTML = events ? `<span class="ev-live-dot"></span>${eventLabel()}` : "Recommended";
-  $("#recShuffle").hidden = !!events;
-  el.upNext.classList.toggle("ev-list", !!events);
+  // of the recommendations, as a slideshow when there's more than one game.
+  const hero = $("#homeView .hero"), events = renderEventSlides(el.upNext, hero);
+  $("#upNextBox").classList.toggle("events", events);
+  $("#upNextBox .rec-head").hidden = events;
+  el.upNext.classList.toggle("ev-list", events);
   el.upNext.classList.toggle("up-next-row", !events);
-  el.upNext.innerHTML = events || (next.length
-    ? next.map(m => `<button data-jump="${m.id}" title="#${m.dex} ${esc(m.name)}${m.form ? " (" + esc(m.form) + ")" : ""} — hunt in ${esc(GAMES.filter(g => m.games[g]).map(g => GAME_INFO[g].name).reverse().join(", "))}"><img src="${m.sprite}" alt="${esc(m.name)}"></button>`).join("")
-    : `<p class="up-next-empty">Nothing left to hunt here ✦</p>`);
+  if (!events) {
+    const next = recommended(pool.filter(homeScope));
+    el.upNext.innerHTML = next.length
+      ? next.map(m => `<button data-jump="${m.id}" title="#${m.dex} ${esc(m.name)}${m.form ? " (" + esc(m.form) + ")" : ""} — hunt in ${esc(GAMES.filter(g => m.games[g]).map(g => GAME_INFO[g].name).reverse().join(", "))}"><img src="${m.sprite}" alt="${esc(m.name)}"></button>`).join("")
+      : `<p class="up-next-empty">Nothing left to hunt here ✦</p>`;
+  }
 
   for (const r of REGIONS) updateSection(el.cards, r.key, inRegion(pool, r.key));
   updateSection(el.cards, "sorted", pool.filter(homeScope));
@@ -120,6 +118,7 @@ export function init() {
     const b = e.target.closest("[data-jump]");
     if (b) openEntry(+b.dataset.jump);
   });
+  initEventSlides(el.upNext, $("#homeView .hero"));
   $("#recShuffle").addEventListener("click", () => { shuffleRecs(); renderHomeStats(); });
 
   $("#fShare").addEventListener("click", () => {
