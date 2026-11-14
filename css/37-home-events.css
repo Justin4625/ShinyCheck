@@ -3,19 +3,29 @@
    and the events sit in it without frames: big sprite with twinkling stars, then the text.
    Files in css/ load in name order (index.html); later files win on equal selectors. */
 
-/* The hero as a night sky: dark in both themes, like .banner. */
+/* The hero while slides are shown: dark in both themes, like .banner. Its look comes from one
+   background layer per slide (.ev-bg, from js/components/event-slides.js) that cross-fade, so a
+   change of slide never jumps from one design to the next. */
 .hero.ev-themed {
   --text: #fff; --muted: rgba(255, 255, 255, .74); --faint: rgba(255, 255, 255, .55);
   --surface-2: rgba(255, 255, 255, .07); --border: rgba(255, 255, 255, .13); --border-2: rgba(255, 255, 255, .24);
-  color: var(--text); border-color: color-mix(in srgb, var(--accent) 35%, transparent);
+  color: var(--text); background: #060815; border-color: color-mix(in srgb, var(--accent) 35%, transparent);
+  transition: border-color .8s;
+}
+.ev-bgs { position: absolute; inset: 0; border-radius: inherit; overflow: hidden; pointer-events: none; }
+.ev-bg { position: absolute; inset: 0; opacity: 0; transition: opacity .9s ease-in-out; }
+.ev-bg.on { opacity: 1; }
+@media (prefers-reduced-motion: reduce) { .ev-bg, .hero.ev-themed { transition: none; } }
+/* Default design: a night sky with a glowing horizon in the game's colours. */
+.ev-bg {
   background:
     radial-gradient(120% 60% at 50% 120%, color-mix(in srgb, var(--accent2) 70%, transparent), transparent 60%),
     radial-gradient(80% 50% at 85% 110%, color-mix(in srgb, var(--accent) 60%, transparent), transparent 70%),
     linear-gradient(#060815, #0a0f26);
 }
 /* Stars: small dots scattered over the sky. */
-.hero.ev-themed::before {
-  content: ""; position: absolute; inset: 0; opacity: .9; pointer-events: none;
+.ev-bg::before {
+  content: ""; position: absolute; inset: 0; opacity: .9;
   background-image:
     radial-gradient(1.5px 1.5px at 10% 20%, #fff, transparent), radial-gradient(1px 1px at 25% 70%, #fff, transparent),
     radial-gradient(1.5px 1.5px at 40% 12%, #fff, transparent), radial-gradient(1px 1px at 55% 40%, #fff, transparent),
@@ -34,13 +44,16 @@
 .rec-head[hidden] { display: none; }
 /* Slides share one grid cell: the block is as tall as the tallest slide, so switching never jumps. */
 .ev-slides { display: grid; }
-.ev-slide { grid-area: 1 / 1; display: grid; gap: 4px; align-content: center; opacity: 0; visibility: hidden; transition: opacity .6s, visibility .6s; }
-.ev-slide.on { opacity: 1; visibility: visible; }
+/* The old slide fades out first, then the new one fades in, so their text never overlaps; the
+   background layers cross-fade underneath over the whole change. */
+.ev-slide { grid-area: 1 / 1; display: grid; gap: 4px; align-content: center; opacity: 0; visibility: hidden; transform: translateY(6px);
+  transition: opacity .35s ease, transform .35s ease, visibility 0s .35s; }
+.ev-slide.on { opacity: 1; visibility: visible; transform: none; transition: opacity .5s ease .4s, transform .5s ease .4s, visibility 0s .4s; }
 .ev-dots { display: flex; justify-content: center; gap: 2px; margin-top: 10px; }
 .ev-dots button { width: 28px; height: 28px; display: grid; place-items: center; border: 0; padding: 0; background: none; cursor: pointer; }
 .ev-dots button::before { content: ""; width: 7px; height: 7px; border-radius: 99px; background: rgba(255, 255, 255, .35); transition: width .3s, background .3s; }
 .ev-dots button[aria-current="true"]::before { width: 20px; background: #fff; }
-@media (prefers-reduced-motion: reduce) { .ev-slide { transition: none; } }
+@media (prefers-reduced-motion: reduce) { .ev-slide, .ev-slide.on { transition: none; transform: none; } }
 
 /* One event: no frame, the sprite with a few twinkling stars, then the text. */
 .ev-card { position: relative; display: flex; align-items: center; gap: 6px; padding: 4px 0; color: #fff; }

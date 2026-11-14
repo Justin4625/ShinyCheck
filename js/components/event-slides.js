@@ -1,7 +1,8 @@
 // Slideshow in the Shiny Dex hero (slides from event-cards.js). Every slide sits in the same grid
 // cell, so the block is always as tall as the tallest slide and nothing jumps when it changes.
 // With more than one slide it moves on every SLIDE_MS (paused while hovered or focused, and not
-// at all with reduced motion); dots switch by hand. The hero takes the shown slide's colours.
+// at all with reduced motion); dots switch by hand. Each slide has a background layer in the hero
+// (its game's colours, or its own `look`); the layers cross-fade.
 import { esc } from "../core/util.js";
 import { eventSlides } from "./event-cards.js";
 
@@ -19,8 +20,8 @@ function show(box, hero, key) {
     s.inert = s !== on;
   }
   for (const d of box.querySelectorAll(".ev-dots button")) d.setAttribute("aria-current", d.dataset.slide === current);
+  for (const b of hero.querySelectorAll(".ev-bg")) b.classList.toggle("on", b.dataset.key === current);
   for (const [k, v] of [["--accent", on.dataset.accent], ["--accent2", on.dataset.accent2]]) hero.style.setProperty(k, v);
-  if (on.dataset.look) hero.dataset.look = on.dataset.look; else delete hero.dataset.look;
 }
 
 const next = (box, hero) => {
@@ -34,16 +35,20 @@ export function renderEventSlides(box, hero) {
   const slides = eventSlides();
   hero.classList.toggle("ev-themed", slides.length > 0);
   clearInterval(timer);
+  hero.querySelector(".ev-bgs")?.remove();
   if (!slides.length) {
-    delete hero.dataset.look;
     hero.style.removeProperty("--accent");
     hero.style.removeProperty("--accent2");
     return false;
   }
-  box.innerHTML = `<div class="ev-slides">${slides.map(s => `<div class="ev-slide" data-key="${esc(s.key)}" data-accent="${s.accent}" data-accent2="${s.accent2}"${s.look ? ` data-look="${s.look}"` : ""}>${s.html}
+  // Re-rendering keeps the shown slide, already marked "on", so nothing fades in again.
+  const cur = slides.some(s => s.key === current) ? current : slides[0].key, on = s => s.key === cur ? " on" : "";
+  box.innerHTML = `<div class="ev-slides">${slides.map(s => `<div class="ev-slide${on(s)}" data-key="${esc(s.key)}" data-accent="${s.accent}" data-accent2="${s.accent2}"${s.look ? ` data-look="${s.look}"` : ""}>${s.html}
     </div>`).join("")}</div>${slides.length > 1 ? `<div class="ev-dots">${slides.map((s, i) =>
       `<button data-slide="${esc(s.key)}" aria-label="Show slide ${i + 1} of ${slides.length}"></button>`).join("")}</div>` : ""}`;
-  show(box, hero, current);
+  // One background layer per slide; show() fades the shown slide's layer in.
+  hero.insertAdjacentHTML("afterbegin", `<div class="ev-bgs" aria-hidden="true">${slides.map(s => `<div class="ev-bg${on(s)}" data-key="${esc(s.key)}" style="--accent:${s.accent};--accent2:${s.accent2}"${s.look ? ` data-look="${s.look}"` : ""}></div>`).join("")}</div>`);
+  show(box, hero, cur);
   if (slides.length > 1 && !reduced()) timer = setInterval(() => { if (!hold && !document.hidden) next(box, hero); }, SLIDE_MS);
   return true;
 }
