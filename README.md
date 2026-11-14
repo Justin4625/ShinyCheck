@@ -60,7 +60,8 @@ js/                     the app, as ES modules
   services/cloud.js       Firebase: sign-in, Firestore sync, backups, push tokens (separate module)
   services/social.js      community data: profiles, usernames, posts, likes, follows (through cloud.js's connection)
   services/admin.js       admin dashboard data: counts, who's online, the free plan's limits
-scripts/                bump-version (asset versions), gen-forms.py, gen-sprites.py, send-push.mjs (notifications)
+scripts/                bump-version (asset versions), gen-forms.py, gen-sprites.py, send-push.mjs (notifications),
+                        preview-hero.cjs (screenshots + video of the Shiny Dex hero)
 tests/smoke.mjs         end-to-end smoke test in headless Chrome
 sprites/ types/ logos/ icons/ shots/   images
 ```
