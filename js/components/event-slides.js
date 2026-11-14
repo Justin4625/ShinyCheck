@@ -7,6 +7,8 @@ import { esc } from "../core/util.js";
 import { eventSlides } from "./event-cards.js";
 
 const SLIDE_MS = 7000;
+// Phones show one shiny event per slide, so the hero stays as compact as before.
+const phone = matchMedia("(max-width: 560px)");
 let current = "", timer = 0, hold = false;
 const reduced = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
 
@@ -32,7 +34,7 @@ const next = (box, hero) => {
 // Fills `box` with the slides and themes `hero`; returns false (and clears the theme) when
 // there's nothing to show, so the caller can fall back to its recommendations.
 export function renderEventSlides(box, hero) {
-  const slides = eventSlides();
+  const slides = eventSlides(phone.matches ? 1 : 2);
   hero.classList.toggle("ev-themed", slides.length > 0);
   clearInterval(timer);
   hero.querySelector(".ev-bgs")?.remove();
@@ -53,8 +55,10 @@ export function renderEventSlides(box, hero) {
   return true;
 }
 
-// Wiring, once: dots and pausing while the pointer or focus is on the slides.
+// Wiring, once: dots, pausing while the pointer or focus is on the slides, and regrouping the
+// slides when the screen crosses the phone width.
 export function initEventSlides(box, hero) {
+  phone.addEventListener("change", () => { if (hero.classList.contains("ev-themed")) renderEventSlides(box, hero); });
   box.addEventListener("click", e => {
     const d = e.target.closest(".ev-dots button");
     if (d) show(box, hero, d.dataset.slide);

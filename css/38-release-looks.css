@@ -46,7 +46,13 @@
 @media (prefers-reduced-motion: reduce) { .ev-slide[data-look="winds-waves"] .rel-count b { animation: none; background-position: 60% 0; } }
 .ev-slide[data-look] .ev-how { color: rgba(224, 242, 254, .85); }
 @media (max-width: 560px) {
-  .ev-bg[data-look="winds-waves"]::before { height: 38%; }
-  .ev-bg[data-look="winds-waves"]::after { height: 14%; }
-  .ev-slide[data-look] .rel-logos img { height: 84px; max-width: 46%; }
+  .ev-bg[data-look="winds-waves"]::before { height: 60%; }
+  .ev-bg[data-look="winds-waves"]::after { height: 22%; }
+  /* Phones: logos side by side, a smaller count and the date below. */
+  .ev-slide[data-look] .rel-logos { min-height: 0; }
+  .ev-slide[data-look] .rel-logos img { height: 50px; max-width: 48%; }
+  .ev-slide[data-look] .rel-count { gap: 5px; }
+  .ev-slide[data-look] .rel-count b { font-size: 38px; }
+  .rel-pre, .rel-unit { font-size: 8.5px; letter-spacing: .08em; }
+  .ev-slide[data-look] .ev-how { display: block; font-size: 10.5px; }
 }

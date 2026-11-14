@@ -96,12 +96,22 @@
   .ev-slide { grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
 }
 @media (max-width: 560px) {
-  /* Phones: the events get their own full-width row under the ring. */
-  .hero-side:has(.up-next.events) { flex-wrap: wrap; justify-content: center; }
-  .up-next.events { flex: 1 1 100%; }
+  /* Phones: the old compact hero, the ring with the slides beside it. One event per slide, laid
+     out small: sprite and name side by side, the code below; the date line is left out. */
+  .up-next.events { flex: 1; min-width: 0; width: auto; }
   .ev-slide { grid-template-columns: 1fr; }
-  .ev-dots button { width: 34px; height: 34px; }
-  .ev-art { width: 100px; height: 100px; }
+  .ev-card { align-items: flex-start; flex-wrap: wrap; gap: 2px 8px; padding: 0; }
+  .ev-art { width: 64px; height: 64px; }
+  .ev-art i:nth-child(2) { font-size: 12px; left: 0; top: 4px; }
+  .ev-body { flex: 1; min-width: 0; gap: 2px; padding-top: 4px; }
+  .ev-when { font-size: 8.5px; letter-spacing: .04em; }
+  .ev-name { font-size: 14.5px; }
+  .ev-game { font-size: 11px; margin-top: 0; }
+  .ev-how { display: none; }
+  .ev-code, .ev-got { flex-basis: 100%; justify-content: center; margin-top: 4px; padding: 6px 6px; font-size: 10.5px; letter-spacing: .03em; }
+  .ev-code svg { width: 12px; height: 12px; }
+  .ev-dots { margin-top: 4px; }
+  .ev-dots button { width: 30px; height: 26px; }
 }
 @media (hover: none) { .ev-card:hover .ev-art { transform: none; } }
 
