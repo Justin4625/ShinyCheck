@@ -48,6 +48,7 @@ How features work lives in the code, README and git log. This file keeps only wh
 - Community: no push for follows; profiles public by default with a private toggle; Share only on your own catches; nickname is private (never in posts/collection/share card), mark is public.
 - Profile Collection: game chips only for games in that collection (no long dropdown). Letter avatars not rainbow.
 - Buy me a lunch: only in the ⚙ menu and at the bottom of What's new (not in the foot bar or nav). Not a main feature: no What's new/push.
+- Shiny Dex hero: while a shiny event runs or starts within 30 days (`GAME_EVENTS`), the events replace Recommended in a starry-night hero with a horizon in the game's colours (chosen from 20 mockups, Nov 2026). No glow behind the sprite; game name as text, no logo; no copy button for codes (they're typed on the Switch). Without events: the normal hero with Recommended.
 - Admin photo upload uses a crop dialog. Radar chain Reset only in the Hunt Deck, not the pop-out.
 
 ## Open ideas

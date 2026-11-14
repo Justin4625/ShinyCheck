@@ -14,6 +14,7 @@ import { huntable, shinyStatus } from "../model/availability.js";
 import { SORTS, activeCount, matches, sorter } from "../model/dex-filter.js";
 import { REGIONS, mons, regionOf } from "../model/dex.js";
 import { GAME_INFO } from "../model/games.js";
+import { eventCards, eventTheme } from "../components/event-cards.js";
 import { render } from "./router.js";
 
 // Recommended: missing shinies you can actually hunt — not shiny locked or event only,
@@ -85,10 +86,19 @@ export function renderHomeStats() {
         <span class="r-bar" style="width:${pct(l)}%"></span>
       </button>`).join("");
 
-  const next = recommended(pool.filter(homeScope));
-  el.upNext.innerHTML = next.length
+  // Shiny events running now or coming soon take the place of the recommendations.
+  const events = eventCards(), next = events ? [] : recommended(pool.filter(homeScope));
+  $("#upNextBox").classList.toggle("events", !!events);
+  const hero = $("#homeView .hero"), g = events && eventTheme();
+  hero.classList.toggle("ev-themed", !!g);
+  for (const [k, v] of [["--accent", g?.accent], ["--accent2", g?.accent2]]) v ? hero.style.setProperty(k, v) : hero.style.removeProperty(k);
+  $("#upNextLabel").innerHTML = events ? `<span class="ev-live-dot"></span>Shiny events` : "Recommended";
+  $("#recShuffle").hidden = !!events;
+  el.upNext.classList.toggle("ev-list", !!events);
+  el.upNext.classList.toggle("up-next-row", !events);
+  el.upNext.innerHTML = events || (next.length
     ? next.map(m => `<button data-jump="${m.id}" title="#${m.dex} ${esc(m.name)}${m.form ? " (" + esc(m.form) + ")" : ""} — hunt in ${esc(GAMES.filter(g => m.games[g]).map(g => GAME_INFO[g].name).reverse().join(", "))}"><img src="${m.sprite}" alt="${esc(m.name)}"></button>`).join("")
-    : `<p class="up-next-empty">Nothing left to hunt here ✦</p>`;
+    : `<p class="up-next-empty">Nothing left to hunt here ✦</p>`);
 
   for (const r of REGIONS) updateSection(el.cards, r.key, inRegion(pool, r.key));
   updateSection(el.cards, "sorted", pool.filter(homeScope));
@@ -103,7 +113,7 @@ export function init() {
     const r = e.target.closest(".region");
     if (r) { state.gen = r.dataset.gen; render(); }
   });
-  // A recommendation opens its Dex Entry, where "Hunt it in" starts the hunt.
+  // A recommendation or event opens its Dex Entry, where "Hunt it in" starts the hunt.
   el.upNext.addEventListener("click", e => {
     const b = e.target.closest("[data-jump]");
     if (b) openEntry(+b.dataset.jump);

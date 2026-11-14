@@ -73,7 +73,7 @@ const GAME_LOCKS = {
 const GAME_EVENTS = {
   lza: {
     // Serebii serial-code page: code CELEBRATE30TH, Nov 12 2026 – Jan 7 2027.
-    716: { how: "Mystery Gift with the code CELEBRATE30TH", from: "2026-11-12", until: "2027-01-07" },
+    716: { how: "Mystery Gift", code: "CELEBRATE30TH", from: "2026-11-12", until: "2027-01-07" },
     // The Pokémon Company's announcement and Serebii's news (Nov 12, 2026): Dec 10 2026 – Feb 4 2027;
     // no code published yet.
     717: { how: "Mystery Gift", from: "2026-12-10", until: "2027-02-04" },
@@ -81,12 +81,19 @@ const GAME_EVENTS = {
 };
 const day = d => new Date(`${d}T12:00:00Z`).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric", timeZone: "UTC" });
 const today = () => new Date().toISOString().slice(0, 10);
-const eventNote = ({ how, from, until }) => {
-  const t = today();
+const eventNote = ({ how: h, code, from, until }) => {
+  const t = today(), how = code ? `${h} with the code ${code}` : h;
   if (t < from) return `Coming via ${how} on ${day(from)}.`;
   if (until && t > until) return `Was only via ${how} (${day(from)} – ${day(until)}).`;
   return `Only via ${how}${until ? `, until ${day(until)}` : ` since ${day(from)}`}.`;
 };
+// Shiny Dex hero: events running now or starting within SOON_DAYS, soonest first.
+const SOON_DAYS = 30;
+const daysTo = d => Math.round((new Date(`${d}T12:00:00Z`) - new Date(`${today()}T12:00:00Z`)) / 864e5);
+export const activeEvents = () => Object.entries(GAME_EVENTS).flatMap(([gid, evs]) => Object.entries(evs).map(([dex, ev]) => {
+  const live = today() >= ev.from;
+  return { gid, dex: +dex, ...ev, live, days: live ? (ev.until ? daysTo(ev.until) : null) : daysTo(ev.from), fromLabel: day(ev.from), untilLabel: ev.until && day(ev.until) };
+})).filter(e => (e.live ? !e.until || e.days >= 0 : e.days <= SOON_DAYS)).sort((a, b) => b.live - a.live || a.from.localeCompare(b.from));
 // Event-only shinies (EVENT_ONLY, GAME_EVENTS) never count toward a game's total, like locks.
 export const lockedIn = (m, gid) => !!gid && (SHINY_LOCKED.has(+m.dex) || !!EVENT_ONLY[+m.dex]
   || (GAME_LOCKS[gid] || []).some(k => k === +m.dex || k === `${+m.dex}:${m.form}`));
