@@ -11,6 +11,18 @@
 //           or "filter" (the Shiny Dex with Filter & sort open)
 window.UPDATES = [
   {
+    id: "shiny-events-2026-11",
+    date: "2026-11-14",
+    title: "Shiny events",
+    text: "The top of the Shiny Dex now shows shiny events that are on or coming soon, like the Shiny Xerneas in Legends: Z-A, with the days left and the Mystery Gift code. With more than one, it switches between them by itself.",
+    steps: [
+      "Look at the top of the **Shiny Dex**: each event shows the Pokémon, its game and how many days are left.",
+      "Enter the code under **Mystery Gift** in the game to get the shiny.",
+      "Tap the event to open the Pokémon's **Dex Entry**. Once the shiny is in your collection, the event says so.",
+    ],
+    shot: "shots/updates/events.webp",
+  },
+  {
     id: "phase-timeline-2026-10",
     date: "2026-10-29",
     title: "Phase timeline",
