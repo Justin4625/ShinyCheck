@@ -92,6 +92,7 @@ export function renderHomeStats() {
   $("#upNextBox").classList.toggle("events", !!events);
   const hero = $("#homeView .hero"), g = events && eventTheme();
   hero.classList.toggle("ev-themed", !!g);
+  if (g?.look) hero.dataset.look = g.look; else delete hero.dataset.look;
   for (const [k, v] of [["--accent", g?.accent], ["--accent2", g?.accent2]]) v ? hero.style.setProperty(k, v) : hero.style.removeProperty(k);
   $("#upNextLabel").innerHTML = events ? `<span class="ev-live-dot"></span>${eventLabel()}` : "Recommended";
   $("#recShuffle").hidden = !!events;

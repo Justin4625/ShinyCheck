@@ -1,0 +1,47 @@
+/* Hero designs for new games (`look` in js/model/releases.js), used instead of the starry sky
+   while a release counts down and no shiny event is on.
+   Files in css/ load in name order (index.html); later files win on equal selectors. */
+
+/* Pokémon Winds & Waves: a green, windy sky above a blue sea, with wind swirls and waves. */
+.hero.ev-themed[data-look="winds-waves"] {
+  border-color: rgba(125, 211, 252, .35);
+  background:
+    radial-gradient(55% 70% at 8% 0%, rgba(52, 211, 153, .55), transparent 70%),
+    radial-gradient(50% 60% at 100% 35%, rgba(59, 130, 246, .45), transparent 70%),
+    linear-gradient(180deg, #0c3b3c 0%, #0b3150 48%, #0a2350 100%);
+}
+/* Wind: soft white swirls drifting across the top. */
+.hero.ev-themed[data-look="winds-waves"]::before {
+  opacity: .5; inset: 0 0 auto; height: 70%;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 300' preserveAspectRatio='none' fill='none' stroke='%23ffffff' stroke-linecap='round'%3E%3Cpath d='M-20 70 C180 30 330 110 520 70 S800 30 860 70 c30 22 70 6 64 -22 c-6 -26 -44 -24 -46 0' stroke-opacity='.35' stroke-width='3'/%3E%3Cpath d='M300 150 C480 110 640 190 820 150 S1100 110 1220 140' stroke-opacity='.22' stroke-width='2.5'/%3E%3Cpath d='M-20 210 C140 180 260 240 420 205 c40 -10 60 30 30 46 c-22 12 -42 -10 -26 -24' stroke-opacity='.25' stroke-width='2.5'/%3E%3Cpath d='M760 240 C880 215 980 260 1100 232' stroke-opacity='.18' stroke-width='2'/%3E%3C/svg%3E") top / 100% 100% no-repeat;
+  mask-image: none; -webkit-mask-image: none;
+}
+/* Waves: three layers of sea along the bottom edge. */
+.hero.ev-themed[data-look="winds-waves"]::after {
+  content: ""; position: absolute; inset: auto 0 0; height: 26%; pointer-events: none; opacity: .85;
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 120' preserveAspectRatio='none'%3E%3Cpath d='M0 70 C150 40 300 100 450 70 S750 40 900 70 S1100 95 1200 70 V120 H0Z' fill='%231d4ed8' fill-opacity='.42'/%3E%3C/svg%3E") bottom / 100% 100% no-repeat,
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 120' preserveAspectRatio='none'%3E%3Cpath d='M0 50 C200 85 350 20 600 55 S1000 85 1200 45 V120 H0Z' fill='%233b82f6' fill-opacity='.35'/%3E%3Cpath d='M0 50 C200 85 350 20 600 55 S1000 85 1200 45' fill='none' stroke='%23e0f2fe' stroke-opacity='.45' stroke-width='2'/%3E%3C/svg%3E") bottom 10px left 0 / 100% 80% no-repeat,
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 120' preserveAspectRatio='none'%3E%3Cpath d='M0 40 C250 10 400 80 650 45 S1050 15 1200 50 V120 H0Z' fill='%2334d399' fill-opacity='.18'/%3E%3C/svg%3E") bottom 24px left 0 / 100% 70% no-repeat;
+}
+.hero.ev-themed[data-look="winds-waves"] .stat { background: rgba(8, 30, 60, .45); }
+.hero.ev-themed[data-look="winds-waves"] .ring .track { stroke: rgba(224, 242, 254, .2); }
+
+/* The game takes the stage: bigger logos and countdown. */
+.hero[data-look] .up-next.events { width: 290px; }
+.hero[data-look] .ev-release { align-items: center; text-align: center; gap: 4px; }
+.hero[data-look] .rel-logos { gap: 4px; justify-content: center; }
+.hero[data-look] .rel-logos img { height: 92px; max-width: 142px; filter: drop-shadow(0 10px 22px rgba(0, 0, 0, .45)); }
+.hero[data-look] .rel-count b { font-size: 64px; text-shadow: 0 0 30px rgba(125, 211, 252, .55); }
+.hero[data-look="winds-waves"] .rel-count b {
+  background: linear-gradient(180deg, #ffffff 30%, #a7f3d0 60%, #93c5fd);
+  -webkit-background-clip: text; background-clip: text; color: transparent; text-shadow: none;
+  filter: drop-shadow(0 0 18px rgba(125, 211, 252, .45));
+}
+.hero[data-look] .ev-how { color: rgba(224, 242, 254, .85); }
+@media (max-width: 560px) {
+  .hero.ev-themed[data-look="winds-waves"]::before { height: 38%; }
+  .hero.ev-themed[data-look="winds-waves"]::after { height: 14%; }
+  .hero[data-look] .up-next.events { width: 100%; }
+  .hero[data-look] .rel-logos img { height: 84px; max-width: 46%; }
+}
