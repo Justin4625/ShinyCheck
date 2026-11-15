@@ -17,6 +17,7 @@ const dates = e => e.live ? (e.until ? `Until ${e.untilLabel}` : `Since ${e.from
 const card = e => {
   const g = GAME_INFO[e.gid], m = monFor(e.dex);
   if (!m) return "";
+  // The code always shows, also when you have the shiny already; without a code, a check mark.
   const got = has(m);
   return `<div class="ev-card ${e.live ? "live" : "soon"} ${got ? "got" : ""}" style="--accent:${g.accent};--accent2:${g.accent2}">
     <button class="ev-open" data-jump="${m.id}" aria-label="Open Shiny ${esc(m.name)}"></button>
@@ -26,8 +27,8 @@ const card = e => {
       <b class="ev-name">Shiny ${esc(m.name)}</b>
       <span class="ev-game">${esc(g.name)}</span>
       <span class="ev-how">${esc(e.how)} · ${dates(e)}</span>
-      ${got ? `<span class="ev-got">✓ In your collection</span>`
-        : e.code ? `<span class="ev-code" title="Code for Mystery Gift"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12v9H4v-9M2 7h20v5H2zM12 21V7M12 7H7.5a2.5 2.5 0 010-5C11 2 12 7 12 7zM12 7h4.5a2.5 2.5 0 000-5C13 2 12 7 12 7z"/></svg>${esc(e.code)}</span>` : ""}
+      ${e.code ? `<span class="ev-code" title="Code for Mystery Gift"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12v9H4v-9M2 7h20v5H2zM12 21V7M12 7H7.5a2.5 2.5 0 010-5C11 2 12 7 12 7zM12 7h4.5a2.5 2.5 0 000-5C13 2 12 7 12 7z"/></svg>${esc(e.code)}</span>`
+        : got ? `<span class="ev-got">✓ In your collection</span>` : ""}
     </div>
   </div>`;
 };
