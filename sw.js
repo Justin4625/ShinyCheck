@@ -6,7 +6,7 @@
 // - Fonts and the Firebase SDK: served from the cache, refreshed in the background.
 // Firestore, sign-in and other API calls are never touched (Firestore keeps its own offline copy).
 // Also shows push notifications (update news) and opens the app when one is tapped.
-const VERSION = "20261115120245"; // stamped by scripts/bump-version.sh on every commit
+const VERSION = "20261115121857"; // stamped by scripts/bump-version.sh on every commit
 const SHELL = `shinycheck-shell-${VERSION}`;
 const RUNTIME = "shinycheck-runtime-v2"; // raise to drop saved sprites/icons (v2: sharper 256px sprites)
 const CORE = [
@@ -67,6 +67,7 @@ const CORE = [
   `js/components/hunt-setup.js?v=${VERSION}`,
   `js/components/icons.js?v=${VERSION}`,
   `js/components/mark-picker.js?v=${VERSION}`,
+  `js/components/obtained-picker.js?v=${VERSION}`,
   `js/components/owner-socials.js?v=${VERSION}`,
   `js/components/phase-timeline.js?v=${VERSION}`,
   `js/components/post-card.js?v=${VERSION}`,

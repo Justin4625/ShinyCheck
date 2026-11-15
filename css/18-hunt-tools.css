@@ -130,3 +130,9 @@
   .dr-pace-stats div { padding: 8px; }
   .dr-pace-stats b { font-size: 15px; }
 }
+
+/* "How you got it" in Add a shiny (js/components/obtained-picker.js). A Mystery Gift or trade has
+   no encounters, hunt time or hunt method, so those fields hide. */
+.en-how { display: flex; flex-direction: column; gap: 8px; --accent: #9d7bff; --accent2: #ff7ad9; }
+.en-how-label { font: 700 9px/1 var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--faint); }
+.en-add-form.not-hunted .tf, .en-add-form.not-hunted .en-setup { display: none; }

@@ -606,6 +606,32 @@ step("dex entry: add, edit, move, delete", async () => {
   await capture("entry deleted");
   await key("Escape");
 });
+step("dex entry: Mystery Gift and traded", async () => {
+  await openEntry("vivillon");
+  await click("[data-add-open]", 300);
+  await click('.en-add-form .gp-tile input[value="sv"]', 200);
+  await type('.en-add-form [name="count"]', "77");
+  await click('.en-add-form [data-how="gift"]', 200);
+  expect(await js(`getComputedStyle(document.querySelector(".en-add-form .tf")).display === "none" && getComputedStyle(document.querySelector("#enSetup")).display === "none"`), "Mystery Gift hides encounters, time and hunt method");
+  expect(await js(`document.querySelector(".en-add-form [data-ts-label]").textContent`) === "Received on", "A gift is received, not caught");
+  await size(360, 780, true);
+  await js(`document.querySelector(".en-how").scrollIntoView({ block: "start" })`); await capture("entry add mystery gift phone");
+  await size(1280, 900, false);
+  await click("[data-add-save]", 500);
+  const sk = `"sv:" + DEX.find(m => m.key === "vivillon").id`;
+  let s = await js(`JSON.parse(localStorage.getItem("shinycheck-v3-shinies"))[${sk}].at(-1)`);
+  expect(s.method === "Mystery Gift" && s.odds === null && s.count === 0 && s.time === 0, "Mystery Gift saves no odds or encounters: " + JSON.stringify(s));
+  expect(await js(`[...document.querySelectorAll(".en-row small")].some(x => /Mystery Gift/.test(x.textContent) && !/1\\//.test(x.textContent))`), "The log shows Mystery Gift without odds");
+  await click("[data-add-open]", 300);
+  expect(await js(`document.querySelector('.en-add-form [data-how="hunted"]').classList.contains("on")`), "Add a shiny starts at Hunted again");
+  await click('.en-add-form .gp-tile input[value="sv"]', 200);
+  await click('.en-add-form [data-how="trade"]', 200);
+  await click("[data-add-save]", 500);
+  s = await js(`JSON.parse(localStorage.getItem("shinycheck-v3-shinies"))[${sk}].at(-1)`);
+  expect(s.method === "Traded" && s.odds === null, "Traded saves as Traded: " + JSON.stringify(s));
+  for (let i = 0; i < 2; i++) { await click(".en-row", 300); await click(".en-edit [data-delete]"); await click(".en-edit [data-delete]", 400); }
+  await key("Escape");
+});
 step("dex entry: not tracked, move between games", async () => {
   await openEntry("mew");
   await click(".en-row", 300);

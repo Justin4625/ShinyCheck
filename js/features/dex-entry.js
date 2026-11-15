@@ -28,6 +28,7 @@ import { codeLabel } from "../model/game-dex.js";
 import { GAME_INFO } from "../model/games.js";
 import { HUNT_SETUP, defaultSetup, evalSetup, patchSetup, startSetup } from "../model/hunt-setup.js";
 import { markOf } from "../model/marks.js";
+import { obtainedHtml, obtainedLabel, showObtained } from "../components/obtained-picker.js";
 import { canMove } from "../model/transfers.js";
 import { renderHomeStats } from "../pages/home.js";
 import { navigate } from "../pages/router.js";
@@ -39,6 +40,8 @@ export let entryMon = null, entryFocus = null, editing = null, adding = false;
 let viewAlt = "", altsAll = false;
 // Setup for "Add a shiny": starts from the game's remembered hunt setup.
 let addSetup = null;
+// "How you got it" for Add a shiny: hunted, Mystery Gift or traded (components/obtained-picker.js).
+let addHow = "hunted";
 const addSetupFor = g => startSetup(g, entryMon.dex, { ...defaultSetup(g), ...((prefs[g] || {}).setup || {}) });
 function paintAddSetup(g) {
   const box = $("#enSetup");
@@ -197,9 +200,10 @@ export function paintEntry() {
   const now = new Date(), nowLocal = new Date(now - now.getTimezoneOffset() * 6e4).toISOString().slice(0, 16);
   $("#enAdd").innerHTML = adding ? `<div class="en-add-form">
         <div class="wide">${gamePicker(addGames, preset)}</div>
+        ${obtainedHtml(addHow)}
         ${trackedFields(0, 0)}
         <div class="wide en-setup" id="enSetup"></div>
-        <label class="wide">Caught on<input type="datetime-local" name="ts" value="${nowLocal}"></label>
+        <label class="wide"><span data-ts-label>Caught on</span><input type="datetime-local" name="ts" value="${nowLocal}"></label>
         ${alts.length ? `<div class="wide en-fp"><span>Form</span>${formPicker(m, viewAlt)}</div>` : ""}
         <div class="wide" id="enMark"></div>
         ${nickField("")}
@@ -209,7 +213,7 @@ export function paintEntry() {
         </div>
       </div>`
     : `<button class="en-add-btn" data-add-open><span>+</span> Add a shiny${altOf(m, viewAlt) ? ` ${esc(altOf(m, viewAlt).n)}` : " manually"}</button>`;
-  if (adding) { paintAddSetup(preset); paintAddMark(preset); }
+  if (adding) { paintAddSetup(preset); paintAddMark(preset); showObtained($("#enAdd .en-add-form"), addHow); }
 
   const games = [...GAMES].reverse().filter(gid => m.games[gid]);  // newest game first
   $("#enGames").innerHTML = games.length
@@ -256,7 +260,7 @@ export function init() {
 
   en.root.addEventListener("click", e => {
     if (e.target.closest("[data-eclose]")) return closeEntry();
-    if (e.target.closest("[data-add-open]")) { adding = true; addSetup = null; editing = null; return paintEntry(); }
+    if (e.target.closest("[data-add-open]")) { adding = true; addSetup = null; addHow = "hunted"; editing = null; return paintEntry(); }
     if (e.target.closest("[data-add-cancel]")) { adding = false; viewAlt = ""; return paintEntry(); }
     if (e.target.closest("[data-alts-all]")) { altsAll = true; return paintEntry(); }
     const altView = e.target.closest("[data-alt-view]");
@@ -269,6 +273,8 @@ export function init() {
       hero.classList.add("pop");
       return;
     }
+    const howBtn = e.target.closest(".en-add-form [data-how]");
+    if (howBtn) { addHow = howBtn.dataset.how; return showObtained(howBtn.closest(".en-add-form"), addHow); }
     const setupBtn = e.target.closest("#enSetup button");
     if (setupBtn) {
       const g = en.root.querySelector('.en-add-form [name="game"]:checked').value, patch = setupPatch(setupBtn, addSetup);
@@ -280,7 +286,10 @@ export function init() {
       const f = addBtn.closest(".en-add-form"), val = n => f.querySelector(`[name="${n}"]:not([type="radio"]), [name="${n}"]:checked`).value;
       const g = val("game"), ts = new Date(val("ts")).getTime();
       const k = hk(g, entryMon.id), alt = f.querySelector('[name="alt"]') ? f.querySelector('[name="alt"]').value : "";
-      (shinies[k] = shinies[k] || []).push(markPost({ ...readTracked(f), ...(GAME_INFO[g].noOdds || !HUNT_SETUP[g] ? { odds: null } : { odds: evalSetup(g, addSetup).odds, method: evalSetup(g, addSetup).label }), ...(alt ? { alt } : {}), ts: isNaN(ts) ? Date.now() : ts, manual: true }, { manual: true }));
+      const how = addHow === "hunted"
+        ? { ...readTracked(f), ...(GAME_INFO[g].noOdds || !HUNT_SETUP[g] ? { odds: null } : { odds: evalSetup(g, addSetup).odds, method: evalSetup(g, addSetup).label }) }
+        : { count: 0, time: 0, odds: null, method: obtainedLabel(addHow) };
+      (shinies[k] = shinies[k] || []).push(markPost({ ...how, ...(alt ? { alt } : {}), ts: isNaN(ts) ? Date.now() : ts, manual: true }, { manual: true }));
       applyExtras(shinies[k].at(-1), f);
       shinies[k].sort((x, y) => x.ts - y.ts);
       saveShinies();
