@@ -93,6 +93,7 @@ export function renderHomeStats() {
   $("#upNextBox .rec-head").hidden = events;
   el.upNext.classList.toggle("ev-list", events);
   el.upNext.classList.toggle("up-next-row", !events);
+  hero.classList.add("ready");
   if (!events) {
     const next = recommended(pool.filter(homeScope));
     el.upNext.innerHTML = next.length

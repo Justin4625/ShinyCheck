@@ -36,6 +36,8 @@ const next = (box, hero) => {
 export function renderEventSlides(box, hero) {
   const slides = eventSlides(phone.matches ? 1 : 2);
   hero.classList.toggle("ev-themed", slides.length > 0);
+  // Remembered for the next start, so index.html can paint the hero dark before this runs.
+  try { localStorage.setItem("shinycheck-v3-hero-slides", slides.length ? "1" : "0"); } catch {}
   clearInterval(timer);
   hero.querySelector(".ev-bgs")?.remove();
   if (!slides.length) {

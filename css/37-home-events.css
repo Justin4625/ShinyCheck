@@ -12,6 +12,14 @@
   color: var(--text); background: #060815; border-color: color-mix(in srgb, var(--accent) 35%, transparent);
   transition: border-color .8s;
 }
+/* Before the first render (js/pages/home.js adds .ready) the hero's static HTML would show 0%,
+   "Recommended" and the plain design for a moment: keep its content hidden, and paint it dark
+   already when this device showed slides last time (html[data-hero-slides], set in index.html). */
+#homeView .hero:not(.ready) > * { visibility: hidden; }
+html[data-hero-slides] #homeView .hero:not(.ready) {
+  background: radial-gradient(120% 60% at 50% 120%, rgba(255, 255, 255, .06), transparent 60%), linear-gradient(#060815, #0a0f26);
+  border-color: rgba(255, 255, 255, .13);
+}
 .ev-bgs { position: absolute; inset: 0; border-radius: inherit; overflow: hidden; pointer-events: none; }
 .ev-bg { position: absolute; inset: 0; opacity: 0; transition: opacity .9s ease-in-out; }
 .ev-bg.on { opacity: 1; }
