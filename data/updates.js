@@ -11,6 +11,17 @@
 //           or "filter" (the Shiny Dex with Filter & sort open)
 window.UPDATES = [
   {
+    id: "gift-trade-2026-11",
+    date: "2026-11-15",
+    title: "Mystery Gift and traded shinies",
+    text: "When you add a shiny by hand, you can now log it as a Mystery Gift or a trade, without encounters or odds.",
+    steps: [
+      "Open a Pokémon's **Dex Entry** and tap **Add a shiny manually**.",
+      "Under **How you got it**, pick **Mystery Gift** or **Traded**. Encounters, hunt time and hunt method go away.",
+      "Your shiny log shows how you got it instead of the odds.",
+    ],
+  },
+  {
     id: "shiny-events-2026-11",
     date: "2026-11-14",
     title: "Shiny events",
@@ -18,7 +29,7 @@ window.UPDATES = [
     steps: [
       "Look at the top of the **Shiny Dex**: each event shows the Pokémon, its game and how many days are left.",
       "Enter the code under **Mystery Gift** in the game to get the shiny.",
-      "Tap the event to open the Pokémon's **Dex Entry**. Once the shiny is in your collection, the event says so.",
+      "Tap the event to open the Pokémon's **Dex Entry**.",
     ],
     shot: "shots/updates/events.webp",
   },
