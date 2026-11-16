@@ -49,12 +49,12 @@ How features work lives in the code, README and git log. This file keeps only wh
 - Profile Collection: game chips only for games in that collection (no long dropdown). Letter avatars not rainbow.
 - Buy me a lunch: only in the ⚙ menu and at the bottom of What's new (not in the foot bar or nav). Not a main feature: no What's new/push.
 - Shiny Dex hero: while a shiny event runs or starts within 30 days (`GAME_EVENTS`), the events replace Recommended in a starry-night hero with a horizon in the game's colours (chosen from 20 mockups, Nov 2026). No glow behind the sprite; game name as text, no logo; no copy button for codes (they're typed on the Switch). Without events: the normal hero with Recommended.
+- Moved-in species a game can't catch (Mew in SV) stay off that game's page: not needed (Nov 2026).
+- Hunt Deck mark picker, Hisui region, Change Pokémon and Move to game get no What's new/push (Nov 2026).
 - Admin photo upload uses a crop dialog. Radar chain Reset only in the Hunt Deck, not the pop-out.
 
 ## Open ideas
 - More shiny details: ball, gender, nature (mark + nickname done).
 - Goals, badges, two hunts at once, Play Store (TWA), Stadium?
-- Moved-in species a game can't catch (Mew in SV) don't show on that game's page yet.
 - Routine "ShinyCheck: Serebii news check" (3x a day, 07:05/15:05/23:05 Amsterdam, fresh session in the cloud environment "ShinyCheck", which allows serebii.net): looks on Serebii for new shiny distributions in tracked games and for release dates of new main-series games. It never pushes to main: it prepares the change on a `news/...` branch, publishes screenshots + video of the hero (scripts/preview-hero.cjs) as a private Artifact page, and the owner gets a push notification with the link to approve ("merge"). Owner's choice (Nov 2026): approve first, never auto-publish. GAME_EVENTS entries for Pokémon that are huntable in that game only show in the hero (no "Event only" lock).
 - Pokémon Winds & Waves (Switch 2, "2027") is in `js/model/releases.js` with `date: null` (logos from eternia.fr are in): once the date is official, fill it in and the hero counts down in its own Winds & Waves design (`look`, css/38-release-looks.css, darker with stars and a shine). Shiny events keep the starry night. Phones keep the old compact hero (ring with the slides beside it, one event per slide, no date line). Several games at once (events per game, max 2 per slide on wider screens, each new game its own slide) → slideshow every 7 s with dots, hero colours follow the slide, slides always the same size; no labels ("Shiny events" / "Coming soon" were removed on request). The cloud environment "ShinyCheck" allows www.pokepedia.fr and www.eternia.fr.
-- Not yet announced in What's new/push: Hunt Deck mark picker, Hisui region, Change Pokémon, Move to game routes.
