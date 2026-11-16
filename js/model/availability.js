@@ -86,7 +86,8 @@ const today = () => new Date().toISOString().slice(0, 10);
 const eventNote = ({ how: h, code, from, until }) => {
   const t = today(), how = code ? `${h} with the code ${code}` : h;
   if (t < from) return `Coming via ${how} on ${day(from)}.`;
-  if (until && t > until) return `Was only via ${how} (${day(from)} – ${day(until)}).`;
+  // Once it's over the code is no use any more, so it's left out.
+  if (until && t > until) return `Was only via ${h} (${day(from)} – ${day(until)}).`;
   return `Only via ${how}${until ? `, until ${day(until)}` : ` since ${day(from)}`}.`;
 };
 // Shiny Dex hero: events running now or starting within SOON_DAYS, soonest first.
