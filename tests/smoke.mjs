@@ -311,6 +311,35 @@ step("hunt deck: mark", async () => {
   expect(await js(`document.getElementById("drMark").hidden`), "no mark picker for a game without marks");
   await key("Escape");
 });
+step("hunt deck: ball, gender and nature", async () => {
+  await nav("sv", 400);
+  await type("#gq", "ralts");
+  await click(`#gameCards .pcard`, 400);
+  expect((await js(`[...document.querySelectorAll("#drDetails [type=hidden]")].map(i => i.name).join()`)) === "ball,gender,nature", "Scarlet & Violet shows ball, gender and nature");
+  await click("#drDetails .dp-ball .fp-btn"); await click('#drDetails .dp-ball .fp-opt[data-v="quick"]');
+  await click("#drDetails .dp-gender .fp-btn"); await click('#drDetails .dp-gender .fp-opt[data-v="f"]');
+  await click("#drPlus");
+  await click("#drDetails .dp-nature .fp-btn"); await click('#drDetails .dp-nature .fp-opt[data-v="timid"]');
+  await js(`(i => { i.value = "Kirlia"; i.dispatchEvent(new Event("input", { bubbles: true })); i.dispatchEvent(new Event("change", { bubbles: true })); })(document.querySelector('#drDetails [name="nick"]'))`);
+  expect((await js(`document.querySelector('#drDetails [name="ball"]').value`)) === "quick", "the ball stays when the hunt starts");
+  await capture("hunt deck with ball, gender and nature");
+  await click("#drGotcha"); await click("#drGotcha", 600);
+  const got = await js(`(s => [s.ball, s.gender, s.nature, s.nick].join())((JSON.parse(localStorage.getItem("shinycheck-v3-shinies"))["sv:" + DEX.find(m => m.key === "ralts").id] || []).at(-1) || {})`);
+  expect(got === "quick,f,timid,Kirlia", `Gotcha logs ball, gender, nature and nickname, got ${got}`);
+  expect((await js(`[...document.querySelectorAll("#drDetails [type=hidden], #drDetails [name=nick]")].map(i => i.value).join()`)) === ",,,", "the next hunt starts without them");
+  expect(/Quick Ball · ♀ · Timid/.test(await text("#drLog")), "the Hunt Deck log shows them");
+  await key("Escape");
+  // Gold, Silver and Crystal: no ball or nature; a species that's female 1 in 8 times has no shiny females there.
+  await nav("crystal", 400);
+  await type("#gq", "cyndaquil");
+  await click(`#gameCards .pcard`, 400);
+  expect((await js(`document.querySelectorAll("#drDetails .fp").length`)) === 0 && !!(await js(`document.querySelector('#drDetails [name="nick"]')`)), "Crystal: only the nickname for Cyndaquil");
+  await key("Escape");
+  await type("#gq", "sentret");
+  await click(`#gameCards .pcard`, 400);
+  expect((await js(`[...document.querySelectorAll("#drDetails [type=hidden]")].map(i => i.name).join()`)) === "gender", "Crystal: only gender for Sentret");
+  await key("Escape");
+});
 step("hunt deck: pace and ETA", async () => {
   await nav("sv", 400);
   await type("#gq", "sneasel");
@@ -706,6 +735,54 @@ step("dex entry: mark and nickname", async () => {
     await click(".en-edit .fp.mp .fp-btn", 300);
     expect(await js(`(() => { const p = document.querySelector(".en-edit .fp.mp .fp-pop").getBoundingClientRect(), n = document.querySelector('.en-edit [name="nick"]').getBoundingClientRect(); return p.left >= 0 && p.right <= innerWidth && n.right <= innerWidth; })()`), `mark list fits at ${w}px`);
     await capture(`mark picker at ${w}px`);
+    await key("Escape", 200);
+  }
+  await size(1280, 900, false);
+  await click(".en-edit [data-delete]"); await click(".en-edit [data-delete]", 400);
+  await key("Escape");
+});
+step("dex entry: ball, gender and nature", async () => {
+  await openEntry("abra");
+  await click("[data-add-open]", 300);
+  await click('.en-add-form .gp-tile input[value="lgpe"]', 200);
+  expect((await js(`document.querySelectorAll("#enDetails .dp-ball .fp-opt").length`)) === 6, "Let's Go lists its 5 balls plus Not set");
+  await click('.en-add-form .gp-tile input[value="pla"]', 200);
+  expect(await js(`!!document.querySelector('#enDetails .dp-ball .fp-opt[data-v="hisui-poke"]') && !document.querySelector('#enDetails .dp-ball .fp-opt[data-v="poke"]')`), "Legends: Arceus lists Hisui's balls");
+  await click('.en-add-form .gp-tile input[value="bdsp"]', 200);
+  await click("#enDetails .dp-ball .fp-btn"); await click('#enDetails .dp-ball .fp-opt[data-v="dive"]');
+  await click("#enDetails .dp-gender .fp-btn"); await click('#enDetails .dp-gender .fp-opt[data-v="m"]');
+  await click("#enDetails .dp-nature .fp-btn"); await click('#enDetails .dp-nature .fp-opt[data-v="jolly"]');
+  await click('.en-add-form .gp-tile input[value="swsh"]', 200);
+  expect((await js(`[...document.querySelectorAll("#enDetails [type=hidden]")].map(i => i.value).join()`)) === "dive,m,jolly", "another game keeps what was picked");
+  await click("[data-add-save]", 500);
+  const row = `[...document.querySelectorAll(".en-row")].find(r => r.querySelector(".en-ball"))`;
+  expect(await js(`(r => !!r && r.querySelector(".en-gender.m") && r.textContent.includes("Jolly"))(${row})`), "the log shows ball, gender and nature");
+  await capture("entry with ball, gender and nature");
+  await js(`${row}.click()`, 300);
+  expect((await js(`[...document.querySelectorAll(".en-edit [type=hidden]")].filter(i => ["ball", "gender", "nature"].includes(i.name)).map(i => i.value).join()`)) === "dive,m,jolly", "edit shows them");
+  await click(".en-edit .dp-nature .fp-btn"); await click('.en-edit .dp-nature .fp-opt[data-v=""]');
+  await click(".en-edit [data-save]", 400);
+  const saved = await js(`(s => [s.ball, s.gender, "nature" in s].join())(JSON.parse(localStorage.getItem("shinycheck-v3-shinies"))["swsh:" + DEX.find(m => m.key === "abra").id].at(-1))`);
+  expect(saved === "dive,m,false", `edit removes a cleared nature, got ${saved}`);
+  // Genderless Pokémon have no gender to pick; Meowstic's gender is its form.
+  await key("Escape");
+  await openEntry("magnemite");
+  await click("[data-add-open]", 300);
+  expect(!(await js(`!!document.querySelector("#enDetails .dp-gender")`)), "no gender for a genderless Pokémon");
+  await key("Escape");
+  await openEntry("meowstic");
+  await click("[data-add-open]", 300);
+  expect(!(await js(`!!document.querySelector("#enDetails .dp-gender")`)), "no gender picker when the form says it");
+  await key("Escape");
+  // Phones: the three fit without sideways scrolling, also with a list open.
+  await openEntry("abra");
+  await js(`${row}.click()`, 300);
+  for (const w of [360, 390, 414]) {
+    await size(w, 800, true);
+    await js(`document.querySelector(".en-edit .dp-row").scrollIntoView({ block: "center" })`, 300);
+    await click(".en-edit .dp-ball .fp-btn", 300);
+    expect(await js(`(() => { const r = document.querySelector(".en-edit .dp-row").getBoundingClientRect(), p = document.querySelector(".en-edit .dp-ball .fp-pop").getBoundingClientRect(); return r.left >= 0 && r.right <= innerWidth && p.left >= 0 && p.right <= innerWidth; })()`), `ball, gender and nature fit at ${w}px`);
+    await capture(`detail pickers at ${w}px`);
     await key("Escape", 200);
   }
   await size(1280, 900, false);

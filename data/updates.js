@@ -11,6 +11,17 @@
 //           or "filter" (the Shiny Dex with Filter & sort open)
 window.UPDATES = [
   {
+    id: "shiny-details-2026-11",
+    date: "2026-11-16",
+    title: "Ball, gender and nature",
+    text: "You can now save the ball, gender and nature of each shiny. Only you see them, like the nickname: they never show on posts, your public collection or the share card.",
+    steps: [
+      "Open a Pokémon's **Dex Entry** and add a shiny, or tap one in your log to edit it.",
+      "Pick its **Ball**, **Gender** and **Nature**. Each game only lists what it has, like its own balls.",
+      "In the **Hunt Deck**, the **Shiny details** card under Hunt method has the same three plus the nickname. **Gotcha!** saves them with the shiny.",
+    ],
+  },
+  {
     id: "gift-trade-2026-11",
     date: "2026-11-15",
     title: "Mystery Gift and traded shinies",

@@ -1,0 +1,52 @@
+/* Ball, gender and nature: the three pickers (components/detail-pickers.js) in Dex Entry's add and edit
+   forms and under the Hunt Deck's title, and how a logged shiny shows them. */
+.dp .fp-btn img, .dp .fp-opt img { width: 28px; height: 28px; margin: 3px; }
+.dp .fp-label small { display: block; margin-top: 2px; font: 600 11px/1.2 var(--mono); color: var(--muted); }
+.dp-sym, .dp-nat {
+  flex: none; width: 34px; height: 34px; display: grid; place-items: center; border-radius: 50%;
+  font: 800 17px/1 var(--font); background: var(--surface); border: 1px solid var(--border);
+}
+.dp-sym.m { color: #60a5fa; }
+.dp-sym.f { color: #f472b6; }
+.dp-nat { font: 750 12px/1 var(--mono); letter-spacing: -.02em; color: var(--muted); }
+
+/* Dex Entry: the ball on a row of its own, gender and nature side by side under it. */
+.dp-row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.dp-row .dp-ball-field, .dp-row:not(:has(.dp-gender-field)) .dp-field, .dp-row:not(:has(.dp-nature-field)) .dp-field { grid-column: 1 / -1; }
+.dp-row:has(.dp-gender-field):has(.dp-nature-field):not(:has(.dp-ball-field)) .dp-field { grid-column: auto; }
+.dp-field { min-width: 0; }
+.dp-lock::before { content: "🔒"; margin-left: 5px; font-size: 9px; opacity: .7; }
+
+/* A logged shiny: ball before the name, ♂ / ♀ after it. */
+.en-main b .en-ball { width: 20px; height: 20px; margin: -3px 5px 0 0; vertical-align: middle; object-fit: contain; }
+.en-gender { font-weight: 800; }
+.en-gender.m { color: #60a5fa; }
+.en-gender.f { color: #f472b6; }
+
+/* Hunt Deck: the pickers side by side in their own card under Hunt method. */
+.dr-details-card[hidden] { display: none; }
+.dr-details-note { font: 600 9px/1 var(--mono); letter-spacing: .06em; color: var(--faint); }
+.dr-details-note::before { content: "🔒 "; }
+.dr-details { display: grid; grid-template-columns: repeat(var(--n, 3), minmax(0, 1fr)); gap: 8px; margin: 10px 0 0; text-align: left; }
+.dr-detail { display: flex; flex-direction: column; gap: 5px; min-width: 0; }
+.dr-detail > span { font: 700 9px/1 var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--faint); }
+.dr-details .fp-btn { min-height: 40px; padding: 3px 8px 3px 4px; gap: 6px; font-size: 13px; }
+.dr-details .fp-btn img, .dr-details .dp-sym, .dr-details .dp-nat, .dr-details .fp-none { width: 30px; height: 30px; }
+.dr-details .fp-btn img { margin: 0; }
+.dr-details .fp-btn .fp-none { display: none; }
+.dr-details .fp-btn { padding-left: 10px; }
+.dr-details .fp-btn:has(img, .dp-sym, .dp-nat) { padding-left: 4px; }
+.dr-details .fp-label small { display: none; }
+.dr-details .fp-pop { min-width: 220px; }
+.dr-nick { grid-column: 1 / -1; }
+.dr-nick input {
+  width: 100%; min-height: 40px; padding: 8px 10px; border-radius: 12px; border: 1px solid var(--border); background: var(--surface-2);
+  font: 650 14px/1.2 var(--font); color: var(--text); outline: none;
+}
+.dr-nick input:focus { border-color: #9d7bff; }
+.dr-detail:last-child .fp-pop { left: auto; }
+
+@media (max-width: 560px) { .dr-nick input { font-size: 16px; } }
+@media (max-width: 420px) {
+  .dr-details .fp-label { font-size: 12px; }
+}

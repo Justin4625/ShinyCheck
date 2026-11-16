@@ -16,12 +16,16 @@ import { paintPace } from "./pace.js";
 import { breakChain, chainStep, paintChain } from "./chain.js";
 import { paintPhases } from "./phases.js";
 import { carryMark, clearMark, huntMark, paintMark } from "./mark.js";
+import { carryDetails, clearDetails, huntDetails, paintDetails } from "./details.js";
 import { paintPip, pip } from "./pop-out.js";
 import { openShare } from "../share-card.js";
 import { markPost } from "../social-sync.js";
 import { mons } from "../../model/dex.js";
 import { altOf, altSprite, altsOf } from "../../model/forms.js";
 import { markOf } from "../../model/marks.js";
+import { ballOf } from "../../model/balls.js";
+import { shinyGender } from "../../model/gender.js";
+import { natureOf } from "../../model/natures.js";
 import { codeLabel, whereIn } from "../../model/game-dex.js";
 import { GAME_INFO } from "../../model/games.js";
 import { HUNT_SETUP, afterShiny, defaultSetup, evalSetup, patchSetup, startSetup } from "../../model/hunt-setup.js";
@@ -73,6 +77,7 @@ export function setHunt(patch) {
   const h = { ...hunt(), ...patch, updated: Date.now() };
   if (!h.alt && altPick[curKey()]) h.alt = altPick[curKey()];
   carryMark(h, curKey());
+  carryDetails(h, curKey());
   if ("odds" in patch || "inc" in patch || "setup" in patch) {
     prefs[curGame] = { inc: h.inc, odds: h.odds, setup: h.setup || null };
     savePrefs();
@@ -98,6 +103,7 @@ export function openDrawer(id, gid = state.page) {
   dr.celebrate.classList.remove("show");
   paintAlt();
   paintMark();
+  paintDetails();
   paintHunt();
   paintLog();
   disarm();
@@ -183,13 +189,16 @@ export function paintHunt() {
   paintPip();
 }
 
+// Ball, gender and nature in a log line: "Moon Ball · ♀ · Jolly · ".
+const logDetails = s => [ballOf(s.ball)?.n, shinyGender(cur, curGame, s)?.sym, natureOf(s.nature)?.n].filter(Boolean).map(t => `${esc(t)} · `).join("");
+
 export const SHARE_ICO = `<svg class="share-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 15V3M8 7l4-4 4 4M6 11H5a1 1 0 00-1 1v8a1 1 0 001 1h14a1 1 0 001-1v-8a1 1 0 00-1-1h-1"/></svg>`;
 export function paintLog() {
   const list = shinies[curKey()] || [];
   dr.log.innerHTML = list.length
     ? list.map((s, i) => `<li>
           <span class="log-n">${sparkSvg()}${i + 1}</span>
-          <span class="log-main"><b>${nf(s.count)}</b> encounters · ${fmtShort(s.time)}<small>${s.nick ? `“${esc(s.nick)}” · ` : ""}${markOf(s.mark) ? `${esc(markOf(s.mark).n)} · ` : ""}${altOf(cur, s.alt) ? `${esc(altOf(cur, s.alt).n)} · ` : ""}${fmtDate(s.ts)}${s.method ? ` · ${esc(s.method)}` : ""}${s.odds ? ` · 1/${s.odds}` : ""}${s.phases ? ` · after ${s.phases} ${s.phases === 1 ? "phase" : "phases"}` : ""}</small></span>
+          <span class="log-main"><b>${nf(s.count)}</b> encounters · ${fmtShort(s.time)}<small>${s.nick ? `“${esc(s.nick)}” · ` : ""}${markOf(s.mark) ? `${esc(markOf(s.mark).n)} · ` : ""}${logDetails(s)}${altOf(cur, s.alt) ? `${esc(altOf(cur, s.alt).n)} · ` : ""}${fmtDate(s.ts)}${s.method ? ` · ${esc(s.method)}` : ""}${s.odds ? ` · 1/${s.odds}` : ""}${s.phases ? ` · after ${s.phases} ${s.phases === 1 ? "phase" : "phases"}` : ""}</small></span>
           <button class="log-share" data-share="${i}" title="Share card" aria-label="Share card">${SHARE_ICO}</button>
           <button class="log-del" data-del="${i}" title="Delete entry">✕</button>
         </li>`).join("")
@@ -238,20 +247,22 @@ function gotcha() {
   const h = hunt();
   const k = curKey();
   const method = h.setup ? evalSetup(curGame, h.setup).label : "";
-  const phases = (h.phases || []).length, alt = huntAlt(), mark = huntMark();
+  const phases = (h.phases || []).length, alt = huntAlt(), mark = huntMark(), details = huntDetails();
   // The phases' Pokémon, encounters and time stay on the shiny for Dex Entry's phase timeline.
   const phaseLog = (h.phases || []).map(({ id, count, time }) => ({ id, count, time }));
-  (shinies[k] = shinies[k] || []).push(markPost({ count: h.count, time: elapsed(h), odds: h.odds, ...(method ? { method } : {}), ...(phases ? { phases, phaseLog } : {}), ...(alt ? { alt } : {}), ...(mark ? { mark } : {}), ts: Date.now() }));
+  (shinies[k] = shinies[k] || []).push(markPost({ count: h.count, time: elapsed(h), odds: h.odds, ...(method ? { method } : {}), ...(phases ? { phases, phaseLog } : {}), ...(alt ? { alt } : {}), ...(mark ? { mark } : {}), ...details, ts: Date.now() }));
   saveShinies();
   delete hunts[k];
   delete altPick[k];
   clearMark(k);
+  clearDetails(k);
   saveHunts();
   // A shiny ends a fishing chain: the next hunt in this game starts at 0.
   const next = afterShiny(curGame, h.setup);
   if (next !== h.setup) { prefs[curGame] = { ...prefs[curGame], setup: next, odds: evalSetup(curGame, next).odds }; savePrefs(); }
   paintHunt();
   paintMark();
+  paintDetails();
   paintLog();
   refreshCard();
   celebrate();

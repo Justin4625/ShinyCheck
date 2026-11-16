@@ -3,6 +3,7 @@ import { burst } from "../components/burst.js";
 import { card } from "../components/card.js";
 import { formPicker } from "../components/form-picker.js";
 import { markPicker } from "../components/mark-picker.js";
+import { NICK_MAX, detailFields, readDetails } from "../components/detail-pickers.js";
 import { phaseTimeline } from "../components/phase-timeline.js";
 import { gamePicker } from "../components/game-picker.js";
 import { setupHtml, setupPatch } from "../components/hunt-setup.js";
@@ -28,6 +29,9 @@ import { codeLabel } from "../model/game-dex.js";
 import { GAME_INFO } from "../model/games.js";
 import { HUNT_SETUP, defaultSetup, evalSetup, patchSetup, startSetup } from "../model/hunt-setup.js";
 import { markOf } from "../model/marks.js";
+import { ballOf } from "../model/balls.js";
+import { shinyGender } from "../model/gender.js";
+import { natureOf } from "../model/natures.js";
 import { obtainedHtml, obtainedLabel, showObtained } from "../components/obtained-picker.js";
 import { canMove } from "../model/transfers.js";
 import { renderHomeStats } from "../pages/home.js";
@@ -52,7 +56,6 @@ function paintAddSetup(g) {
 }
 // Nickname and mark fields (add and edit). The nickname is private: it stays in your own account and is
 // never part of a post, the public collection or the share card (features/social-sync.js copies named fields only).
-const NICK_MAX = 12;
 const nickField = nick => `<label class="wide en-nick-field">Nickname <small>only you see this</small><input type="text" name="nick" maxlength="${NICK_MAX}" value="${esc(nick || "")}" placeholder="None" autocomplete="off" spellcheck="false"></label>`;
 const markField = (g, mark) => {
   const pick = markPicker(g, mark);
@@ -64,15 +67,25 @@ function paintAddMark(g) {
   const cur = box.querySelector('[name="mark"]');
   box.innerHTML = markField(g, cur ? cur.value : "");
   box.hidden = !box.innerHTML;
+  // Ball, gender and nature keep what was picked when another game is chosen, if it has them too.
+  const det = $("#enDetails"), was = det.innerHTML ? readDetails({}, det) : {};
+  det.innerHTML = detailFields(entryMon, g, was);
+  det.hidden = !det.innerHTML;
 }
-// Reads the two fields into an entry: sets or removes `nick` and `mark`.
+// Reads the fields into an entry: sets or removes `nick`, `mark`, `ball`, `gender` and `nature`.
 function applyExtras(entry, box) {
   const nick = box.querySelector('[name="nick"]'), mark = box.querySelector('[name="mark"]');
   const n = nick ? nick.value.trim().slice(0, NICK_MAX) : entry.nick;
   if (n) entry.nick = n; else delete entry.nick;
   if (mark) { if (mark.value) entry.mark = mark.value; else delete entry.mark; }
-  return entry;
+  return readDetails(entry, box);
 }
+
+// ♂ / ♀ after the name; a Male or Female form already says it in the form text.
+const genderMark = (m, g, s) => {
+  const x = shinyGender(m, g, s);
+  return x && !(s.alt === "male" || s.alt === "female") ? ` <span class="en-gender ${x.id}" title="${x.n}">${x.sym}</span>` : "";
+};
 
 export function openEntry(id) {
   entryMon = mons.find(m => m.id === id);
@@ -151,9 +164,9 @@ export function paintEntry() {
         <button class="en-row" data-edit="${key}">
           <span class="en-thumb">${l.m.sprite ? `<img src="${altSprite(l.m, l.alt)}" alt="">` : ""}</span>
           <span class="en-main">
-            <b>${markOf(l.mark) ? `<img class="en-mark" src="${markOf(l.mark).icon}" alt="${esc(markOf(l.mark).n)}" title="${esc(markOf(l.mark).n)}">` : ""}${l.nick ? `<span class="en-nick">“${esc(l.nick)}”</span> ` : ""}${esc(l.m.name)}${formText(l.m, l.alt) ? ` <em>${esc(formText(l.m, l.alt))}</em>` : ""}</b>
+            <b>${ballOf(l.ball) ? `<img class="en-ball" src="${ballOf(l.ball).icon}" alt="${esc(ballOf(l.ball).n)}" title="${esc(ballOf(l.ball).n)}">` : ""}${markOf(l.mark) ? `<img class="en-mark" src="${markOf(l.mark).icon}" alt="${esc(markOf(l.mark).n)}" title="${esc(markOf(l.mark).n)}">` : ""}${l.nick ? `<span class="en-nick">“${esc(l.nick)}”</span> ` : ""}${esc(l.m.name)}${genderMark(l.m, l.g, l)}${formText(l.m, l.alt) ? ` <em>${esc(formText(l.m, l.alt))}</em>` : ""}</b>
             <span class="en-game">${esc(g.name)}${l.caughtIn && GAME_INFO[l.caughtIn] ? ` <em class="en-from">· caught in ${esc(GAME_INFO[l.caughtIn].abbr || GAME_INFO[l.caughtIn].name)}</em>` : ""}</span>
-            <small>${fmtDate(l.ts)}${l.method ? ` · ${esc(l.method)}` : ""}${l.odds && !GAME_INFO[l.g].noOdds ? ` · 1/${l.odds}` : ""}${l.phases ? ` · after ${l.phases} ${l.phases === 1 ? "phase" : "phases"}` : ""}</small>
+            <small>${fmtDate(l.ts)}${natureOf(l.nature) ? ` · ${natureOf(l.nature).n}` : ""}${l.method ? ` · ${esc(l.method)}` : ""}${l.odds && !GAME_INFO[l.g].noOdds ? ` · 1/${l.odds}` : ""}${l.phases ? ` · after ${l.phases} ${l.phases === 1 ? "phase" : "phases"}` : ""}</small>
           </span>
           <span class="en-nums"><b>${l.count ? nf(l.count) : "—"}</b><small>${l.time ? fmtShort(l.time) : "No time"}</small></span>
         </button>
@@ -163,6 +176,7 @@ export function paintEntry() {
           <label class="wide">Caught on<input type="datetime-local" name="ts" value="${local}"></label>
           ${altsOf(l.m).length ? `<div class="wide en-fp"><span>Form</span>${formPicker(l.m, l.alt)}</div>` : ""}
           ${markField(l.g, l.mark)}
+          ${detailFields(l.m, l.g, l)}
           ${nickField(l.nick)}
           ${(() => {
           const prev = (l.evolvedFrom || []).length && mons.find(x => x.id === l.evolvedFrom.at(-1));
@@ -206,6 +220,7 @@ export function paintEntry() {
         <label class="wide"><span data-ts-label>Caught on</span><input type="datetime-local" name="ts" value="${nowLocal}"></label>
         ${alts.length ? `<div class="wide en-fp"><span>Form</span>${formPicker(m, viewAlt)}</div>` : ""}
         <div class="wide" id="enMark"></div>
+        <div class="wide" id="enDetails" hidden></div>
         ${nickField("")}
         <div class="en-edit-actions">
           <button class="en-save" data-add-save>Add ${esc(m.name)}${m.form && m.form !== "Original" ? ` (${esc(m.form)})` : ""} ✦</button>
