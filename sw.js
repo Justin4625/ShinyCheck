@@ -6,7 +6,7 @@
 // - Fonts and the Firebase SDK: served from the cache, refreshed in the background.
 // Firestore, sign-in and other API calls are never touched (Firestore keeps its own offline copy).
 // Also shows push notifications (update news) and opens the app when one is tapped.
-const VERSION = "20261116133519"; // stamped by scripts/bump-version.sh on every commit
+const VERSION = "20261116134848"; // stamped by scripts/bump-version.sh on every commit
 const SHELL = `shinycheck-shell-${VERSION}`;
 const RUNTIME = "shinycheck-runtime-v2"; // raise to drop saved sprites/icons (v2: sharper 256px sprites)
 const CORE = [
@@ -186,6 +186,8 @@ self.addEventListener("activate", event => {
 
 self.addEventListener("message", event => {
   if (event.data === "skipWaiting") self.skipWaiting();
+  // The app asks which version this worker serves, to reload only when its own files are older.
+  if (event.data === "version" && event.source) event.source.postMessage({ swVersion: VERSION });
 });
 
 self.addEventListener("fetch", event => {

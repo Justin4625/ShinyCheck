@@ -41,18 +41,26 @@ export function install() {
 // Wiring: runs once at startup, from main.js.
 export function init() {
   if (swOk) {
-    let reloading = false;
+    // A new version takes over: reload when you tapped Update, or when this page still runs older files.
+    // Opening the app online already loads the live index.html and so the newest files; reloading then
+    // only made the app load twice. The worker says which version it serves (sw.js, "version").
+    const PAGE_VERSION = new URL(import.meta.url).searchParams.get("v");
+    let reloading = false, asked = false;
+    const reload = () => { if (!reloading) { reloading = true; location.reload(); } };
+    navigator.serviceWorker.addEventListener("message", e => {
+      if (e.data && e.data.swVersion && e.data.swVersion !== PAGE_VERSION) reload();
+    });
     navigator.serviceWorker.addEventListener("controllerchange", () => {
-      if (reloading) return;
-      reloading = true;
-      location.reload();
+      if (asked) return reload();
+      const sw = navigator.serviceWorker.controller;
+      if (sw && PAGE_VERSION) sw.postMessage("version"); else reload();
     });
     const launchedAt = Date.now();
     navigator.serviceWorker.register(BASE + "sw.js", { scope: BASE }).then(reg => {
       const offer = worker => {
         // Just opened the app? Take the update right away — nothing to lose yet.
         if (Date.now() - launchedAt < 4000) return worker.postMessage("skipWaiting");
-        toast("A new version of ShinyCheck is ready", { label: "Update", run: () => worker.postMessage("skipWaiting") }, 15000);
+        toast("A new version of ShinyCheck is ready", { label: "Update", run: () => { asked = true; worker.postMessage("skipWaiting"); } }, 15000);
       };
       if (reg.waiting && navigator.serviceWorker.controller) offer(reg.waiting);
       reg.addEventListener("updatefound", () => {
