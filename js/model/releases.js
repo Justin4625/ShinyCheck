@@ -3,6 +3,9 @@
 // Fill in `date` (YYYY-MM-DD) once it's official and add the English logos to logos/;
 // until a logo is there, the name is shown as text. `look` names a hero design of its own in
 // css/38-release-looks.css (used while no shiny event is on); without one it's the starry sky.
+// On localhost, ?release gives games without a date a preview date (core/preview.js).
+import { releasePreview } from "../core/preview.js";
+
 export const UPCOMING_GAMES = [
   // Announced Feb 27, 2026 for Nintendo Switch 2, "2027" (pokemon.com / Serebii, checked Nov 2026);
   // no date yet. Logos: English ones from eternia.fr; colours picked from them (Winds green, Waves blue).
@@ -14,5 +17,6 @@ const day = d => new Date(`${d}T12:00:00Z`).toLocaleDateString("en-US", { month:
 const today = () => new Date().toISOString().slice(0, 10);
 const daysTo = d => Math.round((new Date(`${d}T12:00:00Z`) - new Date(`${today()}T12:00:00Z`)) / 864e5);
 // Games with a date that are still to come, or came out less than OUT_NOW_DAYS ago; soonest first.
-export const upcomingReleases = () => UPCOMING_GAMES.filter(g => g.date && daysTo(g.date) > -OUT_NOW_DAYS)
+export const upcomingReleases = () => UPCOMING_GAMES.map(g => g.date || !releasePreview ? g : { ...g, date: releasePreview })
+  .filter(g => g.date && daysTo(g.date) > -OUT_NOW_DAYS)
   .map(g => ({ ...g, days: daysTo(g.date), dateLabel: day(g.date) })).sort((a, b) => a.days - b.days);

@@ -4,6 +4,8 @@
 // Load the config with the same ?v= cache-busting version as this module.
 const { firebaseConfig, googleClientId, appCheckSiteKey, vapidKey } = await import(`../../firebase-config.js${new URL(import.meta.url).search}`);
 
+import { releasePreview } from "../core/preview.js";
+
 const $ = s => document.querySelector(s);
 const gate = $("#gate");
 const account = $("#account");
@@ -403,6 +405,7 @@ function friendly(err) {
 }
 
 function showGate() {
+  if (releasePreview) return hideGate(); // localhost ?release: look at the app without signing in
   delete document.documentElement.dataset.boot;
   document.body.classList.add("gated");
   gate.hidden = false;

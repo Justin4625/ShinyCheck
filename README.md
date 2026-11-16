@@ -116,7 +116,7 @@ Firebase sign-in needs an http(s) origin, so serve the folder instead of opening
 python3 -m http.server 5173
 ```
 
-Then open http://localhost:5173. The service worker stays off on localhost so you always get fresh files; add `?sw` to test it.
+Then open http://localhost:5173. The service worker stays off on localhost so you always get fresh files; add `?sw` to test it. `?release` (or `?release=YYYY-MM-DD`) previews the countdown of upcoming games that have no date yet and skips the landing page, on localhost only (`js/core/preview.js`).
 
 ## Deploying
 
