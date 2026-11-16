@@ -46,15 +46,16 @@ const releaseCard = r => {
 };
 
 // One slide per game's shiny events (at most `perSlide` each: 2 on wide screens, 1 on phones)
-// and one per new game, in that order; each carries the colours (and for a new game its own
-// `look`) the hero takes on.
+// and one per new game, in that order; each carries the colours the hero takes on, plus a
+// background of its own: `bg` for a game's events (heroLook in model/games.js, css/40-event-looks.css)
+// or `look` for a new game (which also restyles the slide, css/38-release-looks.css).
 export function eventSlides(perSlide = 2) {
   const slides = [], byGame = new Map();
   for (const e of activeEvents()) byGame.set(e.gid, [...(byGame.get(e.gid) || []), e]);
   for (const [gid, evs] of byGame) {
-    const { accent, accent2 } = GAME_INFO[gid];
+    const { accent, accent2, heroLook: bg } = GAME_INFO[gid];
     for (let i = 0; i < evs.length; i += perSlide)
-      slides.push({ key: `${gid}:${evs[i].dex}`, accent, accent2, html: evs.slice(i, i + perSlide).map(card).join("") });
+      slides.push({ key: `${gid}:${evs[i].dex}`, accent, accent2, bg, html: evs.slice(i, i + perSlide).map(card).join("") });
   }
   for (const r of upcomingReleases())
     slides.push({ key: `release:${r.name}`, accent: r.accent, accent2: r.accent2, look: r.look, html: releaseCard(r) });

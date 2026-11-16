@@ -44,7 +44,7 @@ export const GAME_INFO = {
   sv:   { nativeForms: ["Paldean", "Paldean Combat Breed"], name: "Scarlet & Violet", abbr: "SV", released: "2022-11-18", accent: "#ff4d00", accent2: "#8c00ff", logo: "logos/svLogo.png",
           sections: [["P", "Paldea"], ["K", "Kitakami"], ["B", "Blueberry"], ["O", "Outside the dex"]] },
   lza:  { name: "Legends: Z-A", abbr: "Z-A", released: "2025-10-16", accent: "#06b6d4", accent2: "#2bd67b", logo: "logos/plzaLogo.png",
-          sections: [["", "Lumiose"], ["M", "Mega Dimension"]] },
+          heroLook: "neon-lumiose", sections: [["", "Lumiose"], ["M", "Mega Dimension"]] },
   pogo: { name: "Pokémon GO", abbr: "GO", released: "2016-07-06", short: "GO", accent: "#10b981", accent2: "#3b82f6", logo: "logos/pogoLogo.png", logOnly: true, noOdds: true, sections: [] },
   home: { name: "Pokémon HOME", abbr: "HOME", released: "2020-02-12", short: "HOME", accent: "#14b8a6", accent2: "#6366f1", logo: "logos/homeLogo.png", logOnly: true, noOdds: true, sections: [] },
 };

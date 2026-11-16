@@ -2,7 +2,7 @@
 // cell, so the block is always as tall as the tallest slide and nothing jumps when it changes.
 // With more than one slide it moves on every SLIDE_MS (paused while hovered or focused, and not
 // at all with reduced motion); dots switch by hand. Each slide has a background layer in the hero
-// (its game's colours, or its own `look`); the layers cross-fade.
+// (its game's colours, or its own `bg` / `look`); the layers cross-fade.
 import { esc } from "../core/util.js";
 import { eventSlides } from "./event-cards.js";
 
@@ -51,7 +51,7 @@ export function renderEventSlides(box, hero) {
     </div>`).join("")}</div>${slides.length > 1 ? `<div class="ev-dots">${slides.map((s, i) =>
       `<button data-slide="${esc(s.key)}" aria-label="Show slide ${i + 1} of ${slides.length}"></button>`).join("")}</div>` : ""}`;
   // One background layer per slide; show() fades the shown slide's layer in.
-  hero.insertAdjacentHTML("afterbegin", `<div class="ev-bgs" aria-hidden="true">${slides.map(s => `<div class="ev-bg${on(s)}" data-key="${esc(s.key)}" style="--accent:${s.accent};--accent2:${s.accent2}"${s.look ? ` data-look="${s.look}"` : ""}></div>`).join("")}</div>`);
+  hero.insertAdjacentHTML("afterbegin", `<div class="ev-bgs" aria-hidden="true">${slides.map(s => `<div class="ev-bg${on(s)}" data-key="${esc(s.key)}" style="--accent:${s.accent};--accent2:${s.accent2}"${s.bg || s.look ? ` data-look="${s.bg || s.look}"` : ""}></div>`).join("")}</div>`);
   show(box, hero, cur);
   if (slides.length > 1 && !reduced()) timer = setInterval(() => { if (!hold && !document.hidden) next(box, hero); }, SLIDE_MS);
   return true;
