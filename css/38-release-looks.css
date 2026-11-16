@@ -36,14 +36,19 @@
 .ev-slide[data-look] .rel-logos { gap: 4px; justify-content: center; }
 .ev-slide[data-look] .rel-logos img { height: 84px; max-width: 136px; filter: drop-shadow(0 0 18px rgba(167, 243, 208, .28)) drop-shadow(0 10px 22px rgba(0, 0, 0, .5)); }
 .ev-slide[data-look] .rel-count b { font-size: 64px; text-shadow: 0 0 30px rgba(125, 211, 252, .55); }
-/* The number shines: a light sweep slides across it now and then. */
+/* The number shines: a green (Winds) and a blue (Waves) streak of the same shape glide across it, without stopping. The gradient is one tile that
+   repeats (both ends the same colour), and the animation moves it exactly one tile, so the loop is seamless. */
 .ev-slide[data-look="winds-waves"] .rel-count b {
-  background: linear-gradient(110deg, #a7f3d0 0%, #ffffff 30%, #ffffff 40%, #f0fdfa 46%, #93c5fd 50%, #ffffff 56%, #ffffff 70%, #93c5fd 100%) 0 0 / 250% 100%;
+  background: linear-gradient(110deg, #a7f3d0 0%, #ffffff 22%, #ffffff 28%, #93c5fd 50%, #ffffff 72%, #ffffff 78%, #a7f3d0 100%) 0 0 / 200% 100% repeat-x;
   -webkit-background-clip: text; background-clip: text; color: transparent; text-shadow: none;
-  filter: drop-shadow(0 0 16px rgba(125, 211, 252, .5)); animation: rel-shine 4.5s ease-in-out infinite;
+  filter: drop-shadow(0 0 16px rgba(125, 211, 252, .5));
+  /* Its own layer, repainted every frame. */
+  will-change: background-position; transform: translateZ(0);
 }
-@keyframes rel-shine { 0%, 35% { background-position: 100% 0; } 75%, 100% { background-position: 0 0; } }
-@media (prefers-reduced-motion: reduce) { .ev-slide[data-look="winds-waves"] .rel-count b { animation: none; background-position: 60% 0; } }
+/* Only while this slide is showing. */
+.ev-slide.on[data-look="winds-waves"] .rel-count b { animation: rel-shine 6s linear infinite; }
+@keyframes rel-shine { from { background-position: 200% 0; } to { background-position: 0 0; } }
+@media (prefers-reduced-motion: reduce) { .ev-slide[data-look="winds-waves"] .rel-count b, .ev-slide.on[data-look="winds-waves"] .rel-count b { animation: none; background-position: 60% 0; } }
 .ev-slide[data-look] .ev-how { color: rgba(224, 242, 254, .85); }
 @media (max-width: 560px) {
   .ev-bg[data-look="winds-waves"]::before { height: 60%; }
