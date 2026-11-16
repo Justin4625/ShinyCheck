@@ -44,7 +44,8 @@
   font: 650 14px/1.2 var(--font); color: var(--text); outline: none;
 }
 .dr-nick input:focus { border-color: #9d7bff; }
-.dr-detail:last-child .fp-pop { left: auto; }
+/* The rightmost picker (nature) opens its list leftwards, so it stays on screen. */
+.dr-detail:has(.dp-nature):not(:only-of-type) .fp-pop { left: auto; right: 0; }
 
 @media (max-width: 560px) { .dr-nick input { font-size: 16px; } }
 @media (max-width: 420px) {

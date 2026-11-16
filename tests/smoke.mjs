@@ -319,6 +319,16 @@ step("hunt deck: ball, gender and nature", async () => {
   await click("#drDetails .dp-ball .fp-btn"); await click('#drDetails .dp-ball .fp-opt[data-v="quick"]');
   await click("#drDetails .dp-gender .fp-btn"); await click('#drDetails .dp-gender .fp-opt[data-v="f"]');
   await click("#drPlus");
+  // Phones: every list stays on screen (the nature list opens leftwards).
+  for (const w of [360, 414]) {
+    await size(w, 800, true);
+    for (const k of ["ball", "gender", "nature"]) {
+      await click(`#drDetails .dp-${k} .fp-btn`, 200);
+      expect(await js(`(r => r.left >= 0 && r.right <= innerWidth)(document.querySelector("#drDetails .dp-${k} .fp-pop").getBoundingClientRect())`), `the ${k} list fits a ${w}px phone`);
+      await click(`#drDetails .dp-${k} .fp-btn`, 150);
+    }
+  }
+  await size(1280, 900, false);
   await click("#drDetails .dp-nature .fp-btn"); await click('#drDetails .dp-nature .fp-opt[data-v="timid"]');
   await js(`(i => { i.value = "Kirlia"; i.dispatchEvent(new Event("input", { bubbles: true })); i.dispatchEvent(new Event("change", { bubbles: true })); })(document.querySelector('#drDetails [name="nick"]'))`);
   expect((await js(`document.querySelector('#drDetails [name="ball"]').value`)) === "quick", "the ball stays when the hunt starts");
