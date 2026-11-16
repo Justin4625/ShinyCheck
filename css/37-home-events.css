@@ -16,6 +16,9 @@
    "Recommended" and the plain design for a moment: keep its content hidden, and paint it dark
    already when this device showed slides last time (html[data-hero-slides], set in index.html). */
 #homeView .hero:not(.ready) > * { visibility: hidden; }
+/* And keep the room the hero and the region tabs took last time (html[data-boot-sizes], index.html). */
+html[data-boot-sizes] #homeView .hero:not(.ready) { min-height: var(--boot-hero-h); }
+html[data-boot-sizes] #homeView #regions:empty { min-height: var(--boot-regions-h); }
 html[data-hero-slides] #homeView .hero:not(.ready) {
   background: radial-gradient(120% 60% at 50% 120%, rgba(255, 255, 255, .06), transparent 60%), linear-gradient(#060815, #0a0f26);
   border-color: rgba(255, 255, 255, .13);

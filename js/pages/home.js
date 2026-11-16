@@ -35,6 +35,15 @@ function recommended(scope) {
 
 const homeScope = m => state.gen === "0" || regionOf(m) === state.gen;
 const inRegion = (list, key) => list.filter(m => regionOf(m) === key);
+// Startup without a jump: the hero and the region tabs are filled in only after the data has loaded,
+// so the search bar below them used to jump down. Their heights at this window width are kept here and
+// reserved from the first paint (index.html's head, css/37-home-events.css).
+function rememberBootSizes(hero) {
+  const regions = el.regions.offsetHeight;
+  if (!hero.offsetHeight || !regions) return;
+  try { localStorage.setItem("shinycheck-v3-boot-sizes", JSON.stringify({ w: innerWidth, hero: hero.offsetHeight, regions })); } catch {}
+}
+
 // The Forms toggle decides whether alternate forms count towards totals and percentages:
 // Shiny Dex uses its own toggle, game pages share theirs.
 export const homePool = () => mons.filter(m => state.forms || !m.variant);
@@ -94,6 +103,7 @@ export function renderHomeStats() {
   el.upNext.classList.toggle("ev-list", events);
   el.upNext.classList.toggle("up-next-row", !events);
   hero.classList.add("ready");
+  requestAnimationFrame(() => rememberBootSizes(hero));
   if (!events) {
     const next = recommended(pool.filter(homeScope));
     el.upNext.innerHTML = next.length
